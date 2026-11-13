@@ -400,6 +400,19 @@ export const VN_LAWS: LawParam[] = [
     versions: [{ value: 0.08, from: '2020-01-01', source: { doc: 'Thông tư 41/2016/TT-NHNN (theo trí nhớ); Thông tư 14/2025 chưa đọc' }, verification: 'C', chuaXacMinh: true }],
   },
 
+  {
+    id: 'cb.omo.auto',
+    label: 'NHNN mua lại trái phiếu khi ngân hàng thiếu dự trữ (thị trường mở)',
+    unit: 'bật/tắt',
+    group: 'NHNN',
+    owner: 'monetary',
+    min: 0,
+    max: 1,
+    step: 1,
+    note: 'Tắt thì ngân hàng thiếu dự trữ phải vay tái cấp vốn. Ngoài đời đây là kênh bơm thanh khoản chính của NHNN, làm qua hợp đồng mua lại có kỳ hạn; mô hình coi như mua đứt.',
+    versions: [{ value: 1, from: '2000-01-01', source: { doc: 'Luật NHNN 2010', article: 'Điều 15 (nghiệp vụ thị trường mở; theo trí nhớ)' }, verification: 'C', chuaXacMinh: true, simplification: 'Mua đứt thay cho mua có kỳ hạn; không có lãi suất OMO riêng.' }],
+  },
+
   // ---------------- Ngân sách (tham số điều hành, không phải điều luật) ----------------
   {
     id: 'gov.public.share',
@@ -410,7 +423,7 @@ export const VN_LAWS: LawParam[] = [
     min: 0,
     max: 0.5,
     step: 0.01,
-    versions: [{ value: 0.1, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
+    versions: [{ value: 0.05, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
   },
   {
     id: 'gov.wage.premium',
@@ -432,7 +445,7 @@ export const VN_LAWS: LawParam[] = [
     min: 0,
     max: 0.6,
     step: 0.005,
-    versions: [{ value: 0.06, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
+    versions: [{ value: 0.03, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
   },
   {
     id: 'gov.transfer.unemployed',

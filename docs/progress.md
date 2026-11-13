@@ -4,9 +4,35 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 ## Đang ở đâu
 
-- **Giai đoạn**: GĐ0, đang code theo chế độ tự chạy. Thiết kế GĐ0 + GĐ1 được duyệt ngày 13/11/2026.
-- Thứ tự làm: gd0.md mục 11, rồi gd1.md mục 17. Engine và kiểm định trước, các tính năng S sau.
-- Xem `git log` để biết bước nào đã xong.
+Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
+
+- **Giai đoạn**: GĐ1, mốc M1-M5 (engine). Thiết kế GĐ0 + GĐ1 được duyệt ngày 13/11/2026.
+- **Xong**:
+  - GĐ0 phần lõi: engine, sổ cái, luật theo ngày, chuỗi nhân quả, nền đồ chơi. Test K0.1, K0.3-K0.9, K0.11, K0.12 qua.
+  - GĐ1 engine bản đầu: `src/engine/modules/gd1/` (schema, init, households, firms, banks, gov, indicators, index), tham số ở `src/config/model/gd1.ts`. Chạy ổn định 20 năm ở mức 500 hộ, không nợ lương, lạm phát 4-5%.
+  - Test nhanh `tests/unit/gd1.test.ts`: K1.1-K1.4, K1.30, tất định, lưu/tải, mọi biến thể Phòng thí nghiệm giữ sổ cân.
+- **Đang dở**: hiệu chỉnh thô GĐ1. Thất nghiệp đang quá thấp (khoảng 1%), Gini của cải mới 0,25 sau 19 năm, vốn ngân hàng phình.
+- **Bước tiếp theo**:
+  1. Hiệu chỉnh tiếp, dùng `npx tsx scripts/run-gd1.ts M 1 480` để xem nhanh.
+  2. Viết kiểm định thống kê `tests/validation/gd1.test.ts` (K1.5-K1.31) và chạy `npm run validate:gd1` ở cuối mốc.
+  3. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
+  4. GĐ1 mốc M6: UI, kịch bản, các tính năng S.
+
+## 13/11/2026 - GĐ1 engine chạy được lần đầu
+
+Thay đổi so với thiết kế đã duyệt, tớ tự quyết (Dương xem lại nếu muốn):
+- **Làm engine GĐ1 trước phần UI của GĐ0.** Lý do: Dương ưu tiên engine và kiểm định. Giao thức, Worker, khung UI của GĐ0 làm sau.
+- **Chính phủ nhỏ hơn dự kiến**: công chức 5% lao động (thiết kế ghi tạm 10%), mua hàng 3% GDP (ghi tạm 6%). Lý do: mô hình chỉ có GTGT, TNCN, TNDN, thuế hộ kinh doanh; thiếu thuế xuất nhập khẩu, tiêu thụ đặc biệt, đất, dầu, nên thu ngân sách chỉ khoảng 6-9% GDP. Giữ 10% thì thâm hụt 15% GDP và lạm phát không dừng. Mục tiêu thô "thu ngân sách 14-20% GDP" sẽ không đạt ở GĐ1; ghi vào mục "mô hình bỏ qua gì".
+- **Thêm nghiệp vụ thị trường mở tự động** (`cb.omo.auto`, mặc định bật): ngân hàng thiếu dự trữ thì bán lại trái phiếu cho NHNN, hết trái phiếu mới vay tái cấp vốn. Thiết kế mục 8 ghi "không tự động". Lý do: dân rút tiền mặt làm dự trữ cạn dần, ngân hàng không mua được trái phiếu mới, kho bạc nợ lương công chức, kinh tế sụp. Có nút tắt. K1.21 sẽ đo tổng hỗ trợ thanh khoản của NHNN (tái cấp vốn + trái phiếu mua lại).
+- Bỏ `cb.print.monthly`; in tiền đi qua `cb.monetize` (NHNN mua thẳng trái phiếu) và `gov.transfer.universal`.
+- Hộ kinh doanh: năng suất 0,54, lương 0,6 so với doanh nghiệp, tối đa 5 người. Đặt để giá hai khu vực ngang nhau lúc đầu.
+- Người tự làm (lối thoát T2) bán hết hàng và có vốn thì thuê người, thành hộ kinh doanh thường. Thiết kế chưa nói; không có thì số hộ kinh doanh chỉ giảm.
+- Hộ đi mua: nơi quen hết hàng thì sang ngay nơi quen kế tiếp trong cùng lượt.
+- Doanh nghiệp chỉ đăng tuyển số người mà tiền đang có trả nổi lương. Doanh nghiệp hết người, hết tiền quá 6 tháng thì giải thể.
+- Ngân hàng trả dần phần vốn vượt gấp đôi mục tiêu cho chủ sở hữu.
+- `firm.rBar` (tỷ suất lợi nhuận bình thường) lấy bằng mức ở trạng thái khởi tạo, như cách Caiani hiệu chỉnh theo trạng thái dừng.
+- Khấu hao theo số dư giảm dần. Mua máy giữa doanh nghiệp không tính GTGT.
+- Đổi cấu hình test: reporter `dot`, chỉ in chi tiết khi lỗi.
 
 ## 13/11/2026 - Dương duyệt thiết kế và thêm GĐ1.5
 

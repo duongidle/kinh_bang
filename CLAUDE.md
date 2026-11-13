@@ -53,7 +53,13 @@ tests/{unit,validation,perf}
 8. **Không đánh đổi độ đúng cơ chế lấy hiệu ứng.** Hoạt cảnh trên bản đồ là phát lại giao dịch thật của tháng đó.
 9. **Module mới gắn thêm, không sửa lõi.** Nếu buộc phải sửa `core` hoặc `ledger`, ghi lý do vào progress log.
 10. Tên trong code bằng tiếng Anh. Chữ hiển thị và tài liệu bằng tiếng Việt, câu ngắn, từ thông dụng.
-11. Sau mỗi bước nhỏ: chạy test, `git commit`, cập nhật `docs/progress.md`. Không xoá file hay chạy lệnh ngoài thư mục dự án.
+11. **Sau MỖI bước nhỏ, làm đủ 3 việc** (Dương yêu cầu ngày 13/11/2026):
+    1. Chạy test nhanh của phần vừa sửa: `npm test` (chỉ `tests/unit`). Không chạy kiểm định thống kê ở bước này.
+    2. `git commit` với lời nhắn rõ.
+    3. Cập nhật mục "Đang ở đâu" trong `docs/progress.md`: xong gì, đang dở gì, bước tiếp theo.
+12. **Kiểm định thống kê đầy đủ** (`npm run validate:gdN`, nhiều seed × 480 tháng) chỉ chạy ở cuối mỗi mốc lớn (M1, M2... trong spec giai đoạn).
+13. **Test in kết quả gọn.** Vitest dùng reporter `dot`: chỉ in chi tiết khi có lỗi. Test không tự `console.log` khi qua.
+14. Không xoá file hay chạy lệnh ngoài thư mục dự án.
 
 ## Quyết định đã chốt
 

@@ -12,7 +12,7 @@
     "test": "vitest run tests/unit",
     "test:all": "vitest run",
     "validate:gd0": "vitest run tests/unit tests/perf",
-    "validate:gd1": "vitest run tests/validation --reporter=verbose"
+    "validate:gd1": "vitest run tests/validation"
   },
   "dependencies": {
     "idb-keyval": "^6.3.0",

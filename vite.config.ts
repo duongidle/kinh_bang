@@ -23,5 +23,6 @@ export default defineConfig({
   ],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   worker: { format: 'es' },
-  test: { environment: 'node', testTimeout: 600000, include: ['tests/**/*.test.ts'] },
+  // reporter 'dot': chỉ in chi tiết khi có lỗi (CLAUDE.md quy tắc 13)
+  test: { environment: 'node', testTimeout: 600000, include: ['tests/**/*.test.ts'], reporters: ['dot'], silent: 'passed-only' },
 });
