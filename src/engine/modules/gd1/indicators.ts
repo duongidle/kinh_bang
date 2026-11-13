@@ -38,10 +38,42 @@ export function gini(values: Float64Array | number[]): number {
   return sum > 0 ? (2 * acc) / (n * sum) - (n + 1) / n : 0;
 }
 
-function wealthOf(w: World): Float64Array {
+function liquidOf(w: World): Float64Array {
   const h = H(w);
   const out = new Float64Array(h.n);
   for (let i = 0; i < h.n; i++) out[i] = h.cash[i] + h.dep[i];
+  return out;
+}
+
+/**
+ * Của cải ròng của hộ: tiền mặt, tiền gửi, cộng phần vốn ròng của doanh nghiệp, ngân hàng và hộ kinh doanh mà hộ sở hữu
+ * (gd0 mục 4.1: giá trị cổ phần là vốn ròng của đơn vị chia theo tỷ lệ). Vốn ròng âm tính là 0 vì chủ chỉ mất phần đã góp.
+ */
+export function wealthOf(w: World): Float64Array {
+  const f = F(w);
+  const b = B(w);
+  const out = liquidOf(w);
+  for (let i = 0; i < f.n; i++) {
+    if (!f.alive[i] || f.formal[i]) continue;
+    const o = f.owner[i];
+    if (o >= 0) out[o] += f.cash[i] + f.dep[i] + f.invValue[i];
+  }
+  const S = w.tables.share;
+  const kind = u8(S, 'kind');
+  const ent = i32(S, 'entity');
+  const own = i32(S, 'owner');
+  const frac = f64(S, 'frac');
+  const al = u8(S, 'alive');
+  for (let r = 0; r < S.n; r++) {
+    if (!al[r]) continue;
+    const e = ent[r];
+    let nw = 0;
+    if (kind[r] === 0) {
+      if (!f.alive[e]) continue;
+      nw = f.cash[e] + f.dep[e] + f.invValue[e] + f.capValue[e] - f.debt[e];
+    } else nw = bankEquity(b, e);
+    if (nw > 0) out[own[r]] += nw * frac[r];
+  }
   return out;
 }
 
@@ -459,7 +491,30 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'gov.bondsToCb', label: 'Trái phiếu bán thẳng cho NHNN (tháng)', unit: 'đồng', group: 'Ngân sách', compute: (w) => st(w).m.bondSoldCb },
 
   // ---------- phân phối ----------
-  { id: 'gini.wealth', label: 'Gini của cải', unit: 'chỉ số', group: 'Phân phối', good: -1, compute: (w) => gini(wealthOf(w)) },
+  { id: 'gini.wealth', label: 'Gini của cải ròng (tiền và phần vốn sở hữu)', unit: 'chỉ số', group: 'Phân phối', good: -1, compute: (w) => gini(wealthOf(w)) },
+  { id: 'gini.liquid', label: 'Gini tiền mặt và tiền gửi', unit: 'chỉ số', group: 'Phân phối', good: -1, compute: (w) => gini(liquidOf(w)) },
+  {
+    id: 'wealth.skew',
+    label: 'Độ lệch của phân phối của cải',
+    unit: 'chỉ số',
+    group: 'Phân phối',
+    compute(w) {
+      const a = wealthOf(w);
+      const n = a.length;
+      let mean = 0;
+      for (let i = 0; i < n; i++) mean += a[i];
+      mean /= n;
+      let m2 = 0;
+      let m3 = 0;
+      for (let i = 0; i < n; i++) {
+        m2 += (a[i] - mean) ** 2;
+        m3 += (a[i] - mean) ** 3;
+      }
+      m2 /= n;
+      m3 /= n;
+      return m2 > 0 ? m3 / Math.pow(m2, 1.5) : 0;
+    },
+  },
   { id: 'gini.income', label: 'Gini thu nhập sau thuế', unit: 'chỉ số', group: 'Phân phối', good: -1, compute: (w) => gini(H(w).income.subarray(0, H(w).n)) },
   {
     id: 'gini.incomeGross',
