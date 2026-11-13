@@ -1019,7 +1019,8 @@ function entry(w: World, eng: Engine): void {
       const founders = picks.slice(0, 5);
       let pooled = 0;
       for (const o of founders) pooled += Math.floor(h.dep[o] * share);
-      if (pooled < minCap) continue;
+      // người sáng lập phải tự có ít nhất 40% vốn cần; phần còn lại vay ngân hàng
+      if (pooled < Math.max(minCap, 0.4 * needCap)) continue;
       const scale = Math.min(1, needCap / pooled);
       const bank = h.bank[founders[0]];
       const pNet = s.pSector[sec] / (1 + vatRate(w, eng, sec));

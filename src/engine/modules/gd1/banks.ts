@@ -7,7 +7,7 @@ import { f64, i32, u8 } from '../../core/table';
 import { BANK, CB_REF, GOV_REF, ref, type World } from '../../core/world';
 import { tx } from '../../ledger/kinds';
 import { cbLend, cbRepay, cbTradeBond, createLoan, issueBond, MED_DEP, serviceLoan, transfer } from '../../ledger/ledger';
-import { ownersIndex, restructure } from './firms';
+import { kappaOf, ownersIndex, restructure } from './firms';
 import { B, bankEquity, F, firmRef, foldedStep, H, hhRef, INDUSTRY, R, st, STREAM, vatRate } from './schema';
 
 const K_INT_DEP = tx('interest_dep');
@@ -66,6 +66,8 @@ export function creditMarket(w: World, eng: Engine): void {
   const buffer = eng.param(w, 'firm.liqBuffer');
   const pK = s.pSector[INDUSTRY] / (1 + vatRate(w, eng, INDUSTRY));
   const service = serviceByFirm(w);
+  const uBar = eng.param(w, 'firm.uBar');
+  const aL0 = eng.param(w, 'firm.aL');
 
   // sức cho vay còn lại của từng ngân hàng theo từng ràng buộc
   const capCar = new Float64Array(b.n);
@@ -114,7 +116,11 @@ export function creditMarket(w: World, eng: Engine): void {
     let inv = a.inv;
     let granted = 0;
     const cuts: Record<string, number> = {};
-    const ocf = Math.max(f.ocf[i], 0.1 * f.salesE[i] * f.price[i]);
+    // Dòng tiền để xét khả năng trả nợ. Doanh nghiệp dưới hai năm tuổi chưa có lịch sử:
+    // ngân hàng xét theo phương án kinh doanh, tức dòng tiền khi máy định mua chạy ở công suất bình thường. [TTK]
+    const young = w.meta.tick - f.born[i] < 24;
+    const planned = ((f.K[i] + f.iPlan[i]) / kappaOf(w, eng, f.sector[i])) * uBar * aL0;
+    const ocf = Math.max(f.ocf[i], 0.1 * f.salesE[i] * f.price[i], young ? planned * Math.max(0, f.price[i] - f.wage[i] / aL0) * 0.7 : 0);
 
     for (let t = 0; t < 2 && wc + inv >= 1_000_000; t++) {
       const k = banks[t];

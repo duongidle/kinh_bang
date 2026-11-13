@@ -12,19 +12,20 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
   - GĐ1 engine: `src/engine/modules/gd1/` (schema, init, households, firms, banks, gov, indicators, index), tham số ở `src/config/model/gd1.ts`.
   - Test nhanh `tests/unit/gd1.test.ts` (37 test qua): K1.1-K1.4, K1.30, tất định, lưu/tải, mọi biến thể Phòng thí nghiệm giữ sổ cân.
   - Kế toán đúng ở mọi lần chạy: bốn đẳng thức giữ, GDP chi tiêu = GDP thu nhập, tiền thay đổi khớp sổ cái.
-- **Đang dở: hành vi vĩ mô chưa ổn định, CHƯA đạt K1.5.** Kết quả 3 seed × 40 năm ở 500 hộ (`npx tsx scripts/run-gd1.ts M <seed> 480 5`):
-  - 20 năm đầu chạy được nhưng thất nghiệp cao (5-17%, mục tiêu 2-6%), lạm phát 0-5%.
-  - Seed 1 và 2: sau năm 15-25 có một đợt tín dụng nóng (dư nợ gấp 5-8 lần, lạm phát 6-12%), rồi khu vực chính thức sụp (còn 6-7 doanh nghiệp, thất nghiệp 18-33%, 95-100% đơn vay bị từ chối) và nền kinh tế lùi về 65-85% phi chính thức.
-  - Seed 3: suy giảm từ năm 3-5, sau đó đứng yên ở mức thấp, số doanh nghiệp tăng dần tới 158 nhưng hầu như không vay được.
-  - Gini của cải mới 0,25-0,31 sau 40 năm (K1.13 cần trên 0,4).
+- **Đang dở: hành vi vĩ mô chưa đạt K1.5.** Kết quả mới nhất, 3 seed × 40 năm ở 500 hộ (`npx tsx scripts/run-gd1.ts M <seed> 480 8`):
+  - Không còn sụp: cả 3 seed chạy hết 40 năm, lạm phát 0-5%, nợ công 35-70% GDP.
+  - Thất nghiệp còn cao: 5-20% (K1.5 cho phép 1-15%, mục tiêu thô 2-6%). Cùng lúc có 2-22% GDP nhu cầu mua không được đáp ứng: thiếu máy, không thiếu cầu.
+  - Không có doanh nghiệp mới nào (cột DNmới = 0) từ khi bắt người sáng lập tự có 40% vốn. Số doanh nghiệp giảm dần từ 40 còn 8-9.
+  - Tỷ lệ phi chính thức trôi từ 62% xuống 30-45%.
+  - Gini của cải 0,25-0,31 sau 40 năm (K1.13 cần trên 0,4).
 - **Đã chẩn đoán, chưa sửa**:
-  1. Tín dụng bị từ chối 80-100% suốt ván, chủ yếu vì lý do `cr_repay` (dòng tiền không đủ trả nợ). Quy tắc xét khả năng trả nợ ở `banks.ts` (`ocf / dscr − service`) quá chặt so với cách doanh nghiệp xin vay mỗi tháng. Đây là nút thắt chính: bán hết hàng, còn người thất nghiệp, mà doanh nghiệp không mua được máy.
-  2. Cân bằng giữa doanh nghiệp và hộ kinh doanh không bền: hàng đồng nhất, người mua chọn nơi rẻ nhất, nên bên nào rẻ hơn một chút sẽ lấn dần hết thị trường. Chưa có cơ chế nào giữ hai khu vực cùng tồn tại.
-  3. Quy tắc tự động của Bộ Tài chính (bám mục tiêu bội chi) cùng chiều chu kỳ: lúc nóng thu tăng nên chi tăng theo.
+  1. Gia nhập doanh nghiệp: hộ trong mô hình không đủ giàu để góp 40% vốn một doanh nghiệp hai người (khoảng 140 triệu theo giá gốc). Hạ ngưỡng thì doanh nghiệp mới thiếu vốn, không mua nổi máy, sống lay lắt. Cần chọn: hạ vốn cố định mỗi lao động, cho vay khởi nghiệp rộng hơn, hay cho nhiều người góp vốn hơn.
+  2. Cân bằng giữa doanh nghiệp và hộ kinh doanh không bền: hàng đồng nhất, người mua chọn nơi rẻ nhất, nên bên nào rẻ hơn một chút sẽ lấn dần thị trường. Chưa có cơ chế nào giữ hai khu vực cùng tồn tại. **Chạm thiết kế mục 6, cần Dương quyết.**
+  3. Quy tắc tự động của Bộ Tài chính (bám mục tiêu bội chi) cùng chiều chu kỳ.
   4. Lãi suất của NHNN ít tác dụng lên đầu tư (hàm đầu tư chưa có chi phí vay).
-  5. Máy của doanh nghiệp phá sản dồn về vài doanh nghiệp lớn, ngành công nghiệp có lúc chỉ còn một nhà sản xuất máy.
+  5. Tín dụng vẫn bị từ chối 35-80% số tiền xin vay, chủ yếu vì `cr_repay`.
 - **Bước tiếp theo** (theo thứ tự):
-  1. Sửa quy tắc xét tín dụng (mục 1 ở trên), chạy lại 3 seed. Công cụ soi: `scripts/debug3.ts` (lý do từ chối tín dụng, lý do thất nghiệp, từng doanh nghiệp), `DBG=1 npx tsx scripts/debug-gd1.ts <tháng> | grep BUST` (vì sao phá sản), `scripts/debug2.ts` (dòng tiền theo khu vực, bảng cân đối ngân hàng).
+  1. Sửa gia nhập doanh nghiệp (mục 1 ở trên), chạy lại 3 seed. Công cụ soi: `scripts/debug3.ts` (lý do từ chối tín dụng, lý do thất nghiệp, từng doanh nghiệp), `DBG=1 npx tsx scripts/debug-gd1.ts <tháng> | grep BUST` (vì sao phá sản), `scripts/debug2.ts` (dòng tiền theo khu vực, bảng cân đối ngân hàng).
   2. Quyết cách giữ hai khu vực cùng tồn tại (mục 2). Việc này chạm thiết kế mục 6, có thể phải hỏi Dương.
   3. Khi K1.5 đạt ở 3 seed: viết `tests/validation/gd1.test.ts` (K1.5-K1.31), chạy `npm run validate:gd1`, ghi `docs/validation/gd1.md`.
   4. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
@@ -48,6 +49,7 @@ Các thay đổi cơ chế đã thêm trong lúc hiệu chỉnh. Tất cả là 
 - **Giãn nợ**: doanh nghiệp còn vốn ròng dương mà chậm trả, hoặc trả xong thì hết quỹ lương, được ngân hàng giãn kỳ hạn thay vì phá sản. Chỉ phá sản khi âm vốn hoặc hết người hết tiền.
 - **Thanh lý**: máy của doanh nghiệp phá sản bán chiết khấu cho tối đa ba doanh nghiệp, nơi đang cần máy mua trước.
 - Kỳ hạn vay đầu tư 84 tháng. Tỷ lệ vốn mục tiêu của ngân hàng 18%.
+- Doanh nghiệp dưới hai năm tuổi được ngân hàng xét theo phương án kinh doanh (dòng tiền khi máy chạy ở công suất bình thường). Người sáng lập phải tự có 40% vốn cần.
 
 ## 13/11/2026 - GĐ1 engine chạy được lần đầu
 
