@@ -16,7 +16,10 @@ export const SECTOR_KEY = ['agri', 'industry', 'services'] as const;
 export const UNEMPLOYED = -1;
 export const PUBLIC = -2;
 
-export const NSELL = 5; // số người bán quen mỗi ngành (cố định theo lược đồ)
+export const NSEG = 3; // số người bán quen mỗi phân khúc (phi chính thức, chính thức) của mỗi ngành
+export const NSELL = 2 * NSEG; // ô 0..NSEG-1: hộ kinh doanh; NSEG..2*NSEG-1: doanh nghiệp
+export const SEG_INF = 0;
+export const SEG_FORMAL = 1;
 
 const HH_COLS: ColSpec[] = [
   { name: 'employer', type: 'i32', def: UNEMPLOYED }, // id doanh nghiệp, -1 thất nghiệp, -2 Nhà nước
@@ -254,6 +257,10 @@ export interface Gd1State {
   balHist: number[]; // cân đối ngân sách 12 tháng gần nhất
   gdpHist: number[];
   cpiTaxBase: number; // CPI ở lần chỉnh ngưỡng thuế gần nhất
+  omega: number[]; // trọng số sở thích hàng phi chính thức theo ngành, hiệu chỉnh theo cơ cấu ban đầu
+  pSeg: number[][]; // giá bình quân gồm thuế theo [phân khúc][ngành]
+  pK: number; // giá máy chưa thuế bình quân
+  budgetAvg: number; // ngân sách tiêu dùng bình quân tháng trước
   pHist: number[][]; // giá theo ngành, 5 tháng gần nhất
   p0: number[]; // giá gốc theo ngành, để tính GDP thực
   basketAcc: number[];
@@ -305,6 +312,11 @@ export interface Gd1State {
     taxPit: number;
     taxCit: number;
     taxHkd: number;
+    taxExcise: number;
+    taxFees: number;
+    omo: number; // trái phiếu NHNN mua lại từ ngân hàng trong tháng
+    consInf: number; // tiêu dùng của hộ ở hộ kinh doanh
+    spill: number; // phần cầu chuyển sang phân khúc kia vì hết hàng
     govSpend: number;
     govRevenue: number;
     bondSoldBanks: number;
@@ -354,6 +366,11 @@ export function resetMonth(s: Gd1State): void {
     taxPit: 0,
     taxCit: 0,
     taxHkd: 0,
+    taxExcise: 0,
+    taxFees: 0,
+    omo: 0,
+    consInf: 0,
+    spill: 0,
     govSpend: 0,
     govRevenue: 0,
     bondSoldBanks: 0,
@@ -426,6 +443,7 @@ export const STREAM = {
   bankSwitch: streamId('gd1.bank.switch'),
   fallback: streamId('gd1.fallback'),
   hkdHire: streamId('gd1.hkd'),
+  announce: streamId('gd1.announce'),
 };
 
 export function minWageOf(w: World, eng: Engine, zone: number): number {
@@ -452,4 +470,14 @@ export function pitOnWage(w: World, eng: Engine, gross: number, dependents: numb
 
 export function vatRate(w: World, eng: Engine, sector: number): number {
   return sector === AGRI ? eng.law(w, 'vat.rate.agri') : eng.law(w, 'vat.rate.standard');
+}
+
+/** Thuế gián thu khác nằm trong giá hàng công nghiệp và dịch vụ; người bán nào cũng chịu (sai-khac.md S3). */
+export function exciseRate(w: World, eng: Engine, sector: number): number {
+  return sector === AGRI ? 0 : eng.law(w, 'tax.indirect.other');
+}
+
+/** Tổng thuế tính trên giá chưa thuế của một người bán: GTGT (chỉ doanh nghiệp) + thuế gián thu khác. */
+export function taxWedge(w: World, eng: Engine, sector: number, formal: boolean): number {
+  return (formal ? vatRate(w, eng, sector) : 0) + exciseRate(w, eng, sector);
 }

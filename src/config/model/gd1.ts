@@ -64,18 +64,22 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'hh.foodMin', value: 15, label: 'Lương thực tối thiểu mỗi tháng (đơn vị hàng)', source: 'TTK; quy luật Engel', note: 'Khoảng một phần tư lương bình quân ở mức giá gốc.' },
   { id: 'hh.share.agri', value: 0.15, label: 'Phần ngân sách còn lại cho lương thực', source: 'TTK' },
   { id: 'hh.share.industry', value: 0.4, label: 'Phần ngân sách còn lại cho hàng công nghiệp', source: 'TTK' },
-  { id: 'hh.sellers', value: 5, label: 'Số người bán quen mỗi ngành', source: `${C}: χ = 5` },
+  { id: 'hh.sellers', value: 3, label: 'Số người bán quen mỗi phân khúc của mỗi ngành', source: `${C}: χ = 5 cho một loại hàng`, note: 'Mỗi ngành giờ có hai loại hàng (của hộ kinh doanh và của doanh nghiệp), mỗi loại 3 người bán quen. Cố định theo lược đồ.' },
+  // phân khúc chính thức / phi chính thức (sai-khac.md S1)
+  { id: 'seg.sigma', value: 2, label: 'Độ thay thế giữa hàng của hộ kinh doanh và hàng của doanh nghiệp', source: 'TTK. Cơ sở: La Porta và Shleifer 2014 (hai khu vực phục vụ nhu cầu khác nhau, không cạnh tranh trực diện); Böhme và Thiele 2012 (hàng phi chính thức hiếm khi bán qua kênh chính thức)', note: 'Bằng 1 thì tỷ lệ chi tiêu không đổi theo giá; rất lớn thì quay về hàng đồng nhất như bản cũ. Giá trị 2 là giá trị tạm, chưa có ước lượng cho Việt Nam.' },
+  { id: 'seg.incomeEta', value: 0.3, label: 'Hộ khá giả hơn thì mua ở hộ kinh doanh ít hơn (độ co giãn)', source: 'TTK. Cơ sở: Böhme và Thiele 2012, World Development 40(7): thu nhập cao hơn thì ít mua hàng phi chính thức hơn', note: 'Bằng 0 thì tắt. Giá trị tạm.' },
+  { id: 'seg.spill', value: 1, label: 'Phần cầu chuyển sang phân khúc kia khi mọi nơi quen đều hết hàng', source: 'TTK', note: 'Bằng 0 thì hai phân khúc tách hẳn.' },
   { id: 'hh.searchProb', value: 0.25, label: 'Xác suất xem thử người bán mới mỗi tháng', source: 'Lengnick 2011 Bảng 1: 0,25' },
   { id: 'hh.epsGoods', value: 3.46574, label: 'Cường độ đổi người bán theo chênh lệch giá', source: `${C}: ε = 3,46574` },
   { id: 'hh.applications', value: 5, label: 'Số nơi người thất nghiệp hỏi mỗi tháng', source: 'Lengnick 2011 mục 2.3: 5' },
   { id: 'hh.onJobSearch', value: 0.1, label: 'Xác suất người có việc hỏi thử nơi khác', source: 'Lengnick 2011: 0,1' },
-  { id: 'hh.resWageDecay', value: 0.05, label: 'Lương đòi hỏi giảm mỗi tháng thất nghiệp', source: 'Lengnick 2011: 10%/tháng', note: 'Hạ xuống 3% vì 10% làm lương sụp quá nhanh ở bước tháng. Hiệu chỉnh thô.' },
+  { id: 'hh.resWageDecay', value: 0.1, label: 'Lương đòi hỏi giảm mỗi tháng thất nghiệp', source: 'Lengnick 2011: 10%/tháng' },
   { id: 'hh.cashBuffer', value: 1.0, label: 'Tiền mặt giữ so với chi tiêu tiền mặt một tháng', source: 'TTK' },
   { id: 'hh.bankSwitch', value: 0.02, label: 'Xác suất mỗi năm xét đổi ngân hàng', source: `${C} 3.14, giản lược` },
   { id: 'hh.dependentsMean', value: 1.0, label: 'Số người phụ thuộc bình quân mỗi hộ', source: 'TTK, giá trị tạm' },
   // lối thoát phi chính thức (T2)
-  { id: 'hh.fallbackMonths', value: 4, label: 'Số tháng thất nghiệp trước khi tự mở hộ kinh doanh', source: 'TTK' },
-  { id: 'hh.fallbackWealth', value: 3, label: 'Ngưỡng của cải (tháng chi tiêu tối thiểu) để phải tự làm', source: 'TTK' },
+  { id: 'hh.fallbackMonths', value: 3, label: 'Số tháng thất nghiệp trước khi tự mở hộ kinh doanh', source: 'TTK' },
+  { id: 'hh.fallbackWealth', value: 12, label: 'Ngưỡng của cải (tháng chi tiêu tối thiểu) để phải tự làm', source: 'TTK' },
 
   // ---------- doanh nghiệp ----------
   { id: 'firm.aL', value: 100, label: 'Năng suất lao động (đơn vị hàng/người/tháng)', source: 'Chuẩn hoá: giá gốc khoảng 100 nghìn đồng một đơn vị' },
@@ -85,14 +89,17 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'firm.depreciation', value: 1 / 120, label: 'Khấu hao máy mỗi tháng', source: `${C}: máy dùng 20 quý, khấu hao tuyến tính theo lô`, note: 'Mô hình dùng khấu hao đều 10 năm theo số dư, không theo lô. Đơn giản hoá.' },
   { id: 'firm.lambda', value: 0.25, label: 'Tốc độ cập nhật doanh số kỳ vọng', source: `${C}: λ = 0,25` },
   { id: 'firm.nu', value: 0.3, label: 'Tồn kho đệm so với doanh số tháng', source: `${C}: ν = 0,1 doanh số quý, tức 0,3 doanh số tháng` },
+  { id: 'firm.nuServices', value: 0.1, label: 'Công suất làm dư của ngành dịch vụ so với doanh số kỳ vọng', source: 'TTK', note: 'Dịch vụ không tồn kho được, phần làm dư mất đi (gd1 mục 5.2). Dùng 0,3 như hàng hoá thì ngành dịch vụ bỏ phí gần một phần tư sức làm. Giá trị tạm.' },
   { id: 'firm.markup0', value: 0.25, label: 'Biên lãi ban đầu trên chi phí đơn vị', source: `${C}: 0,319 trên chi phí lao động; 0,1 trên tổng chi phí` },
   { id: 'firm.adjSigma', value: 0.0056, label: 'Độ lệch chuẩn bước điều chỉnh giá, lương, lãi suất (tháng)', source: `${C}: phân phối chuẩn gấp, phương sai 0,0094 mỗi quý`, note: 'Độ lệch chuẩn quý là 0,097; kỳ vọng mỗi bước 0,0075 theo phụ lục A. Tháng: chia 3 phương sai rồi co lại để kỳ vọng bước khoảng 0,0045.' },
   { id: 'firm.fireMax', value: 0.25, label: 'Tỷ lệ lao động tối đa bị sa thải mỗi tháng', source: 'TTK; ma sát sa thải' },
   { id: 'firm.wageSlackU', value: 0.05, label: 'Thất nghiệp trên mức này thì lương mềm mới giảm', source: `${C}: υ = 0,08`, note: 'Hạ xuống 5%.' },
   { id: 'firm.wageShortageStep', value: 1, label: 'Bước tăng lương khi không tuyển đủ người (số lần bước chuẩn)', source: `${C} 3.5` },
-  { id: 'firm.wageIndex', value: 0.6, label: 'Phần lạm phát kỳ vọng đưa vào đợt xét lương năm', source: 'TTK' },
+  { id: 'firm.wageIndex', value: 1, label: 'Phần lạm phát kỳ vọng đưa vào đợt xét lương năm', source: 'TTK', note: 'Dưới 1 thì lương thực ở doanh nghiệp mòn dần mỗi năm cho tới khi ngang lương hộ kinh doanh, và khoảng cách lương hai khu vực biến mất.' },
   { id: 'firm.gamma1', value: 0.01 / 3, label: 'Trọng số lợi nhuận trong hàm đầu tư (tháng)', source: `${C}: γ1 = 0,01 mỗi quý` },
-  { id: 'firm.gamma2', value: 0.05, label: 'Trọng số sử dụng công suất trong hàm đầu tư (tháng)', source: `${C}: γ2 = 0,02 mỗi quý`, note: 'Nâng mạnh so với gốc (0,0067 mỗi tháng). Doanh nghiệp trong mô hình chỉ 3-4 người, với hệ số gốc phải mất nhiều năm mới mua đủ máy cho thêm một người. Hiệu chỉnh thô.' },
+  { id: 'firm.gamma2', value: 0.02, label: 'Trọng số sử dụng công suất trong hàm đầu tư (tháng)', source: `${C}: γ2 = 0,02 mỗi quý`, note: 'Quy đổi thẳng sang tháng là 0,0067. Dùng 0,02: doanh nghiệp trong mô hình chỉ vài người, với hệ số gốc phải mất nhiều năm mới mua đủ máy cho thêm một người. Hiệu chỉnh thô.' },
+  { id: 'firm.gMax', value: 0.02, label: 'Tốc độ tăng máy tối đa mỗi tháng', source: 'TTK; chặn trên của hàm đầu tư' },
+  { id: 'firm.invAdjust', value: 1 / 3, label: 'Phần thiếu hụt tồn kho đệm được bù mỗi tháng', source: `${C} 3.2: bù đủ trong một quý; ở bước tháng là một phần ba mỗi tháng`, note: 'Bằng 1 thì bù hết trong một tháng, sản lượng mong muốn giật mạnh gấp ba so với mô hình gốc theo quý.' },
   { id: 'firm.uBar', value: 0.8, label: 'Mức sử dụng công suất bình thường', source: `${C}: 0,8` },
   { id: 'firm.rBar', value: 0.04345 / 3, label: 'Tỷ suất lợi nhuận bình thường (tháng)', source: `${C}: 0,04345 mỗi quý` },
   { id: 'firm.liqBuffer', value: 1, label: 'Đệm tiền so với quỹ lương một tháng', source: `${C}: σ = 1` },
@@ -100,6 +107,8 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'firm.haircut', value: 0.5, label: 'Chiết khấu khi thanh lý tài sản', source: `${C}: ι = 0,5` },
   { id: 'firm.distressMonths', value: 2, label: 'Số tháng không trả đủ trước khi phá sản', source: 'TTK' },
   { id: 'firm.entryRate', value: 0.6, label: 'Số doanh nghiệp mới mỗi tháng trên 1000 hộ, khi ngành lãi bình thường và máy chạy đủ', source: 'TTK', note: 'Ở 500 hộ là khoảng 3-4 doanh nghiệp mỗi năm.' },
+  { id: 'firm.founders', value: 15, label: 'Số hộ cùng góp vốn lập một doanh nghiệp mới (người sáng lập và người góp vốn)', source: 'TTK; lúc khởi tạo mỗi doanh nghiệp cũng có khoảng 12 chủ. Caiani: mọi hộ góp vốn theo của cải', note: 'Thiết kế mục 5.7 ghi một hộ sáng lập. Một hộ trong mô hình không đủ tiền mua máy cho hai người làm.' },
+  { id: 'firm.founderEquityMin', value: 0.3, label: 'Phần vốn cần mà nhóm sáng lập phải tự có', source: 'TTK; ngân hàng không cho vay toàn bộ vốn lập doanh nghiệp' },
   { id: 'firm.founderShare', value: 0.3, label: 'Phần tiền gửi người sáng lập bỏ vào doanh nghiệp mới', source: 'TTK' },
   { id: 'firm.turnover', value: 0.017, label: 'Tỷ lệ người làm thuê rời chỗ làm mỗi tháng', source: `${C}: θ = 0,05 mỗi quý, chia 3` },
   { id: 'firm.entryCapital', value: 60e6, label: 'Vốn góp tối thiểu để lập doanh nghiệp (theo giá gốc)', source: 'TTK' },
@@ -112,7 +121,7 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'hkd.maxWorkers', value: 5, label: 'Số lao động tối đa kể cả chủ', source: 'TTK' },
   { id: 'hkd.declare', value: 0.5, label: 'Tỷ lệ doanh thu khai báo', source: 'TTK, chưa có số liệu' },
   { id: 'hkd.entryRate', value: 4, label: 'Số hộ kinh doanh mới mỗi tháng trên 1000 hộ, khi chủ hộ kinh doanh kiếm gấp ba người làm thuê', source: 'TTK' },
-  { id: 'hkd.soloProductivity', value: 0.45, label: 'Năng suất của người tự làm do hết đường', source: 'TTK' },
+  { id: 'hkd.soloProductivity', value: 0.3, label: 'Năng suất của người tự làm một mình so với doanh nghiệp', source: 'TTK', note: 'Thấp hơn hộ kinh doanh có thuê người, để đi làm thuê vẫn hơn tự làm. Nhờ vậy người tự làm là lực lượng dự trữ của thị trường lao động (Lewis 1954).' },
 
   // ---------- ngân hàng ----------
   { id: 'bank.margin0', value: 0.035, label: 'Biên lãi suất cho vay ban đầu (năm)', source: `${C}: lãi vay 0,75%/quý so với lãi tái cấp vốn 0,5%/quý`, note: 'Đặt theo chênh lệch thực tế ở Việt Nam, khoảng 3-4 điểm. Giá trị tạm.' },
@@ -134,17 +143,30 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'exp.trustLoss', value: 0.04, label: 'Niềm tin mất mỗi tháng cho mỗi 2 điểm lệch mục tiêu', source: 'TTK' },
   { id: 'exp.trustBand', value: 0.02, label: 'Biên quanh mục tiêu coi là "gần"', source: 'TTK' },
   { id: 'exp.flight', value: 1.0, label: 'Tiêu dùng tăng thêm khi lạm phát kỳ vọng vượt lãi tiền gửi', source: 'TTK; dạng cầu tiền Cagan 1956' },
+  { id: 'exp.saveResponse', value: 1.0, label: 'Tiêu dùng giảm khi lãi tiền gửi vượt lạm phát kỳ vọng', source: 'TTK; thay thế liên thời gian trong giáo trình (lãi suất thực cao thì hoãn tiêu dùng)', note: 'Thiết kế mục 10 chỉ nêu chiều mua sớm. Bằng 0 thì quay về đúng thiết kế, và lãi suất của NHNN gần như không chạm tới tiêu dùng.' },
   { id: 'exp.confKappa', value: 1.0, label: 'Tiêu dùng giảm theo thất nghiệp quanh hộ', source: 'TTK; tiết kiệm phòng thân' },
   { id: 'exp.confNormal', value: 0.05, label: 'Mức thất nghiệp coi là bình thường', source: 'TTK' },
 
   // ---------- quy tắc tự động của Nhà nước ----------
-  { id: 'gov.autopilot', value: 1, label: 'Bộ Tài chính tự chỉnh mức mua hàng mỗi năm theo mục tiêu bội chi (1 bật)', source: 'TTK; phỏng theo dự toán ngân sách hằng năm', note: 'Tắt khi người chơi giữ vai Chính phủ hoặc khi làm thí nghiệm tài khoá.' },
+  { id: 'gov.autopilot', value: 0, label: 'Bộ Tài chính tự chỉnh mức mua hàng mỗi năm theo mục tiêu bội chi (1 bật)', source: 'TTK; phỏng theo dự toán ngân sách hằng năm', note: 'Tắt khi người chơi giữ vai Chính phủ hoặc khi làm thí nghiệm tài khoá.' },
   { id: 'gov.indexation', value: 1, label: 'Tự chỉnh ngưỡng thuế và lương tối thiểu theo lạm phát (1 bật)', source: 'Luật Thuế TNCN: CPI biến động trên 20% thì xét chỉnh mức giảm trừ (theo trí nhớ, điều khoản cần tra); lương tối thiểu vùng thực tế chỉnh gần như hằng năm', note: 'Áp chung cho mọi ngưỡng tính bằng đồng: đơn giản hoá. Tắt để xem hiện tượng trượt bậc thuế.' },
 
   // ---------- NHNN ----------
   { id: 'cb.autopilot', value: 1, label: 'NHNN tự chỉnh lãi suất theo lạm phát (1 bật, 0 giữ nguyên)', source: 'TTK; dạng quy tắc Taylor 1993 giản lược' },
 
+  // ---------- công tắc của các cơ chế thêm ngoài thiết kế (sai-khac.md) ----------
+  { id: 'firm.normalCostPricing', value: 1, label: 'Chi phí máy tính trên sản lượng ở công suất bình thường (1) hay sản lượng kỳ vọng (0)', source: 'TTK; định giá theo chi phí chuẩn (Lavoie 2014, mục định giá theo chi phí bình thường; trí nhớ)' },
+  { id: 'entry.customersPerUnit', value: 0.12, label: 'Số hộ biết tới một nơi bán mới mở, trên mỗi đơn vị hàng nó định bán mỗi tháng (0 tắt)', source: 'TTK', note: 'Một hộ mua khoảng 8 đơn vị mỗi loại hàng mỗi tháng, nên 0,12 là vừa đủ khách cho sản lượng dự định.' },
+  { id: 'hkd.wageFlex', value: 1, label: 'Lương ở hộ kinh doanh giảm được khi thừa người và ế hàng (1 bật)', source: 'TTK; lao động phi chính thức không có hợp đồng' },
+  { id: 'bank.restructure', value: 1, label: 'Ngân hàng giãn nợ cho doanh nghiệp còn vốn ròng dương (1 bật)', source: 'TTK; thông lệ cơ cấu lại thời hạn trả nợ (ví dụ Thông tư 02/2023/TT-NHNN, theo trí nhớ)' },
+  { id: 'bank.youngFirmMonths', value: 24, label: 'Doanh nghiệp trẻ hơn mức này được xét vay theo phương án kinh doanh (tháng; 0 tắt)', source: 'TTK' },
+  { id: 'hkd.soloUpgrade', value: 0.25, label: 'Xác suất mỗi tháng người tự làm bán hết hàng thuê thêm người (0 tắt)', source: 'TTK' },
+  { id: 'bank.idlePayout', value: 0.25, label: 'Phần vốn vượt gấp đôi mục tiêu ngân hàng trả lại chủ mỗi quý (0 tắt)', source: 'TTK' },
+
   // ---------- khởi tạo ----------
+  { id: 'init.soloShare', value: 0.35, label: 'Phần lao động phi chính thức là người tự làm một mình lúc đầu', source: 'Giá trị tạm; lao động tự làm chiếm khoảng một nửa lao động phi chính thức ở Việt Nam (Cục Thống kê, theo trí nhớ)', note: 'Thiết kế mục 2 chỉ ghi 90 hộ kinh doanh có thuê người. Thêm nhóm tự làm để thị trường lao động có lực lượng dự trữ ngay từ đầu.' },
+  { id: 'init.soloUtil', value: 0.8, label: 'Người tự làm lúc đầu bán được bao nhiêu phần sức làm', source: 'TTK' },
+  { id: 'init.soeShare', value: 0.2, label: 'Phần doanh nghiệp chính thức do Nhà nước sở hữu lúc đầu', source: 'Giá trị tạm; khu vực doanh nghiệp nhà nước đóng góp khoảng 28% GDP (theo trí nhớ)', note: 'Ở GĐ1 doanh nghiệp nhà nước hành xử như doanh nghiệp khác; chỉ khác là cổ tức về ngân sách. Hành vi riêng thuộc GĐ4.' },
   { id: 'init.formalShare', value: 0.26, label: 'Phần lao động ở doanh nghiệp chính thức lúc đầu', source: 'Cục Thống kê qua research mục 4.1: phi chính thức 63-64%' },
   { id: 'init.unemployment', value: 0.04, label: 'Thất nghiệp lúc đầu', source: 'TTK' },
   { id: 'init.wealthMonths', value: 6, label: 'Của cải ban đầu của hộ (tháng thu nhập)', source: 'Suy từ α1, α2 ở trạng thái dừng' },

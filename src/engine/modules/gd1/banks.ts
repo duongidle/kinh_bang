@@ -8,7 +8,7 @@ import { BANK, CB_REF, GOV_REF, ref, type World } from '../../core/world';
 import { tx } from '../../ledger/kinds';
 import { cbLend, cbRepay, cbTradeBond, createLoan, issueBond, MED_DEP, serviceLoan, transfer } from '../../ledger/ledger';
 import { kappaOf, ownersIndex, restructure } from './firms';
-import { B, bankEquity, F, firmRef, foldedStep, H, hhRef, INDUSTRY, R, st, STREAM, vatRate } from './schema';
+import { B, bankEquity, F, firmRef, foldedStep, H, hhRef, R, st, STREAM } from './schema';
 
 const K_INT_DEP = tx('interest_dep');
 const K_INT_ADV = tx('interest_adv');
@@ -64,7 +64,8 @@ export function creditMarket(w: World, eng: Engine): void {
   const mWc = eng.param(w, 'bank.loanMonthsWc');
   const mInv = eng.param(w, 'bank.loanMonthsInv');
   const buffer = eng.param(w, 'firm.liqBuffer');
-  const pK = s.pSector[INDUSTRY] / (1 + vatRate(w, eng, INDUSTRY));
+  const pK = s.pK;
+  const youngMonths = eng.param(w, 'bank.youngFirmMonths');
   const service = serviceByFirm(w);
   const uBar = eng.param(w, 'firm.uBar');
   const aL0 = eng.param(w, 'firm.aL');
@@ -118,7 +119,7 @@ export function creditMarket(w: World, eng: Engine): void {
     const cuts: Record<string, number> = {};
     // Dòng tiền để xét khả năng trả nợ. Doanh nghiệp dưới hai năm tuổi chưa có lịch sử:
     // ngân hàng xét theo phương án kinh doanh, tức dòng tiền khi máy định mua chạy ở công suất bình thường. [TTK]
-    const young = w.meta.tick - f.born[i] < 24;
+    const young = w.meta.tick - f.born[i] < youngMonths;
     const planned = ((f.K[i] + f.iPlan[i]) / kappaOf(w, eng, f.sector[i])) * uBar * aL0;
     const ocf = Math.max(f.ocf[i], 0.1 * f.salesE[i] * f.price[i], young ? planned * Math.max(0, f.price[i] - f.wage[i] / aL0) * 0.7 : 0);
 
@@ -195,7 +196,8 @@ export function debtService(w: World, eng: Engine): void {
   // xin ngân hàng giãn nợ trước khi phải cắt người. Mỗi doanh nghiệp tối đa một lần mỗi năm. [TTK]
   const months = eng.param(w, 'bank.loanMonthsInv');
   const s = st(w);
-  for (let i = 0; i < f.n; i++) {
+  const restructureOn = eng.param(w, 'bank.restructure') >= 0.5;
+  for (let i = 0; i < f.n && restructureOn; i++) {
     if (!f.alive[i] || !f.formal[i] || f.debt[i] <= 0 || w.meta.tick - f.lastRestr[i] < 12) continue;
     if (f.dep[i] - f.service[i] >= f.workers[i] * f.wage[i]) continue;
     if (f.dep[i] + f.invValue[i] + f.capValue[i] - f.debt[i] <= 0) continue;
@@ -274,7 +276,7 @@ export function bankHousekeeping(w: World, eng: Engine): void {
       const spare = eq - carTarget * b.loans[k];
       // vốn vượt gấp đôi mục tiêu thì trả dần lại cho chủ sở hữu, để vốn không nằm chết trong ngân hàng [TTK]
       const idle = Math.max(0, eq - 2 * carTarget * b.loans[k]);
-      const div = Math.floor(Math.min(rho * Math.max(0, b.profitQ[k]) + 0.25 * idle, Math.max(0, spare)));
+      const div = Math.floor(Math.min(rho * Math.max(0, b.profitQ[k]) + eng.param(w, 'bank.idlePayout') * idle, Math.max(0, spare)));
       b.profitQ[k] = 0;
       if (div > 0) {
         if (b.stateOwned[k]) transfer(w, me, GOV_REF, div, MED_DEP, K_DIV);
@@ -331,7 +333,10 @@ export function bankHousekeeping(w: World, eng: Engine): void {
       while (need > 0 && list.length) {
         const r = list.pop()!;
         const face = bondFace[r];
-        if (cbTradeBond(w, r, true)) need -= face;
+        if (cbTradeBond(w, r, true)) {
+          need -= face;
+          s.m.omo += face;
+        }
       }
     }
     if (b.cbAdv[k] > 0 && b.reserves[k] > req) cbRepay(w, k, b.reserves[k] - req);

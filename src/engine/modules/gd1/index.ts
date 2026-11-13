@@ -21,7 +21,7 @@ const REASONS: ReasonDef[] = [
   { id: 'p_markup_up', label: 'người bán nâng biên lãi vì hàng bán chạy, tồn kho thấp', upstream: [ind('consumption', 1), ind('unmet', 1)] },
   { id: 'p_markup_down', label: 'người bán hạ biên lãi vì hàng ế', upstream: [ind('consumption', 1), ind('inventories', 1)] },
   { id: 'p_expect', label: 'người bán tính trước lạm phát kỳ vọng vào giá', upstream: [ind('inflation.expected', 1)] },
-  { id: 'p_vat', label: 'thuế suất GTGT đổi', upstream: [law('vat.rate.standard'), law('vat.rate.agri')] },
+  { id: 'p_vat', label: 'thuế trong giá bán đổi (GTGT, thuế gián thu khác)', upstream: [law('vat.rate.standard'), law('vat.rate.agri'), law('tax.indirect.other')] },
   { id: 'p_mix', label: 'người mua đổi nơi mua, người bán cũ và mới thay nhau', upstream: [] },
   // lương
   { id: 'w_shortage', label: 'không tuyển đủ người nên nâng lương', upstream: [ind('vacancies', 1), ind('unemployment', 1)] },
@@ -77,13 +77,20 @@ const REASONS: ReasonDef[] = [
   { id: 't_pit', label: 'thuế TNCN', upstream: [law('pit.deduction.self'), ind('wage.formal')] },
   { id: 't_cit', label: 'thuế TNDN', upstream: [law('cit.rate.standard')] },
   { id: 't_hkd', label: 'thuế hộ kinh doanh', upstream: [law('hkd.threshold')] },
+  { id: 't_excise', label: 'thuế gián thu khác', upstream: [law('tax.indirect.other'), ind('consumption')] },
+  { id: 't_fees', label: 'thu từ đất, phí, lệ phí', upstream: [law('gov.fees.rate'), ind('gdp.nominal')] },
   { id: 't_other', label: 'cổ tức doanh nghiệp, ngân hàng nhà nước và lợi nhuận NHNN', upstream: [] },
+  // dự trữ ngân hàng
+  { id: 'r_cash', label: 'dân rút hoặc nộp tiền mặt', upstream: [ind('money.cash'), ind('informal.consShare')] },
+  { id: 'r_omo', label: 'NHNN mua lại trái phiếu của ngân hàng (thị trường mở)', upstream: [law('cb.omo.auto'), ind('money.cash')] },
+  { id: 'r_refi', label: 'ngân hàng vay hoặc trả tái cấp vốn', upstream: [law('cb.omo.auto'), law('cb.reserve.ratio')] },
   { id: 'root_tech', label: 'năng suất', upstream: [root('Năng suất lao động không đổi ở GĐ1')] },
 ];
 
 const C = 'Caiani và cộng sự 2016';
 const RULES: RuleDef[] = [
   { id: 'firm.wage', label: 'Lương chào của doanh nghiệp', source: `${C} 3.5; tự thiết kế phần lương cứng chiều xuống`, teaches: 'Vì sao suy thoái sinh thất nghiệp', variants: [{ id: 'base', label: 'Lương cứng chiều xuống' }, { id: 'flex', label: 'Lương giảm được khi thất nghiệp cao' }] },
+  { id: 'hh.segments', label: 'Hàng của hộ kinh doanh và hàng của doanh nghiệp', source: 'Tự thiết kế; cơ sở: La Porta và Shleifer 2014, Böhme và Thiele 2012 (docs/design/sai-khac.md S1)', teaches: 'Vì sao khu vực phi chính thức tồn tại dai dẳng', variants: [{ id: 'base', label: 'Hai loại hàng không thay thế hoàn toàn' }, { id: 'homogeneous', label: 'Một loại hàng, ai rẻ hơn thì thắng' }] },
   { id: 'firm.price', label: 'Giá bán = chi phí đơn vị × (1 + biên lãi)', source: `${C} 3.6-3.7. Thứ tự phân rã: lương, vốn, biên lãi, kỳ vọng, thuế`, variants: [{ id: 'base', label: 'Gốc' }] },
   { id: 'firm.dividend', label: 'Chia cổ tức', source: `${C}`, teaches: 'Sở hữu đóng góp bao nhiêu vào bất bình đẳng', variants: [{ id: 'base', label: 'Theo cổ phần' }, { id: 'equal', label: 'Chia đều cho mọi hộ' }] },
   { id: 'firm.bankruptcy', label: 'Phá sản', source: `${C} 3.3`, teaches: 'Ràng buộc ngân sách mềm', variants: [{ id: 'base', label: 'Có phá sản' }, { id: 'bailout', label: 'Nhà nước cứu mọi doanh nghiệp' }] },

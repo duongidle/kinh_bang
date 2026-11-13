@@ -12,7 +12,8 @@ import { addRow, f64 } from '../../core/table';
 import { BANK, CB_REF, GOV_REF, ref, type World } from '../../core/world';
 import { tx } from '../../ledger/kinds';
 import { createLoan, issueBond, MED_DEP, seedCash, seedDeposit, seedReserves, transfer } from '../../ledger/ledger';
-import { AGRI, B, bankEquity, F, firmRef, H, hhRef, INDUSTRY, PUBLIC, resetMonth, SERVICES, shuffled, STREAM, UNEMPLOYED, vatRate, type Gd1State } from './schema';
+import { GOV_MIX } from './gov';
+import { AGRI, B, bankEquity, F, firmRef, H, hhRef, INDUSTRY, NSECTOR, PUBLIC, resetMonth, SECTOR_KEY, SERVICES, shuffled, STREAM, taxWedge, UNEMPLOYED, type Gd1State } from './schema';
 
 const K_INIT = tx('init');
 
@@ -25,7 +26,7 @@ export function initialCounts(n: number): { formal: number; hkd: number; banks: 
   };
 }
 
-const FORMAL_MIX = [0.15, 0.5, 0.35]; // nông nghiệp, công nghiệp, dịch vụ
+// Hộ kinh doanh chia theo ngành lúc đầu: nông nghiệp, công nghiệp, dịch vụ. Doanh nghiệp nhận phần cầu còn lại của mỗi ngành.
 const HKD_MIX = [0.5, 0.15, 0.35];
 
 function sectorByQuota(i: number, n: number, mix: number[]): number {
@@ -66,6 +67,73 @@ export function initWorld(w: World, eng: Engine): void {
   // ---------- 3. doanh nghiệp chính thức ----------
   // giá máy ban đầu: giá chưa thuế của hàng công nghiệp, ước lượng một vòng
   const pK = Math.round((1 + mu0) * (w0 / aL) * 1.08);
+
+  // Cơ cấu ngành lúc đầu: tính cầu của hộ, Chính phủ và đầu tư theo từng ngành rồi chia người làm cho khớp,
+  // để tháng đầu không ngành nào thừa hay thiếu hàng. Phần hộ kinh doanh theo HKD_MIX; doanh nghiệp nhận phần còn lại.
+  const kap = SECTOR_KEY.map((k) => eng.param(w, `firm.kappa.${k}`));
+  const pFg: number[] = [];
+  const pIg: number[] = [];
+  for (let k = 0; k < NSECTOR; k++) {
+    const capW = (kap[k] / uBar) * pK; // vốn cố định mỗi lao động
+    const ucCap = (delta * capW + (capW * P('firm.initLeverage') * loanRate) / 12) / aL;
+    pFg.push((1 + mu0) * (w0 / aL + ucCap) * (1 + taxWedge(w, eng, k, true)));
+    pIg.push(Math.round((1 + mu0) * (wH / (aL * prodH))) * (1 + taxWedge(w, eng, k, false)));
+  }
+  const publicWage0 = Math.round(w0 * eng.law(w, 'gov.wage.premium'));
+  const nuS = P('firm.nuServices');
+  const SF = nFormalW * aL;
+  const nSolo = Math.max(0, Math.min(nInf - 2 * cnt.hkd, Math.round(nInf * P('init.soloShare'))));
+  const nHkdW = nInf - nSolo;
+  const aSolo = aL * P('hkd.soloProductivity');
+  const soloUtil = P('init.soloUtil');
+  const SI = nHkdW * aL * prodH + nSolo * aSolo * soloUtil;
+  const pFavg = (pFg[0] + pFg[1] + pFg[2]) / 3;
+  const pIavg = HKD_MIX[0] * pIg[0] + HKD_MIX[1] * pIg[1] + HKD_MIX[2] * pIg[2];
+  const gdpEst = SF * pFavg + SI * pIavg + nPublic * publicWage0;
+  const govV = eng.law(w, 'gov.purchase.share') * gdpEst;
+  const invU = nFormalW * ((kap[0] + kap[1] + kap[2]) / 3 / uBar) * delta; // máy thay thế mỗi tháng
+  const hhV = Math.max(0, SF * pFavg + SI * pIavg - govV - invU * pK);
+  const food0 = Math.min(hhV, n * P('hh.foodMin') * pIg[AGRI]);
+  const rest0 = hhV - food0;
+  const shA0 = P('hh.share.agri');
+  const shI0 = P('hh.share.industry');
+  const demV = [food0 + rest0 * shA0, rest0 * shI0, rest0 * (1 - shA0 - shI0)]; // cầu của hộ theo ngành, đồng
+  const infV = [0, 0, 0];
+  {
+    // phần của hộ kinh doanh ở mỗi ngành không quá 85% cầu của hộ; phần vượt chia cho ngành còn chỗ
+    let left = SI * pIavg;
+    const open = [true, true, true];
+    for (let pass = 0; pass < 3 && left > 1; pass++) {
+      let wsum = 0;
+      for (let k = 0; k < NSECTOR; k++) if (open[k]) wsum += HKD_MIX[k];
+      if (wsum <= 0) break;
+      const give = left;
+      for (let k = 0; k < NSECTOR; k++) {
+        if (!open[k]) continue;
+        const add = Math.min((give * HKD_MIX[k]) / wsum, 0.85 * demV[k] - infV[k]);
+        infV[k] += add;
+        left -= add;
+        if (infV[k] >= 0.85 * demV[k] - 1) open[k] = false;
+      }
+    }
+  }
+  const waste = [1, 1, 1 + nuS]; // dịch vụ phải làm dư mới bán đủ
+  const infU = infV.map((v, k) => (v / pIg[k]) * waste[k]);
+  const forU = demV.map((v, k) => (Math.max(0, v - infV[k]) / pFg[k] + (govV * GOV_MIX[k]) / pFg[k] + (k === INDUSTRY ? invU : 0)) * waste[k]);
+  const sumI = infU[0] + infU[1] + infU[2];
+  const sumF = forU[0] + forU[1] + forU[2];
+  const hkdMix = infU.map((x) => x / sumI);
+  const FORMAL_MIX = forU.map((x) => x / sumF);
+  // Trọng số sở thích hàng phi chính thức theo ngành: chọn để ở giá ban đầu hộ chia chi tiêu đúng như cơ cấu này
+  // (cách hiệu chỉnh trọng số CES quen thuộc: lấy theo tỷ trọng năm gốc).
+  const sigma = P('seg.sigma');
+  const omega = demV.map((v, k) => {
+    const sV = Math.max(0.02, Math.min(0.98, v > 0 ? infV[k] / v : 0.5));
+    const odds = (sV / (1 - sV)) * Math.pow(pIg[k] / pFg[k], sigma - 1);
+    return odds / (1 + odds);
+  });
+
+  const soeEvery = P('init.soeShare') > 0 ? Math.max(1, Math.round(1 / P('init.soeShare'))) : 0;
   const sizeF = new Int32Array(cnt.formal);
   for (let j = 0; j < nFormalW; j++) sizeF[j % cnt.formal]++;
   let gdp0 = 0;
@@ -76,17 +144,18 @@ export function initWorld(w: World, eng: Engine): void {
     const K = (kappa * size) / uBar;
     const capValue = Math.round(K * pK);
     const debt = Math.round(capValue * P('firm.initLeverage'));
-    const salesE = size * aL;
+    const salesE = (size * aL) / (sec === SERVICES ? 1 + nuS : 1); // dịch vụ làm dư một ít so với doanh số kỳ vọng
     const ucWage = w0 / aL;
-    const ucCap = (delta * capValue + (debt * loanRate) / 12) / salesE;
+    const ucCap = (delta * capValue + (debt * loanRate) / 12) / (size * aL); // theo sản lượng ở công suất bình thường
     const price = (1 + mu0) * (ucWage + ucCap);
-    const vat = vatRate(w, eng, sec);
+    const vat = taxWedge(w, eng, sec, true);
     const priceG = Math.round(price * (1 + vat));
     const inv = sec === SERVICES ? 0 : nu * salesE;
     const firm = addRow(w.tables.firm, {
       bank: i % cnt.banks,
       sector: sec,
       formal: 1,
+      stateOwned: soeEvery > 0 && i % soeEvery === soeEvery - 1 ? 1 : 0,
       zone: (i % 4) + 1,
       born: -120,
       nTarget: size,
@@ -125,14 +194,15 @@ export function initWorld(w: World, eng: Engine): void {
 
   // ---------- 4. hộ kinh doanh ----------
   const sizeH = new Int32Array(cnt.hkd);
-  for (let j = 0; j < nInf; j++) sizeH[j % cnt.hkd]++;
+  for (let j = 0; j < nHkdW; j++) sizeH[j % cnt.hkd]++;
   for (let i = 0; i < cnt.hkd; i++) {
-    const sec = sectorByQuota(i, cnt.hkd, HKD_MIX);
+    const sec = sectorByQuota(i, cnt.hkd, hkdMix);
     const size = sizeH[i];
     const a = aL * prodH;
-    const salesE = size * a;
+    const salesE = (size * a) / (sec === SERVICES ? 1 + nuS : 1);
     const ucWage = wH / a;
-    const price = Math.round((1 + mu0) * ucWage);
+    const priceNet = (1 + mu0) * ucWage;
+    const price = Math.round(priceNet * (1 + taxWedge(w, eng, sec, false)));
     const inv = sec === SERVICES ? 0 : nu * salesE;
     const firm = addRow(w.tables.firm, {
       bank: i % cnt.banks,
@@ -141,7 +211,7 @@ export function initWorld(w: World, eng: Engine): void {
       born: -120,
       nTarget: size,
       wage: wH,
-      price,
+      price: priceNet,
       priceG: price,
       pricePrev: price,
       markup: mu0,
@@ -153,11 +223,47 @@ export function initWorld(w: World, eng: Engine): void {
       sales: salesE,
       salesPrev: salesE,
       output: salesE,
-      revenue: salesE * price,
-      rev12: 12 * salesE * price,
+      revenue: salesE * priceNet,
+      rev12: 12 * salesE * priceNet,
       cell: cnt.formal + i,
     });
     seedCash(w, firmRef(firm), 2 * (size - 1) * wH);
+    gdp0 += salesE * price;
+  }
+
+  // ---------- 4b. người tự làm một mình: lực lượng dự trữ của thị trường lao động ----------
+  const soloBiz: number[] = [];
+  for (let i = 0; i < nSolo; i++) {
+    const sec = sectorByQuota(i, nSolo, hkdMix);
+    const salesE = (aSolo * soloUtil) / (sec === SERVICES ? 1 + nuS : 1);
+    const priceNet = (1 + mu0) * (wH / (aL * prodH)); // bán theo giá của hộ kinh doanh quanh mình
+    const price = Math.round(priceNet * (1 + taxWedge(w, eng, sec, false)));
+    const inv = sec === SERVICES ? 0 : nu * salesE;
+    soloBiz.push(
+      addRow(w.tables.firm, {
+        bank: i % cnt.banks,
+        sector: sec,
+        formal: 0,
+        solo: 1,
+        born: -120,
+        nTarget: 1,
+        wage: 0,
+        price: priceNet,
+        priceG: price,
+        pricePrev: price,
+        markup: Math.max(0, priceNet / (wH / aSolo) - 1),
+        uc: wH / aSolo,
+        ucWage: wH / aSolo,
+        inv,
+        salesE,
+        sales: salesE,
+        salesPrev: salesE,
+        output: salesE,
+        revenue: salesE * priceNet,
+        rev12: 12 * salesE * priceNet,
+        cell: cnt.formal + cnt.hkd + i,
+      }),
+    );
     gdp0 += salesE * price;
   }
 
@@ -169,6 +275,13 @@ export function initWorld(w: World, eng: Engine): void {
   // chủ hộ kinh doanh, rồi người làm thuê cho hộ kinh doanh
   for (let i = 0; i < cnt.hkd; i++) {
     const biz = cnt.formal + i;
+    const o = take();
+    f.owner[biz] = o;
+    h.ownBiz[o] = biz;
+    h.employer[o] = biz;
+    f.workers[biz] = 1;
+  }
+  for (const biz of soloBiz) {
     const o = take();
     f.owner[biz] = o;
     h.ownBiz[o] = biz;
@@ -191,7 +304,7 @@ export function initWorld(w: World, eng: Engine): void {
       h.wage[x] = w0;
       f.workers[i]++;
     }
-  const publicWage = Math.round(w0 * eng.law(w, 'gov.wage.premium'));
+  const publicWage = publicWage0;
   for (let k = 0; k < nPublic; k++) {
     const x = take();
     h.employer[x] = PUBLIC;
@@ -233,9 +346,12 @@ export function initWorld(w: World, eng: Engine): void {
   }
 
   // ---------- 7. cổ phần: mỗi hộ có phần ở một doanh nghiệp và một ngân hàng tư nhân ----------
-  const ownersOf = new Int32Array(cnt.formal);
-  for (let i = 0; i < n; i++) ownersOf[i % cnt.formal]++;
-  for (let i = 0; i < n; i++) addRow(w.tables.share, { kind: 0, entity: i % cnt.formal, owner: i, frac: 1 / ownersOf[i % cnt.formal] });
+  // doanh nghiệp nhà nước không có cổ đông là hộ; cổ tức của nó về ngân sách
+  const priv: number[] = [];
+  for (let i = 0; i < cnt.formal; i++) if (!f.stateOwned[i]) priv.push(i);
+  const ownersOf = new Int32Array(priv.length);
+  for (let i = 0; i < n; i++) ownersOf[i % priv.length]++;
+  for (let i = 0; i < n; i++) addRow(w.tables.share, { kind: 0, entity: priv[i % priv.length], owner: i, frac: 1 / ownersOf[i % priv.length] });
   const nPriv = cnt.banks - nState;
   if (nPriv > 0) {
     const ob = new Int32Array(nPriv);
@@ -310,12 +426,16 @@ export function initWorld(w: World, eng: Engine): void {
     balHist: [],
     gdpHist: [],
     cpiTaxBase: 100,
+    omega,
+    pSeg: [pIg.slice(), pFg.slice()],
+    pK,
+    budgetAvg: 0,
     pHist: [pSector.slice()],
     p0: pSector.slice(),
     basketAcc: [0, 0, 0],
     trust: P('exp.trust0'),
     wageAvg: w0,
-    wageAvgAll: (nFormalW * w0 + (nInf - cnt.hkd) * wH) / Math.max(1, nFormalW + nInf - cnt.hkd),
+    wageAvgAll: (nFormalW * w0 + (nHkdW - cnt.hkd) * wH) / Math.max(1, nFormalW + nHkdW - cnt.hkd),
     wageRef: w0,
     wageInf: wH,
     publicWage,

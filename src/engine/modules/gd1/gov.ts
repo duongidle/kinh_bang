@@ -7,7 +7,7 @@ import { BANK, CB, CB_REF, GOV_REF, ref, type World } from '../../core/world';
 import { TX_KINDS, tx } from '../../ledger/kinds';
 import { issueBond, MED_DEP, payCoupon, redeemBond, transfer } from '../../ledger/ledger';
 import { sellGoods } from './firms';
-import { B, F, firmRef, H, hhRef, minWageOf, NSECTOR, pitOnWage, PUBLIC, R, SERVICES, st, STREAM, UNEMPLOYED, vatRate } from './schema';
+import { B, F, firmRef, H, hhRef, INDUSTRY, minWageOf, NSECTOR, pitOnWage, PUBLIC, R, SERVICES, st, STREAM, taxWedge, UNEMPLOYED } from './schema';
 import type { Gd1State } from './schema';
 
 const K_WAGE_PUB = tx('wage_public');
@@ -131,7 +131,7 @@ export function payPublic(w: World, eng: Engine): void {
 // =====================================================================
 // Pha goods (trước hộ gia đình): Chính phủ mua hàng hoá dịch vụ
 // =====================================================================
-const GOV_MIX = [0.1, 0.4, 0.5]; // nông nghiệp, công nghiệp, dịch vụ
+export const GOV_MIX = [0.1, 0.4, 0.5]; // nông nghiệp, công nghiệp, dịch vụ
 
 export function govPurchases(w: World, eng: Engine): void {
   const f = F(w);
@@ -145,7 +145,7 @@ export function govPurchases(w: World, eng: Engine): void {
   for (let sec = 0; sec < NSECTOR; sec++) {
     let left = budget * GOV_MIX[sec];
     const list = bySector[sec];
-    const vat = vatRate(w, eng, sec);
+    const vat = taxWedge(w, eng, sec, true);
     for (let k = 0; k < 12 && left > 10_000 && list.length; k++) {
       // xem 5 người bán, mua ở nơi rẻ nhất còn hàng
       let best = -1;
@@ -283,6 +283,26 @@ export function closeMonth(w: World, eng: Engine): void {
   for (let k = 0; k < NSECTOR; k++) {
     if (sumQ[k] > 0) s.pSector[k] = sumPQ[k] / sumQ[k];
     else if (cnt[k] > 0) s.pSector[k] = sumP[k] / cnt[k];
+  }
+  // giá bình quân theo phân khúc, và giá máy chưa thuế (hàng công nghiệp của doanh nghiệp)
+  {
+    const pq = [0, 0, 0, 0, 0, 0];
+    const qq = [0, 0, 0, 0, 0, 0];
+    let kq = 0;
+    let kpq = 0;
+    for (let i = 0; i < f.n; i++) {
+      if (!f.alive[i]) continue;
+      const g = (f.formal[i] ? 3 : 0) + f.sector[i];
+      const wgt = Math.max(f.sales[i], 1e-6);
+      pq[g] += f.priceG[i] * wgt;
+      qq[g] += wgt;
+      if (f.formal[i] && f.sector[i] === INDUSTRY) {
+        kpq += f.price[i] * wgt;
+        kq += wgt;
+      }
+    }
+    for (let g = 0; g < 6; g++) if (qq[g] > 0) s.pSeg[g < 3 ? 0 : 1][g % 3] = pq[g] / qq[g];
+    if (kq > 0) s.pK = kpq / kq;
   }
   // CPI: chỉ số Laspeyres nối chuỗi, rổ cập nhật mỗi năm
   let num = 0;

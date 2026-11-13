@@ -42,6 +42,9 @@ export const TX_KINDS: TxKindDef[] = [
   { id: 'cb_repay', label: 'Trả tái cấp vốn', flow: false },
   { id: 'init', label: 'Khởi tạo', flow: true },
   { id: 'other', label: 'Khác', flow: true },
+  // Thêm 14/11/2026 cho nguồn "thu khác" của ngân sách (sai-khac.md mục S3). Chỉ nối vào cuối để ván cũ không lệch số thứ tự.
+  { id: 'excise', label: 'Thuế gián thu khác (tiêu thụ đặc biệt, xuất nhập khẩu, môi trường)', flow: true },
+  { id: 'fees', label: 'Thu từ đất, phí, lệ phí', flow: true },
 ];
 
 export const NKIND = TX_KINDS.length;

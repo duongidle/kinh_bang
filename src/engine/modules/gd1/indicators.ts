@@ -56,6 +56,8 @@ export const MONEY_CHANNEL: Record<string, string> = {
   pit: 'm_tax',
   cit: 'm_tax',
   hkd_tax: 'm_tax',
+  excise: 'm_tax',
+  fees: 'm_tax',
   interest_loan: 'm_bank_interest',
   interest_dep: 'm_bank_interest',
   dividend: 'm_dividend',
@@ -162,7 +164,7 @@ const money = (w: World) => {
   }
   return { cash, dep };
 };
-const taxes = (w: World) => vol(w, 'vat') + vol(w, 'pit') + vol(w, 'cit') + vol(w, 'hkd_tax');
+const taxes = (w: World) => vol(w, 'vat') + vol(w, 'pit') + vol(w, 'cit') + vol(w, 'hkd_tax') + vol(w, 'excise') + vol(w, 'fees');
 const govRevenue = (w: World) => {
   // mọi dòng tiền vào kho bạc trừ vay nợ: thuế, cổ tức doanh nghiệp và ngân hàng nhà nước, lợi nhuận NHNN
   const L = w.ledger;
@@ -303,6 +305,17 @@ export const GD1_INDICATORS: Ind[] = [
     },
   },
   { id: 'informal.share', label: 'Tỷ lệ lao động phi chính thức', unit: '%', group: 'Lao động', compute: informalShare },
+  {
+    id: 'informal.consShare',
+    label: 'Phần chi tiêu của hộ mua ở hộ kinh doanh',
+    unit: '%',
+    group: 'Lao động',
+    compute(w) {
+      const m = st(w).m;
+      const c = m.consNom[0] + m.consNom[1] + m.consNom[2];
+      return c > 0 ? m.consInf / c : 0;
+    },
+  },
   { id: 'public.workers', label: 'Số công chức', unit: 'người', group: 'Lao động', compute: (w) => st(w).nPublic },
   { id: 'wage.formal', label: 'Lương bình quân ở doanh nghiệp', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => st(w).wageAvg },
   { id: 'wage.informal', label: 'Lương bình quân ở hộ kinh doanh', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => st(w).wageInf },
@@ -392,7 +405,21 @@ export const GD1_INDICATORS: Ind[] = [
       return b.n ? x / b.n : 0;
     },
   },
-  { id: 'bank.reserves', label: 'Dự trữ của ngân hàng tại NHNN', unit: 'đồng', group: 'Tiền và tín dụng', compute: (w) => f64(w.tables.cb, 'resLiab')[0] },
+  {
+    id: 'bank.reserves',
+    label: 'Dự trữ của ngân hàng tại NHNN',
+    unit: 'đồng',
+    group: 'Tiền và tín dụng',
+    compute: (w) => f64(w.tables.cb, 'resLiab')[0],
+    // Dự trữ đổi vì: dân rút hay nộp tiền mặt, NHNN mua lại trái phiếu (thị trường mở), vay và trả tái cấp vốn.
+    // Phần còn lại là thu chi ngân sách và mua bán trái phiếu với kho bạc; engine tự ghi vào "các yếu tố khác".
+    contrib: (w) => ({
+      r_cash: vol(w, 'cash_deposit') - vol(w, 'cash_withdraw'),
+      r_omo: st(w).m.omo,
+      r_refi: vol(w, 'cb_lend') - vol(w, 'cb_repay'),
+    }),
+  },
+  { id: 'cb.omo', label: 'NHNN mua lại trái phiếu qua thị trường mở (tháng)', unit: 'đồng', group: 'Tiền và tín dụng', compute: (w) => st(w).m.omo },
   { id: 'cb.advances', label: 'Dư nợ tái cấp vốn', unit: 'đồng', group: 'Tiền và tín dụng', compute: (w) => f64(w.tables.cb, 'adv')[0] },
   { id: 'cb.bonds', label: 'Trái phiếu NHNN đang giữ', unit: 'đồng', group: 'Tiền và tín dụng', compute: bondsHeldByCb },
 
@@ -410,6 +437,8 @@ export const GD1_INDICATORS: Ind[] = [
         t_pit: vol(w, 'pit'),
         t_cit: vol(w, 'cit'),
         t_hkd: vol(w, 'hkd_tax'),
+        t_excise: vol(w, 'excise'),
+        t_fees: vol(w, 'fees'),
         t_other: govRevenue(w) - taxes(w),
       }),
   },
@@ -419,6 +448,9 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'gov.tax.pit', label: 'Thu thuế TNCN', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'pit') },
   { id: 'gov.tax.cit', label: 'Thu thuế TNDN', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'cit') },
   { id: 'gov.tax.hkd', label: 'Thu thuế hộ kinh doanh', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'hkd_tax') },
+  { id: 'gov.tax.excise', label: 'Thu thuế gián thu khác', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'excise') },
+  { id: 'gov.tax.fees', label: 'Thu từ đất, phí, lệ phí', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'fees') },
+  { id: 'gov.revenueGdp', label: 'Thu ngân sách so với GDP', unit: '%', group: 'Ngân sách', compute: (w) => (gdpNominal(st(w)) > 0 ? govRevenue(w) / gdpNominal(st(w)) : 0) },
   { id: 'gov.debt', label: 'Nợ công', unit: 'đồng', group: 'Ngân sách', good: -1, compute: debt },
   { id: 'gov.debtGdp', label: 'Nợ công so với GDP năm', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (st(w).gdpEma > 0 ? debt(w) / (12 * st(w).gdpEma) : 0) },
   { id: 'gov.tga', label: 'Tiền trong kho bạc', unit: 'đồng', group: 'Ngân sách', compute: (w) => f64(w.tables.gov, 'tga')[0] },
