@@ -7,7 +7,7 @@ import { f64, i32, u8 } from '../../core/table';
 import { BANK, CB_REF, GOV_REF, ref, type World } from '../../core/world';
 import { tx } from '../../ledger/kinds';
 import { cbLend, cbRepay, cbTradeBond, createLoan, issueBond, MED_DEP, serviceLoan, transfer } from '../../ledger/ledger';
-import { ownersIndex } from './firms';
+import { ownersIndex, restructure } from './firms';
 import { B, bankEquity, F, firmRef, foldedStep, H, hhRef, INDUSTRY, R, st, STREAM, vatRate } from './schema';
 
 const K_INT_DEP = tx('interest_dep');
@@ -185,6 +185,18 @@ export function debtService(w: World, eng: Engine): void {
   const L = w.tables.loan;
   const al = u8(L, 'alive');
   const br = i32(L, 'borrower');
+  // Doanh nghiệp còn vốn ròng dương nhưng trả nợ xong thì không đủ quỹ lương tháng tới:
+  // xin ngân hàng giãn nợ trước khi phải cắt người. Mỗi doanh nghiệp tối đa một lần mỗi năm. [TTK]
+  const months = eng.param(w, 'bank.loanMonthsInv');
+  const s = st(w);
+  for (let i = 0; i < f.n; i++) {
+    if (!f.alive[i] || !f.formal[i] || f.debt[i] <= 0 || w.meta.tick - f.lastRestr[i] < 12) continue;
+    if (f.dep[i] - f.service[i] >= f.workers[i] * f.wage[i]) continue;
+    if (f.dep[i] + f.invValue[i] + f.capValue[i] - f.debt[i] <= 0) continue;
+    restructure(w, i, months, true);
+    f.lastRestr[i] = w.meta.tick;
+    s.m.restructured++;
+  }
   for (let r = 0; r < L.n; r++) {
     if (!al[r]) continue;
     const res = serviceLoan(w, r);

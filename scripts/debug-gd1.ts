@@ -1,6 +1,6 @@
 import { gd1Engine } from '../src/engine/modules/gd1/index';
 import { F, H, st } from '../src/engine/modules/gd1/schema';
-const eng = gd1Engine();
+const eng = gd1Engine(); (globalThis as any).__dbg = process.env.DBG;
 const w = eng.newWorld({ seed: 1, scale: 'M' });
 const pr = (t: number) => {
   const f = F(w); const h = H(w); const s = st(w);

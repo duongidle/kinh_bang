@@ -4,7 +4,7 @@
 import type { Engine } from '../../core/engine';
 import { f64, i32, u8 } from '../../core/table';
 import { BANK, CB, CB_REF, GOV_REF, ref, type World } from '../../core/world';
-import { tx } from '../../ledger/kinds';
+import { TX_KINDS, tx } from '../../ledger/kinds';
 import { issueBond, MED_DEP, payCoupon, redeemBond, transfer } from '../../ledger/ledger';
 import { sellGoods } from './firms';
 import { B, F, firmRef, H, hhRef, minWageOf, NSECTOR, pitOnWage, PUBLIC, R, SERVICES, st, STREAM, UNEMPLOYED, vatRate } from './schema';
@@ -16,6 +16,8 @@ const K_GOV_BUY = tx('gov_purchase');
 const K_TRANSFER = tx('transfer_social');
 const K_CB_PROFIT = tx('cb_profit');
 
+const TAX_THRESHOLDS = ['pit.deduction.self', 'pit.deduction.dependent', 'pit.limit.1', 'pit.limit.2', 'pit.limit.3', 'pit.limit.4', 'hkd.threshold', 'cit.limit.small', 'cit.limit.mid'];
+
 // =====================================================================
 // Pha policy
 // =====================================================================
@@ -24,6 +26,41 @@ export function policy(w: World, eng: Engine): void {
   // lương công chức bám lương bình quân khu vực chính thức, không dưới lương tối thiểu vùng II
   s.publicWage = Math.round(Math.max(minWageOf(w, eng, 2), eng.law(w, 'gov.wage.premium') * s.wageRef));
   s.purchaseBudget = eng.law(w, 'gov.purchase.share') * s.gdpEma;
+
+  // Điều chỉnh các ngưỡng tính bằng đồng theo lạm phát (bật tắt bằng tham số gov.indexation).
+  // Ngưỡng thuế: khi CPI đã tăng quá 20% kể từ lần chỉnh trước (Luật Thuế TNCN có điều khoản này cho mức giảm trừ;
+  // mô hình áp chung cho các ngưỡng thuế khác: đơn giản hoá). Lương tối thiểu vùng: mỗi tháng 1 theo lạm phát năm trước.
+  if (eng.param(w, 'gov.indexation') >= 0.5 && w.meta.tick > 0) {
+    const by = 'Điều chỉnh theo lạm phát (tự động)';
+    const ratio = s.cpi / s.cpiTaxBase;
+    if (ratio > 1.2) {
+      for (const id of TAX_THRESHOLDS) eng.setLaw(w, id, Math.round((eng.law(w, id) * ratio) / 1000) * 1000, by);
+      s.cpiTaxBase = s.cpi;
+    }
+    if ((w.meta.startMonth - 1 + w.meta.tick) % 12 === 0) {
+      const pi = yoyInflation(s);
+      if (pi > 0) for (let z = 1; z <= 4; z++) eng.setLaw(w, `minwage.zone.${z}`, Math.round((eng.law(w, `minwage.zone.${z}`) * (1 + pi)) / 1000) * 1000, by);
+    }
+  }
+
+  // Bộ Tài chính tự động (khi người chơi không giữ vai): dự toán hằng năm.
+  // Mỗi tháng 1 chỉnh mức mua hàng để bội chi 12 tháng qua tiến về mục tiêu. [TTK]
+  // Lý do phải có: chi theo tỷ lệ GDP cố định thì không có gì neo cân đối ngân sách, nợ hoặc thặng dư dồn mãi.
+  if (eng.param(w, 'gov.autopilot') >= 0.5 && (w.meta.startMonth - 1 + w.meta.tick) % 12 === 0 && s.balHist.length >= 12) {
+    // nhìn 36 tháng gần nhất và chỉnh chậm (tối đa 0,3 điểm % GDP mỗi năm) để không chạy theo chu kỳ
+    let bal = 0;
+    let gdp = 0;
+    for (let k = 0; k < s.balHist.length; k++) {
+      bal += s.balHist[k];
+      gdp += s.gdpHist[k];
+    }
+    if (gdp > 0) {
+      const gap = bal / gdp + eng.law(w, 'gov.deficit.target'); // dương: bội chi nhỏ hơn mục tiêu, còn dư địa chi
+      const cur = eng.law(w, 'gov.purchase.share');
+      const next = Math.round(Math.max(0, Math.min(0.3, cur + Math.max(-0.003, Math.min(0.003, 0.25 * gap)))) * 1000) / 1000;
+      if (next !== cur) eng.setLaw(w, 'gov.purchase.share', next, 'Bộ Tài chính tự động');
+    }
+  }
 
   // NHNN tự động (khi người chơi không giữ vai): quy tắc phản ứng với lạm phát, xét mỗi quý
   if (eng.param(w, 'cb.autopilot') >= 0.5 && w.meta.tick % 3 === 0 && w.meta.tick >= 12) {
@@ -100,7 +137,7 @@ export function govPurchases(w: World, eng: Engine): void {
   const f = F(w);
   const s = st(w);
   const tga = f64(w.tables.gov, 'tga');
-  let budget = Math.min(s.purchaseBudget, Math.max(0, tga[0]));
+  const budget = Math.min(s.purchaseBudget, Math.max(0, tga[0]));
   if (budget < s.purchaseBudget) s.m.purchaseCut += s.purchaseBudget - budget;
   if (budget <= 0) return;
   const bySector: number[][] = [[], [], []];
@@ -297,6 +334,18 @@ export function closeMonth(w: World, eng: Engine): void {
   s.salesReal = sumQ;
   s.gdpReal = s.p0[0] * s.m.outputReal[0] + s.p0[1] * s.m.outputReal[1] + s.p0[2] * sumQ[SERVICES] + (s.publicWage > 0 ? (s.m.wagesPublic / s.publicWage) * s.publicWage0 : 0);
   const gdp = gdpNominal(s);
+  // cân đối ngân sách tháng này, lấy từ sổ cái: mọi dòng thu trừ mọi dòng chi (không tính vay và trả gốc)
+  {
+    const L = w.ledger;
+    let bal = 0;
+    for (let k = 0; k < L.nkind; k++) if (TX_KINDS[k].flow) bal += L.flow[3 * L.nkind + k];
+    s.balHist.push(bal);
+    s.gdpHist.push(gdp);
+    if (s.balHist.length > 36) {
+      s.balHist.shift();
+      s.gdpHist.shift();
+    }
+  }
   s.gdpEma += 0.25 * (gdp - s.gdpEma);
 }
 

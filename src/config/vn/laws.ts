@@ -423,7 +423,7 @@ export const VN_LAWS: LawParam[] = [
     min: 0,
     max: 0.5,
     step: 0.01,
-    versions: [{ value: 0.05, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
+    versions: [{ value: 0.03, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
   },
   {
     id: 'gov.wage.premium',
@@ -445,7 +445,7 @@ export const VN_LAWS: LawParam[] = [
     min: 0,
     max: 0.6,
     step: 0.005,
-    versions: [{ value: 0.03, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
+    versions: [{ value: 0.02, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
   },
   {
     id: 'gov.transfer.unemployed',
@@ -481,6 +481,18 @@ export const VN_LAWS: LawParam[] = [
     max: 0.3,
     step: 0.0025,
     versions: [{ value: 0.01, from: '2000-01-01', source: { doc: 'Giả định của mô hình' }, verification: 'C', chuaXacMinh: true }],
+  },
+  {
+    id: 'gov.deficit.target',
+    label: 'Mục tiêu bội chi ngân sách (so với GDP)',
+    unit: 'tỷ lệ',
+    group: 'Ngân sách',
+    owner: 'fiscal',
+    min: -0.1,
+    max: 0.3,
+    step: 0.005,
+    note: 'Quy tắc tự động chỉnh mức mua hàng mỗi năm để bội chi tiến về mức này.',
+    versions: [{ value: 0.025, from: '2000-01-01', source: { doc: 'Giả định của mô hình; dự toán thật của Việt Nam quanh 3-4% GDP' }, verification: 'C', chuaXacMinh: true }],
   },
   {
     id: 'gov.debt.ceiling',

@@ -138,8 +138,8 @@ export function planFirms(w: World, eng: Engine): void {
     const stock = sec === SERVICES ? 0 : f.inv[i];
     const yStar = Math.max(0, f.salesE[i] * (1 + nu) - stock);
     let nT = Math.ceil(yStar / aL - 1e-9);
-    nT = Math.max(1, Math.min(nT, Math.floor(capW + 1e-9)));
-    if (!f.formal[i]) nT = Math.max(1, nT);
+    nT = Math.max(1, Math.min(nT, Math.ceil(capW - 1e-9))); // người cuối có thể không đủ máy để làm hết công suất
+    if (f.formal[i] && capW < 0.05) nT = 0; // chưa có máy thì chưa thuê ai
     f.nTarget[i] = nT;
 
     // --- lương (gd1 mục 5.3) ---
@@ -149,10 +149,12 @@ export function planFirms(w: World, eng: Engine): void {
     if (f.solo[i]) {
       // người tự làm không trả lương cho ai
     } else if (f.unfilled[i] > 0 && f.workers[i] < nT) {
-      const up = w1 * foldedStep(w, eng, STREAM.wage, i) * 2;
+      const up = w1 * foldedStep(w, eng, STREAM.wage, i) * eng.param(w, 'firm.wageShortageStep');
       w1 += up;
       parts.push({ reason: 'w_shortage', amount: up });
-    } else if (flexWage && f.unfilled[i] === 0 && s.unemp > 0.08) {
+    } else if ((flexWage || !f.formal[i]) && f.unfilled[i] === 0 && s.unemp > eng.param(w, 'firm.wageSlackU') && f.workers[i] >= nT && f.inv[i] > nu * f.salesE[i]) {
+      // Lương giảm được khi thừa người và hàng ế. Mặc định chỉ hộ kinh doanh làm vậy (không hợp đồng);
+      // doanh nghiệp chính thức giữ lương cứng chiều xuống, trừ khi bật biến thể.
       const down = -w1 * foldedStep(w, eng, STREAM.wage, i, 2);
       w1 += down;
       parts.push({ reason: 'w_slack', amount: down });
@@ -176,7 +178,9 @@ export function planFirms(w: World, eng: Engine): void {
     }
 
     // --- chi phí đơn vị và giá (Caiani 3.6-3.7, thêm khấu hao và lãi vay) ---
-    const yNorm = Math.max(aL, f.salesE[i]);
+    // chi phí máy và lãi vay tính trên sản lượng ở mức sử dụng công suất bình thường (định giá theo chi phí chuẩn),
+    // để bán chậm không tự đẩy giá lên
+    const yNorm = Math.max(aL, aL * capW * uBar);
     const ucWage = (f.solo[i] ? s.wageInf : f.wage[i]) / aL; // người tự làm tính công mình theo lương phi chính thức
     const ucCap = f.formal[i] ? (delta * f.capValue[i] + (f.debt[i] * f.lastRate[i]) / 12) / yNorm : 0;
     const expectFactor = 1 + piExp / 12;
@@ -186,7 +190,7 @@ export function planFirms(w: World, eng: Engine): void {
     let mu1 = mu0;
     const tight = sec === SERVICES ? f.sales[i] >= 0.97 * f.output[i] && f.output[i] > 0 : f.inv[i] < nu * f.salesE[i];
     const step = foldedStep(w, eng, STREAM.markup, i);
-    if (w.meta.tick > 0) mu1 = tight ? mu0 * (1 + step) + step * 0.2 : mu0 * (1 - step);
+    if (w.meta.tick > 0) mu1 = tight ? mu0 * (1 + step) : mu0 * (1 - step);
     mu1 = Math.max(0, Math.min(3, mu1));
     const ucPrevWage = f.ucWage[i];
     const ucPrevCap = f.ucCap[i];
@@ -231,8 +235,9 @@ export function planFirms(w: World, eng: Engine): void {
     // --- đầu tư (Caiani 3.9) ---
     if (f.formal[i]) {
       const kappa = kappaOf(w, eng, sec);
-      const u = capW > 0 ? Math.min(1.2, f.output[i] / (aL * capW)) : 1;
-      f.util[i] = u;
+      f.util[i] = capW > 0 ? Math.min(1, f.output[i] / (aL * capW)) : 1;
+      // mức sử dụng công suất MONG MUỐN: sản lượng muốn làm so với sức máy (Caiani 3.9 dùng u_D); có thể vượt 1
+      const u = capW > 0 ? Math.min(2, yStar / (aL * capW)) : 2;
       const r = f.capValue[i] > 0 ? f.ocf[i] / f.capValue[i] : rBar;
       f.profitRate[i] = r;
       let g = g1 * ((r - rBar) / rBar) + g2 * ((u - uBar) / uBar);
@@ -295,6 +300,20 @@ export function laborMarket(w: World, eng: Engine): void {
     f.vacLeft[i] = f.vac[i];
     s.m.vacancies += f.vac[i];
   }
+
+  // --- luân chuyển tự nhiên: mỗi tháng một phần nhỏ người làm thuê rời chỗ làm (Caiani: θ) ---
+  const turnover = eng.param(w, 'firm.turnover');
+  if (turnover > 0)
+    for (let i = 0; i < h.n; i++) {
+      const e = h.employer[i];
+      if (e < 0 || h.ownBiz[i] === e) continue;
+      if (R(w, STREAM.fire, i, 3) < turnover) {
+        setEmployer(w, i, UNEMPLOYED, 0, 'u_turnover');
+        f.vac[e]++;
+        f.vacLeft[e]++;
+        s.m.vacancies++;
+      }
+    }
 
   // --- Nhà nước giữ biên chế theo tỷ lệ lực lượng lao động ---
   const pubTarget = Math.round(h.n * eng.law(w, 'gov.public.share'));
@@ -581,6 +600,7 @@ export function profits(w: World, eng: Engine): void {
   const rho = eng.param(w, 'firm.dividend');
   const buffer = eng.param(w, 'firm.liqBuffer');
   const quarterEnd = (w.meta.tick + 1) % 3 === 0;
+  const pK = s.pSector[INDUSTRY] / (1 + vatRate(w, eng, INDUSTRY));
   const divTax = eng.law(w, 'pit.rate.dividend');
   const equalDiv = eng.variant(w, 'firm.dividend') === 'equal';
   const owners = quarterEnd ? ownersIndex(w, 0) : null;
@@ -604,7 +624,8 @@ export function profits(w: World, eng: Engine): void {
     if (!f.formal[i]) {
       // chủ hộ kinh doanh rút phần tiền vượt đệm một tháng lương
       const owner = f.owner[i];
-      const keep = Math.max(0, f.workers[i] - 1) * f.wage[i] * (buffer + 0.5);
+      // giữ đủ tiền trả lương cho số người định thuê, kể cả người sắp thuê thêm
+      const keep = Math.max(0, Math.max(f.workers[i], f.nTarget[i] + 1) - 1) * f.wage[i] * (buffer + 0.5);
       const draw = Math.floor(f.cash[i] + f.dep[i] - keep);
       if (owner >= 0 && draw > 0) {
         let got = transfer(w, firmRef(i), hhRef(owner), Math.min(draw, f.cash[i]), MED_CASH, K_DRAW);
@@ -626,7 +647,8 @@ export function profits(w: World, eng: Engine): void {
 
     // cổ tức theo quý (Caiani: ρ = 0,9), chỉ chia phần tiền vượt đệm
     if (quarterEnd) {
-      const free = f.dep[i] - f.workers[i] * f.wage[i] * buffer - f.service[i];
+      // tiền dành cho máy định mua được giữ lại trước khi chia cổ tức
+      const free = f.dep[i] - f.workers[i] * f.wage[i] * buffer - f.service[i] - f.iPlan[i] * pK;
       const div = Math.floor(Math.min(rho * Math.max(0, f.profitQ[i]), Math.max(0, free)));
       f.profitQ[i] = 0;
       if (div > 0) {
@@ -707,8 +729,16 @@ export function exitAndEntry(w: World, eng: Engine): void {
     else if (f.distress[i] > 0 && f.wagesPaid[i] >= f.workers[i] * f.wage[i] * 0.999) f.distress[i] = 0;
     // doanh nghiệp không còn người, không còn tiền trả một tháng lương: giải thể
     const idle = f.workers[i] === 0 && f.dep[i] + f.cash[i] < f.wage[i] && w.meta.tick - f.born[i] > 6;
-    const bust = f.distress[i] > maxDistress || netWorth < 0 || idle;
-    if (!bust) continue;
+    const bust = netWorth < 0 || idle;
+    if (!bust) {
+      // Chậm trả quá hạn nhưng vốn ròng còn dương: ngân hàng cơ cấu lại nợ (giãn kỳ hạn) thay vì đẩy vào phá sản. [TTK]
+      if (f.distress[i] > maxDistress && loanOverdue[i] > 0) {
+        restructure(w, i, eng.param(w, 'bank.loanMonthsInv'));
+        f.distress[i] = 0;
+        s.m.restructured++;
+      }
+      continue;
+    }
     if (noBankruptcy) {
       // Biến thể: Nhà nước cứu mọi doanh nghiệp (ràng buộc ngân sách mềm).
       const need = Math.max(0, -netWorth) + f.workers[i] * f.wage[i] * 2 + f.service[i] * 2;
@@ -716,6 +746,7 @@ export function exitAndEntry(w: World, eng: Engine): void {
       f.distress[i] = 0;
       continue;
     }
+    if ((globalThis as any).__dbg) console.log('BUST t', w.meta.tick, 'firm', i, 'sec', f.sector[i], 'workers', f.workers[i], 'nw', (netWorth / 1e6).toFixed(0), 'distress', f.distress[i], 'idle', idle, 'dep', (f.dep[i] / 1e6).toFixed(0), 'debt', (f.debt[i] / 1e6).toFixed(0), 'cap', (f.capValue[i] / 1e6).toFixed(0), 'sales', f.sales[i].toFixed(0), 'salesE', f.salesE[i].toFixed(0), 'price', f.priceG[i], 'mu', f.markup[i].toFixed(2), 'ocf', (f.ocf[i] / 1e6).toFixed(1), 'svc', (f.service[i] / 1e6).toFixed(1));
     bankrupt(w, i, haircut);
   }
 
@@ -751,8 +782,24 @@ export function exitAndEntry(w: World, eng: Engine): void {
     if (h.uMonths[i] >= T && h.cash[i] + h.dep[i] < kMonths * foodCost * 2) startSolo(w, eng, i);
   }
 
-  // --- gia nhập doanh nghiệp chính thức ---
+  // --- gia nhập ---
+  hkdEntry(w, eng);
   entry(w, eng);
+}
+
+/** Giãn nợ: các khoản vay của doanh nghiệp (chỉ khoản quá hạn, hoặc tất cả) được tính lại kỳ trả gốc trên kỳ hạn mới. */
+export function restructure(w: World, firm: number, months: number, all = false): void {
+  const L = w.tables.loan;
+  const br = i32(L, 'borrower');
+  const ov = i32(L, 'overdue');
+  const al = u8(L, 'alive');
+  const me = firmRef(firm);
+  for (let r = 0; r < L.n; r++) {
+    if (!al[r] || br[r] !== me || (!all && ov[r] <= 0)) continue;
+    f64(L, 'instalment')[r] = Math.ceil(f64(L, 'principal')[r] / months);
+    i32(L, 'left')[r] = months;
+    ov[r] = 0;
+  }
 }
 
 function overdueByFirm(w: World): Int32Array {
@@ -771,22 +818,26 @@ function bankrupt(w: World, i: number, haircut: number): void {
   const s = st(w);
   // 1. người lao động mất việc
   for (let k = 0; k < h.n; k++) if (h.employer[k] === i) setEmployer(w, k, UNEMPLOYED, 0, 'u_bankrupt');
-  // 2. thanh lý tồn kho và máy cho doanh nghiệp cùng ngành với giá chiết khấu
-  const value = (f.invValue[i] + f.capValue[i]) * (1 - haircut);
-  let buyer = -1;
-  for (let k = 0; k < f.n; k++)
-    if (k !== i && f.alive[k] && f.formal[k] && f.sector[k] === f.sector[i] && f.dep[k] > value * 1.5 && (buyer < 0 || f.dep[k] > f.dep[buyer])) buyer = k;
-  if (buyer >= 0 && value >= 1) {
-    const paid = transfer(w, firmRef(buyer), firmRef(i), value, MED_DEP, K_LIQ);
-    if (paid > 0) {
-      f.inv[buyer] += f.inv[i];
-      f.invValue[buyer] += f.invValue[i] * (1 - haircut);
-      f.K[buyer] += f.K[i];
-      f.capValue[buyer] += f.capValue[i] * (1 - haircut);
+  // 2. thanh lý máy với giá chiết khấu cho các doanh nghiệp còn nhiều tiền nhất (tối đa ba nơi mua).
+  //    Tồn kho coi như bỏ. Phần chiết khấu và phần không ai mua là mất mát thật.
+  const value = f.capValue[i] * (1 - haircut);
+  if (value >= 1) {
+    const buyers: number[] = [];
+    for (let k = 0; k < f.n; k++) if (k !== i && f.alive[k] && f.formal[k] && f.dep[k] > 0) buyers.push(k);
+    // nơi đang cần thêm máy được mua trước, rồi tới nơi nhiều tiền
+    buyers.sort((x, y) => (f.iPlan[y] > 0 ? 1 : 0) - (f.iPlan[x] > 0 ? 1 : 0) || f.dep[y] - f.dep[x] || x - y);
+    let left = 1; // phần máy chưa bán
+    for (let q = 0; q < Math.min(3, buyers.length) && left > 0.01; q++) {
+      const k = buyers[q];
+      const paid = transfer(w, firmRef(k), firmRef(i), Math.min(value * left, 0.5 * f.dep[k]), MED_DEP, K_LIQ);
+      if (paid <= 0) continue;
+      const frac = paid / value;
+      f.K[k] += f.K[i] * frac;
+      f.capValue[k] += paid;
+      left -= frac;
     }
   }
-  // tài sản thực của doanh nghiệp vỡ nợ bị xoá sổ (phần chiết khấu là mất mát thật)
-  s.m.dInvValue -= buyer >= 0 ? f.invValue[i] * haircut : f.invValue[i];
+  s.m.dInvValue -= f.invValue[i];
   f.inv[i] = 0;
   f.invValue[i] = 0;
   f.K[i] = 0;
@@ -869,28 +920,94 @@ function startSolo(w: World, eng: Engine, hh: number): void {
   accumulate(w, 'unemp', 'u_self_employed', -1);
 }
 
+/**
+ * Hộ kinh doanh mới mở vì thấy có lãi [TTK]: khi chủ hộ kinh doanh đang kiếm được nhiều hơn hẳn người làm thuê,
+ * một số người làm thuê có vốn ra mở riêng. Không có kênh này thì hộ kinh doanh cũ hưởng lãi cao mãi mà không ai cạnh tranh.
+ */
+function hkdEntry(w: World, eng: Engine): void {
+  const h = H(w);
+  const s = st(w);
+  let f = F(w);
+  let draw = 0;
+  let nOwners = 0;
+  const count = new Int32Array(NSECTOR);
+  const margin = new Float64Array(NSECTOR);
+  for (let i = 0; i < f.n; i++) {
+    if (!f.alive[i] || f.formal[i] || f.solo[i]) continue;
+    draw += f.revenue[i] - f.wagesPaid[i];
+    nOwners++;
+    count[f.sector[i]]++;
+    margin[f.sector[i]] += f.markup[i];
+  }
+  if (!nOwners || s.wageInf <= 0) return;
+  const ratio = draw / nOwners / s.wageInf; // thu nhập chủ so với lương người làm thuê
+  const pull = Math.max(0, Math.min(2, (ratio - 1.5) / 1.5));
+  const expected = eng.param(w, 'hkd.entryRate') * (h.n / 1000) * pull;
+  let n = Math.floor(expected);
+  if (R(w, STREAM.entry, 50) < expected - n) n++;
+  for (let e = 0; e < n; e++) {
+    // người mở: người làm thuê hoặc thất nghiệp có đủ vốn cho hai tháng lương một người làm
+    let who = -1;
+    for (let k = 0; k < 20 && who < 0; k++) {
+      const c = Math.floor(R(w, STREAM.founder, 900 + e, k) * h.n);
+      if (h.ownBiz[c] >= 0 || h.employer[c] === PUBLIC) continue;
+      if (h.cash[c] + h.dep[c] >= 6 * s.wageInf) who = c;
+    }
+    if (who < 0) continue;
+    // chọn ngành đang có biên lãi cao nhất
+    let sec = 0;
+    for (let k = 1; k < NSECTOR; k++) if (count[k] > 0 && margin[k] / count[k] > (count[sec] > 0 ? margin[sec] / count[sec] : -1)) sec = k;
+    const a = eng.param(w, 'firm.aL') * eng.param(w, 'hkd.productivity');
+    const price = s.pSector[sec] > 0 ? s.pSector[sec] : 100_000;
+    const wage = Math.round(s.wageInf);
+    const biz = addRow(w.tables.firm, { bank: h.bank[who], sector: sec, formal: 0, owner: who, born: w.meta.tick, nTarget: 1, wage, price, priceG: price, pricePrev: price, markup: Math.max(0, price / (wage / a) - 1), salesE: a, cell: w.tables.firm.n });
+    f = F(w);
+    if (h.employer[who] === UNEMPLOYED) accumulate(w, 'unemp', 'u_self_employed', -1);
+    else if (h.employer[who] >= 0) f.workers[h.employer[who]]--;
+    h.employer[who] = biz;
+    h.ownBiz[who] = biz;
+    h.wage[who] = 0;
+    h.uMonths[who] = 0;
+    f.workers[biz] = 1;
+    payFlex(w, hhRef(who), firmRef(biz), 3 * wage, MED_CASH, K_EQUITY);
+    s.m.entriesHkd++;
+  }
+}
+
 /** Doanh nghiệp chính thức mới: người sáng lập là các hộ giàu, tự bỏ vốn (gd1 mục 5.7). */
 function entry(w: World, eng: Engine): void {
   const f = F(w);
   const h = H(w);
   const s = st(w);
   const base = eng.param(w, 'firm.entryRate');
-  const minCap = eng.param(w, 'firm.entryCapital');
+  const minCap = (eng.param(w, 'firm.entryCapital') * s.cpi) / 100; // tính theo giá hiện hành
   const rBar = eng.param(w, 'firm.rBar');
-  const count = new Int32Array(NSECTOR);
+  const uBar = eng.param(w, 'firm.uBar');
+  const share = eng.param(w, 'firm.founderShare');
+  const pK = s.pSector[INDUSTRY] / (1 + vatRate(w, eng, INDUSTRY));
   const profit = new Float64Array(NSECTOR);
   const capital = new Float64Array(NSECTOR);
+  const used = new Float64Array(NSECTOR);
+  const kTotal = new Float64Array(NSECTOR);
   for (let i = 0; i < f.n; i++)
     if (f.alive[i] && f.formal[i]) {
-      count[f.sector[i]]++;
       profit[f.sector[i]] += f.ocf[i];
       capital[f.sector[i]] += f.capValue[i];
+      used[f.sector[i]] += f.util[i] * f.K[i];
+      kTotal[f.sector[i]] += f.K[i];
     }
   for (let sec = 0; sec < NSECTOR; sec++) {
+    // Số doanh nghiệp mới kỳ vọng: theo quy mô dân số, nhân với sức hút của ngành.
+    // Ngành lãi trên mức bình thường thì hút người vào; ngành đang thừa máy thì không ai vào. [TTK]
     const r = capital[sec] > 0 ? profit[sec] / capital[sec] : rBar;
-    const expected = base * Math.max(1, count[sec]) * Math.max(0, Math.min(3, r / rBar));
+    const u = kTotal[sec] > 0 ? used[sec] / kTotal[sec] : 1;
+    const pull = Math.max(0, Math.min(2, r / rBar)) * Math.max(0, Math.min(1.5, (u - 0.6) / (uBar - 0.6)));
+    const expected = (base * (h.n / 1000) * pull) / NSECTOR;
     let n = Math.floor(expected);
     if (R(w, STREAM.entry, sec) < expected - n) n++;
+    // vốn cần: máy cho hai người và ba tháng lương; phần máy còn thiếu doanh nghiệp tự vay
+    const wage = Math.max(s.wageAvg, minWageOf(w, eng, 1));
+    const needCap = (kappaOf(w, eng, sec) * 2 * pK) / uBar + 6 * wage;
     for (let e = 0; e < n; e++) {
       // chọn người sáng lập: 5 hộ giàu nhất trong 40 hộ lấy ngẫu nhiên
       const picks: number[] = [];
@@ -901,10 +1018,10 @@ function entry(w: World, eng: Engine): void {
       picks.sort((a, b) => h.dep[b] - h.dep[a] || a - b);
       const founders = picks.slice(0, 5);
       let pooled = 0;
-      for (const o of founders) pooled += Math.floor(h.dep[o] * 0.5);
+      for (const o of founders) pooled += Math.floor(h.dep[o] * share);
       if (pooled < minCap) continue;
+      const scale = Math.min(1, needCap / pooled);
       const bank = h.bank[founders[0]];
-      const wage = Math.max(s.wageAvg, minWageOf(w, eng, 1));
       const pNet = s.pSector[sec] / (1 + vatRate(w, eng, sec));
       const firm = addRow(w.tables.firm, {
         bank,
@@ -924,9 +1041,9 @@ function entry(w: World, eng: Engine): void {
         cell: w.tables.firm.n,
       });
       for (const o of founders) {
-        const put = Math.floor(h.dep[o] * 0.5);
+        const put = Math.floor(h.dep[o] * share * scale);
         const paid = transfer(w, hhRef(o), firmRef(firm), put, MED_DEP, K_EQUITY);
-        addRow(w.tables.share, { kind: 0, entity: firm, owner: o, frac: paid / pooled });
+        addRow(w.tables.share, { kind: 0, entity: firm, owner: o, frac: paid / (pooled * scale) });
       }
       s.m.entries++;
     }

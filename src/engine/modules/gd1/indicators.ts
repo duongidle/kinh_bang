@@ -471,6 +471,7 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'firms.hkd', label: 'Số hộ kinh doanh có thuê người', unit: 'số', group: 'Doanh nghiệp', compute: (w) => countFirms(w, (f, i) => !f.formal[i] && !f.solo[i]) },
   { id: 'firms.solo', label: 'Số người tự làm', unit: 'số', group: 'Doanh nghiệp', compute: (w) => countFirms(w, (f, i) => f.solo[i] === 1) },
   { id: 'firms.bankrupt', label: 'Doanh nghiệp phá sản (tháng)', unit: 'số', group: 'Doanh nghiệp', good: -1, compute: (w) => st(w).m.bankrupt },
+  { id: 'loans.restructured', label: 'Doanh nghiệp được cơ cấu lại nợ (tháng)', unit: 'số', group: 'Tiền và tín dụng', good: -1, compute: (w) => st(w).m.restructured },
   { id: 'firms.entries', label: 'Doanh nghiệp mới (tháng)', unit: 'số', group: 'Doanh nghiệp', good: 1, compute: (w) => st(w).m.entries },
   {
     id: 'firms.sizeSkew',

@@ -43,6 +43,7 @@ const REASONS: ReasonDef[] = [
   { id: 'u_hired_formal', label: 'doanh nghiệp tuyển người', upstream: [ind('consumption', 1), ind('investment', 1)] },
   { id: 'u_hired_informal', label: 'hộ kinh doanh thuê người', upstream: [ind('consumption', 1)] },
   { id: 'u_job_switch', label: 'người lao động đổi chỗ làm', upstream: [] },
+  { id: 'u_turnover', label: 'người làm thuê rời chỗ làm (luân chuyển tự nhiên)', upstream: [] },
   { id: 'u_solo_closed', label: 'người tự làm bỏ nghề', upstream: [] },
   { id: 'u_hkd_closed', label: 'hộ kinh doanh đóng cửa', upstream: [ind('consumption', 1)] },
   { id: 'u_bankrupt', label: 'doanh nghiệp phá sản', upstream: [ind('firms.bankrupt')] },

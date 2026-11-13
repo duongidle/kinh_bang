@@ -6,17 +6,48 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
-- **Giai đoạn**: GĐ1, mốc M1-M5 (engine). Thiết kế GĐ0 + GĐ1 được duyệt ngày 13/11/2026.
+- **Giai đoạn**: GĐ1, mốc M1-M5 (engine), đang **hiệu chỉnh thô, chưa xong**. Chưa chạy kiểm định thống kê.
 - **Xong**:
   - GĐ0 phần lõi: engine, sổ cái, luật theo ngày, chuỗi nhân quả, nền đồ chơi. Test K0.1, K0.3-K0.9, K0.11, K0.12 qua.
-  - GĐ1 engine bản đầu: `src/engine/modules/gd1/` (schema, init, households, firms, banks, gov, indicators, index), tham số ở `src/config/model/gd1.ts`. Chạy ổn định 20 năm ở mức 500 hộ, không nợ lương, lạm phát 4-5%.
-  - Test nhanh `tests/unit/gd1.test.ts`: K1.1-K1.4, K1.30, tất định, lưu/tải, mọi biến thể Phòng thí nghiệm giữ sổ cân.
-- **Đang dở**: hiệu chỉnh thô GĐ1. Thất nghiệp đang quá thấp (khoảng 1%), Gini của cải mới 0,25 sau 19 năm, vốn ngân hàng phình.
-- **Bước tiếp theo**:
-  1. Hiệu chỉnh tiếp, dùng `npx tsx scripts/run-gd1.ts M 1 480` để xem nhanh.
-  2. Viết kiểm định thống kê `tests/validation/gd1.test.ts` (K1.5-K1.31) và chạy `npm run validate:gd1` ở cuối mốc.
-  3. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
-  4. GĐ1 mốc M6: UI, kịch bản, các tính năng S.
+  - GĐ1 engine: `src/engine/modules/gd1/` (schema, init, households, firms, banks, gov, indicators, index), tham số ở `src/config/model/gd1.ts`.
+  - Test nhanh `tests/unit/gd1.test.ts` (37 test qua): K1.1-K1.4, K1.30, tất định, lưu/tải, mọi biến thể Phòng thí nghiệm giữ sổ cân.
+  - Kế toán đúng ở mọi lần chạy: bốn đẳng thức giữ, GDP chi tiêu = GDP thu nhập, tiền thay đổi khớp sổ cái.
+- **Đang dở: hành vi vĩ mô chưa ổn định, CHƯA đạt K1.5.** Kết quả 3 seed × 40 năm ở 500 hộ (`npx tsx scripts/run-gd1.ts M <seed> 480 5`):
+  - 20 năm đầu chạy được nhưng thất nghiệp cao (5-17%, mục tiêu 2-6%), lạm phát 0-5%.
+  - Seed 1 và 2: sau năm 15-25 có một đợt tín dụng nóng (dư nợ gấp 5-8 lần, lạm phát 6-12%), rồi khu vực chính thức sụp (còn 6-7 doanh nghiệp, thất nghiệp 18-33%, 95-100% đơn vay bị từ chối) và nền kinh tế lùi về 65-85% phi chính thức.
+  - Seed 3: suy giảm từ năm 3-5, sau đó đứng yên ở mức thấp, số doanh nghiệp tăng dần tới 158 nhưng hầu như không vay được.
+  - Gini của cải mới 0,25-0,31 sau 40 năm (K1.13 cần trên 0,4).
+- **Đã chẩn đoán, chưa sửa**:
+  1. Tín dụng bị từ chối 80-100% suốt ván, chủ yếu vì lý do `cr_repay` (dòng tiền không đủ trả nợ). Quy tắc xét khả năng trả nợ ở `banks.ts` (`ocf / dscr − service`) quá chặt so với cách doanh nghiệp xin vay mỗi tháng. Đây là nút thắt chính: bán hết hàng, còn người thất nghiệp, mà doanh nghiệp không mua được máy.
+  2. Cân bằng giữa doanh nghiệp và hộ kinh doanh không bền: hàng đồng nhất, người mua chọn nơi rẻ nhất, nên bên nào rẻ hơn một chút sẽ lấn dần hết thị trường. Chưa có cơ chế nào giữ hai khu vực cùng tồn tại.
+  3. Quy tắc tự động của Bộ Tài chính (bám mục tiêu bội chi) cùng chiều chu kỳ: lúc nóng thu tăng nên chi tăng theo.
+  4. Lãi suất của NHNN ít tác dụng lên đầu tư (hàm đầu tư chưa có chi phí vay).
+  5. Máy của doanh nghiệp phá sản dồn về vài doanh nghiệp lớn, ngành công nghiệp có lúc chỉ còn một nhà sản xuất máy.
+- **Bước tiếp theo** (theo thứ tự):
+  1. Sửa quy tắc xét tín dụng (mục 1 ở trên), chạy lại 3 seed. Công cụ soi: `scripts/debug3.ts` (lý do từ chối tín dụng, lý do thất nghiệp, từng doanh nghiệp), `DBG=1 npx tsx scripts/debug-gd1.ts <tháng> | grep BUST` (vì sao phá sản), `scripts/debug2.ts` (dòng tiền theo khu vực, bảng cân đối ngân hàng).
+  2. Quyết cách giữ hai khu vực cùng tồn tại (mục 2). Việc này chạm thiết kế mục 6, có thể phải hỏi Dương.
+  3. Khi K1.5 đạt ở 3 seed: viết `tests/validation/gd1.test.ts` (K1.5-K1.31), chạy `npm run validate:gd1`, ghi `docs/validation/gd1.md`.
+  4. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
+  5. GĐ1 mốc M6: UI, kịch bản, các tính năng S.
+
+## 13/11/2026 - Hiệu chỉnh thô GĐ1 (đang dở)
+
+Các thay đổi cơ chế đã thêm trong lúc hiệu chỉnh. Tất cả là tớ tự quyết, ngoài thiết kế đã duyệt, Dương nên xem:
+- **Quy tắc tự động của Bộ Tài chính** (`gov.autopilot`, mặc định bật): mỗi tháng 1 chỉnh `gov.purchase.share` để bội chi 36 tháng tiến về `gov.deficit.target` (2,5% GDP), tối đa 0,3 điểm mỗi năm. Thiết kế ghi "giữ chi theo tỷ lệ GDP"; làm vậy thì không có gì neo cân đối ngân sách, nợ hoặc thặng dư dồn mãi.
+- **Chỉnh ngưỡng tính bằng đồng theo lạm phát** (`gov.indexation`, mặc định bật): ngưỡng thuế chỉnh khi CPI tăng quá 20%, lương tối thiểu vùng chỉnh mỗi năm. Không có thì sau 20 năm ai cũng nộp TNCN bậc cao.
+- **NHNN tự chỉnh lãi suất theo lạm phát** (`cb.autopilot`) đổi mặc định sang bật.
+- **Chính phủ nhỏ hơn nữa**: công chức 3% lao động, mua hàng khởi điểm 2% GDP.
+- **Vốn cố định mỗi lao động tăng lên** khoảng một năm rưỡi lương (`firm.kappa.*` 1300/1700/1300). Hộ kinh doanh: năng suất 0,44.
+- **Hàm đầu tư** dùng mức sử dụng công suất mong muốn, hệ số `firm.gamma2` nâng từ 0,0067 lên 0,05 mỗi tháng (khác xa Caiani).
+- **Định giá theo chi phí chuẩn**: chi phí máy tính trên sản lượng ở công suất bình thường, để bán chậm không tự đẩy giá lên.
+- **Biên lãi** tăng giảm đối xứng.
+- **Luân chuyển lao động** 1,7% mỗi tháng (Caiani θ).
+- **Gia nhập doanh nghiệp** tính theo dân số và sức hút của ngành, không theo số doanh nghiệp đang có. Vốn góp tối thiểu 60 triệu theo giá gốc.
+- **Hộ kinh doanh mới mở vì thấy có lãi** (`hkd.entryRate`), ngoài kênh "thất nghiệp lâu thì tự làm".
+- **Lương ở hộ kinh doanh giảm được** khi thừa người và hàng ế; lương doanh nghiệp vẫn cứng chiều xuống.
+- **Giãn nợ**: doanh nghiệp còn vốn ròng dương mà chậm trả, hoặc trả xong thì hết quỹ lương, được ngân hàng giãn kỳ hạn thay vì phá sản. Chỉ phá sản khi âm vốn hoặc hết người hết tiền.
+- **Thanh lý**: máy của doanh nghiệp phá sản bán chiết khấu cho tối đa ba doanh nghiệp, nơi đang cần máy mua trước.
+- Kỳ hạn vay đầu tư 84 tháng. Tỷ lệ vốn mục tiêu của ngân hàng 18%.
 
 ## 13/11/2026 - GĐ1 engine chạy được lần đầu
 

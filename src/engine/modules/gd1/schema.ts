@@ -93,6 +93,7 @@ const FIRM_COLS: ColSpec[] = [
   { name: 'distress', type: 'i32' },
   { name: 'service', type: 'f64' }, // nghĩa vụ trả nợ tháng
   { name: 'lastRate', type: 'f64' },
+  { name: 'lastRestr', type: 'i32', def: -999 }, // tháng gần nhất được giãn nợ
   { name: 'cell', type: 'i32' },
   { name: 'named', type: 'i32', def: -1 },
 ];
@@ -215,6 +216,7 @@ export function F(w: World) {
     distress: i32(t, 'distress'),
     service: f64(t, 'service'),
     lastRate: f64(t, 'lastRate'),
+    lastRestr: i32(t, 'lastRestr'),
   };
 }
 
@@ -249,6 +251,9 @@ export interface Gd1State {
   pSectorPrev: number[];
   cpiHist: number[]; // 13 tháng gần nhất
   cpiPrev: number;
+  balHist: number[]; // cân đối ngân sách 12 tháng gần nhất
+  gdpHist: number[];
+  cpiTaxBase: number; // CPI ở lần chỉnh ngưỡng thuế gần nhất
   pHist: number[][]; // giá theo ngành, 5 tháng gần nhất
   p0: number[]; // giá gốc theo ngành, để tính GDP thực
   basketAcc: number[];
@@ -287,6 +292,8 @@ export interface Gd1State {
     fires: number;
     bankrupt: number;
     entries: number;
+    entriesHkd: number;
+    restructured: number;
     loanDemand: number;
     loanGranted: number;
     loanDenied: number;
@@ -334,6 +341,8 @@ export function resetMonth(s: Gd1State): void {
     fires: 0,
     bankrupt: 0,
     entries: 0,
+    entriesHkd: 0,
+    restructured: 0,
     loanDemand: 0,
     loanGranted: 0,
     loanDenied: 0,

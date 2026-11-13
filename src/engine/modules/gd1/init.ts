@@ -114,7 +114,7 @@ export function initWorld(w: World, eng: Engine): void {
       cell: i,
     });
     // khoản vay sẵn có, kỳ hạn còn lại so le để nợ không đáo hạn cùng lúc
-    createLoan(w, firm % cnt.banks, firmRef(firm), debt, { rate: loanRate, months: 24 + ((i * 7) % 37), kind: 1 });
+    createLoan(w, firm % cnt.banks, firmRef(firm), debt, { rate: loanRate, months: 48 + ((i * 7) % 37), kind: 1 });
     // giữ đệm hai tháng lương; phần còn lại coi như đã trả cho người bán máy từ trước
     const keep = 2 * size * w0;
     const fd = f64(w.tables.firm, 'dep');
@@ -245,7 +245,7 @@ export function initWorld(w: World, eng: Engine): void {
 
   // ---------- 8. vốn ngân hàng ----------
   const b = B(w);
-  for (let k = 0; k < cnt.banks; k++) seedReserves(w, k, Math.max(50e6, 0.15 * b.loans[k]) - bankEquity(b, k));
+  for (let k = 0; k < cnt.banks; k++) seedReserves(w, k, Math.max(50e6, 0.2 * b.loans[k]) - bankEquity(b, k));
 
   // ---------- 9. nợ công cân lại toàn bộ tiền đã phát ----------
   const cbEq = f64(w.tables.cb, 'equity');
@@ -307,6 +307,9 @@ export function initWorld(w: World, eng: Engine): void {
     pSectorPrev: pSector.slice(),
     cpiHist: [100],
     cpiPrev: 100,
+    balHist: [],
+    gdpHist: [],
+    cpiTaxBase: 100,
     pHist: [pSector.slice()],
     p0: pSector.slice(),
     basketAcc: [0, 0, 0],
