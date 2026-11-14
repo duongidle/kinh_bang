@@ -22,6 +22,8 @@ export interface Check {
   note?: string;
   /** Mục đã biết là chưa đạt, kèm lý do và hướng xử lý. Không tính là lỗi bất ngờ. */
   known?: string;
+  /** Mục chỉ để tham khảo ở quy mô này: vẫn đo và in, nhưng không bao giờ tính là không qua. Giá trị là lý do. */
+  infoOnly?: string;
 }
 
 export interface Intervention {
@@ -38,8 +40,13 @@ export function apply(eng: Engine, w: World, x: Intervention): void {
 
 /** Mục chưa đạt đã được Dương ghi nhận (14/11/2026). */
 export const KNOWN_FAIL: Record<string, string> = {
+  'K1.13':
+    'Chưa đạt ở 5000 hộ: thiếu cơ chế. Ở 500 hộ Gini vượt 0,4 chủ yếu nhờ nhiễu của quy mô nhỏ (doanh nghiệp phá sản khoảng 17% mỗi năm, so với 6% ở 5000 hộ), không phải nhờ một cơ chế tích tụ. Mô hình thiếu: người giàu tiết kiệm phần lớn hơn của thu nhập, lợi tức vốn dồn tích, chênh lệch kỹ năng (GĐ2), đất và nhà, thừa kế (GĐ3). Chi tiết và đề xuất: sai-khac.md D8.',
   'K1.19':
     'Kênh lãi suất tới cầu còn yếu. Hộ không vay, nên lãi suất chỉ chạm tiêu dùng qua thay thế liên thời gian (exp.saveResponse = 0,35 theo Havránek 2015) và chạm đầu tư. Kênh vay tiêu dùng (thiết kế mục 18) để GĐ3, khi có nhà đất làm tài sản thế chấp. Không nâng tham số để qua mục này.',
+  'K1.28': 'Đã biết (Dương, 14/11/2026). Lương giờ bám một nửa lạm phát 12 tháng qua, không bám lạm phát kỳ vọng, nên tắt kỳ vọng gần như không đổi độ dai của lạm phát.',
+  'K1.29': 'Đã biết (Dương, 14/11/2026). Hiệu đúng dấu nhưng nhỏ hơn nhiễu giữa các seed.',
+  'K1.31': 'Chuyển sang GĐ2 (Dương, 14/11/2026). Lao động ở GĐ1 đồng nhất nên lương các doanh nghiệp tụm sát nhau, sàn lương không tách ra được một nhóm lương thấp. Kiểm lại khi có kỹ năng.',
 };
 
 export function summarize(id: string, claim: string, threshold: string, perSeed: Check['perSeed'], need = 0.8, note?: string): Check {
@@ -230,7 +237,11 @@ export function baselineChecks(seeds: number[], scale: ScaleId, months = MONTHS,
     ['K1.32', 'Tỷ lệ lao động phi chính thức ổn định quanh mục tiêu', 'bình quân 50-70%, trôi dưới 10 điểm'],
   ];
   const absolute = new Set(['K1.1', 'K1.2', 'K1.3', 'K1.4', 'K1.30']);
-  const checks = D.filter(([id]) => rows[id]).map(([id, claim, th]) => summarize(id, claim, th, rows[id], absolute.has(id) ? 1 : 0.8));
+  const checks = D.filter(([id]) => rows[id]).map(([id, claim, th]) => {
+    const c = summarize(id, claim, th, rows[id], absolute.has(id) ? 1 : 0.8);
+    if (id === 'K1.12' && scale !== 'L') c.infoOnly = 'Chỉ xét ở 5000 hộ: ở 500 hộ đỉnh tương quan nhảy giữa cùng quý và trễ một quý vì ít doanh nghiệp (sai-khac.md D6).';
+    return c;
+  });
   return { checks, table };
 }
 
@@ -402,7 +413,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
       const rev = diff(p, 'gov.tax.vat', 6, 24, true);
       return { ok: pass > 0 && pass < 1 && c < 0 && rev > 0, m: Math.min(pass, 1 - pass), value: `chuyển vào giá ${f2(pass)}; tiêu dùng thực ${pc(c)}; thu GTGT ${pc(rev)}` };
     },
-    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung.',
+    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 14/11/2026 người bán chỉ chuyển ngay một phần thuế vào giá (firm.taxPassThrough).',
   );
   each(
     'K1.25',
@@ -516,10 +527,11 @@ export function renderReport(title: string, sections: Array<{ heading: string; c
     lines.push(`## ${s.heading}`, '');
     if (s.intro) lines.push(s.intro, '');
     lines.push('| Mã | Sự thật | Ngưỡng | Số seed đạt | Kết quả |', '|---|---|---|---|---|');
-    for (const c of s.checks) lines.push(`| ${c.id} | ${c.claim} | ${c.threshold} | ${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length} | ${c.pass ? (c.byMean ? 'QUA (theo trung bình)' : 'QUA') : c.known ? '**CHƯA ĐẠT (đã biết)**' : '**KHÔNG QUA**'} |`);
+    for (const c of s.checks) lines.push(`| ${c.id} | ${c.claim} | ${c.threshold} | ${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length} | ${c.infoOnly ? 'tham khảo' : c.pass ? (c.byMean ? 'QUA (theo trung bình)' : 'QUA') : c.known ? '**CHƯA ĐẠT (đã biết)**' : '**KHÔNG QUA**'} |`);
     lines.push('');
     for (const c of s.checks) {
       lines.push(`<details><summary>${c.id}: số đo từng seed</summary>`, '');
+      if (c.infoOnly) lines.push(`Tham khảo: ${c.infoOnly}`, '');
       if (c.known && !c.pass) lines.push(`Chưa đạt, đã biết: ${c.known}`, '');
       if (c.note) lines.push(c.note, '');
       for (const p of c.perSeed) lines.push(`- seed ${p.seed}: ${p.ok ? 'đạt' : 'không đạt'} (${p.value})`);

@@ -17,6 +17,7 @@ import type {
   MoneyResult,
   NamedAgent,
   NewsItem,
+  OptionsReport,
   PlayerOrders,
   Query,
   QueryData,
@@ -66,6 +67,10 @@ export class Session {
   private applied = new Set<number>(); // các lệnh trong nhật ký đã áp vào thế giới đang chạy
   private eventLog = new Map<number, number>(); // vị trí trong w.events -> số thứ tự nhật ký
   private snaps: Snap[] = [];
+  /** Thế giới ở tháng t0, lúc người chơi nhận quyền, trước cú sốc của chính tháng đó. Chỉ lưu cho kịch bản có nhiều lựa chọn. */
+  private t0World?: Uint8Array;
+  /** Kết quả các nhánh (chưa có ván của người chơi) và thế giới đối chứng. Xoá khi mở ván mới hoặc tải ván. */
+  private optionsCache?: { control: World; report: OptionsReport };
   private sentEvents = 0;
   private prevNamed: number[] = [];
   /** Thời gian tính mỗi tháng, do lớp bọc (Worker) đo và ghi vào. Engine không đọc đồng hồ. */
@@ -118,6 +123,8 @@ export class Session {
     this.applied.clear();
     this.eventLog.clear();
     this.snaps = [];
+    this.t0World = undefined;
+    this.optionsCache = undefined;
     this.sentEvents = 0;
     this.prevNamed = [];
     const add = (tick: number, origin: LogEntry['origin'], x: Step | NonNullable<typeof cmd.setup>, label?: string) => {
@@ -133,7 +140,13 @@ export class Session {
     this.t0 = def?.warmup ?? 0;
     for (const s of def?.shocks ?? []) add(this.t0 + s.at, 'shock', s, s.label);
     this.applyDue();
-    for (let i = 0; i < this.t0; i++) this.advance();
+    // Tháng cuối của giai đoạn chạy trước: chưa áp cú sốc của tháng t0, để chụp trạng thái xuất phát cho các nhánh.
+    for (let i = 0; i < this.t0; i++) {
+      this.eng.step(this.w);
+      if (i < this.t0 - 1) this.applyDue();
+    }
+    if (def?.options) this.t0World = pack(this.w);
+    if (this.t0 > 0) this.applyDue();
     if (def?.possess) {
       const n = st(this.w).names.find((x) => x.name === def.possess!.name);
       if (n) this.log.push({ tick: this.t0, origin: 'setup', cmd: { type: 'possess', sector: def.possess.sector, id: n.id } });
@@ -293,11 +306,11 @@ export class Session {
   // =====================================================================
   private save(): Uint8Array {
     const log = this.log.filter((e) => !e.dynamic).map((e) => ({ ...e, applied: this.applied.has(this.log.indexOf(e)) }));
-    return pack({ kind: 'kinhbang-session', protocol: PROTOCOL_VERSION, scenario: this.def?.id ?? null, t0: this.t0, log, world: this.w });
+    return pack({ kind: 'kinhbang-session', protocol: PROTOCOL_VERSION, scenario: this.def?.id ?? null, t0: this.t0, log, world: this.w, t0World: this.t0World });
   }
 
   private load(bytes: Uint8Array): void {
-    const x = unpack<{ kind?: string; scenario: string | null; t0: number; log: Array<LogEntry & { applied: boolean }>; world: World }>(bytes);
+    const x = unpack<{ kind?: string; scenario: string | null; t0: number; log: Array<LogEntry & { applied: boolean }>; world: World; t0World?: Uint8Array }>(bytes);
     if (x.kind !== 'kinhbang-session') throw new Error('File này không phải ván Kinh Bang.');
     const want = this.eng.modules.map((m) => m.id).join(',');
     if (x.world.meta.modules.join(',') !== want) throw new Error('Ván lưu dùng bộ module khác.');
@@ -308,6 +321,8 @@ export class Session {
     this.applied = new Set(x.log.map((e, i) => (e.applied ? i : -1)).filter((i) => i >= 0));
     this.eventLog.clear();
     this.snaps = [];
+    this.t0World = x.t0World;
+    this.optionsCache = undefined;
     this.snapshot(true);
     this.sentEvents = this.w.events.length;
     this.prevNamed = [];
@@ -548,6 +563,100 @@ export class Session {
   }
 
   // =====================================================================
+  // So sánh song song các lựa chọn của kịch bản
+  // =====================================================================
+  /**
+   * Chạy từng nhánh từ cùng một trạng thái xuất phát (tháng t0) rồi đặt cạnh thế giới đối chứng.
+   * Trạng thái t0 lấy từ `t0World`, chụp lúc mở ván. Không dựa vào `snaps` vì mốc lưu có thể bị bỏ bớt khi người chơi ra nhiều lệnh.
+   * Mỗi nhánh áp: các lệnh của kịch bản còn lại sau t0 (cú sốc theo lịch, nhận điều khiển tác nhân), bước chung `demo`, bước riêng của nhánh.
+   * Lệnh của người chơi trong nhật ký bị bỏ qua. Thế giới đang chạy `this.w` không bị đụng tới.
+   */
+  scenarioOptions(): OptionsReport {
+    const def = this.def;
+    if (!def) throw new Error('Ván này không phải kịch bản.');
+    if (!def.options?.length) throw new Error('Kịch bản này không có nhiều lựa chọn để so sánh.');
+    if (!this.t0World) throw new Error('Ván lưu này không có trạng thái xuất phát của kịch bản. Hãy mở ván mới để so sánh các lựa chọn.');
+    const cols = def.compare ?? [];
+    const months = def.months;
+    if (!this.optionsCache) {
+      const control = this.branch(def.control !== 'shock', []);
+      const rows = def.options.map((o) => {
+        const w = this.branch(true, [...def.demo, ...o.steps]);
+        const c: Ctx = { eng: this.eng, w, base: control, t0: this.t0, t1: this.t0 + months };
+        return {
+          id: o.id,
+          label: o.label,
+          note: o.note,
+          values: this.compareValues(w, control, cols),
+          common: def.claims.map((cl) => ({ text: cl.text, ...cl.test(c) })),
+          claims: o.claims.map((cl) => ({ text: cl.text, ...cl.test(c) })),
+        };
+      });
+      this.optionsCache = { control, report: { columns: cols.map((x) => ({ indicator: x.indicator, label: x.label, kind: x.kind })), rows } };
+    }
+    const { control, report } = this.optionsCache;
+    if (this.w.meta.tick >= this.t0 + months) return { ...report, player: { values: this.compareValues(this.w, control, cols) } };
+    return report;
+  }
+
+  /**
+   * Một nhánh chạy def.months tháng từ trạng thái t0.
+   * `withShocks = false`: bỏ cú sốc của kịch bản (thế giới đối chứng khi control = 'shock').
+   */
+  private branch(withShocks: boolean, steps: Step[]): World {
+    const def = this.def!;
+    const w = unpack<World>(this.t0World!);
+    const entries = this.log.filter((e) => {
+      if (e.origin === 'player') return false;
+      if (e.origin === 'shock') return withShocks && (this.t0 > 0 || e.tick > 0);
+      return e.cmd.type === 'possess'; // điều kiện đầu đã nằm sẵn trong trạng thái t0
+    });
+    const done = new Set<LogEntry>();
+    const due = () => {
+      for (const e of entries) {
+        if (done.has(e) || e.tick > w.meta.tick) continue;
+        done.add(e);
+        this.apply(w, e, -1, false);
+      }
+    };
+    const by = 'Người chơi';
+    due();
+    for (let k = 0; k < def.months; k++) {
+      for (const x of steps) if (x.at === k) this.applyStep(w, x, by);
+      this.eng.step(w);
+      due();
+    }
+    return w;
+  }
+
+  /** Áp một bước của kịch bản lên một thế giới bất kỳ, giống `act` nhưng không ghi nhật ký. Giá trị động tính trên chính thế giới đó. */
+  private applyStep(w: World, x: Step, by: string): void {
+    const y = x.dynamic ? x.dynamic(this.eng, w) : x;
+    for (const [id, v] of Object.entries(y.laws ?? {})) this.eng.setLaw(w, id, v, by);
+    for (const [id, v] of Object.entries(y.params ?? {})) this.setParam(w, id, v, by);
+    for (const [rule, variant] of Object.entries(y.variants ?? {})) this.eng.setVariant(w, rule, variant);
+    if (x.orders) Object.assign(playerOf(w), x.orders);
+  }
+
+  /** Giá trị các cột so sánh: trung bình cửa sổ [t0+từ, t0+min(đến, số tháng)) của nhánh so với đối chứng. */
+  private compareValues(w: World, control: World, cols: NonNullable<ScenarioDef['compare']>): number[] {
+    const months = this.def!.months;
+    const mean = (x: World, id: string, a: number, b: number) => {
+      const v = this.eng.seriesOf(x, id, a, b);
+      let sum = 0;
+      for (const y of v) sum += y;
+      return v.length ? sum / v.length : NaN;
+    };
+    return cols.map((c) => {
+      const a = this.t0 + c.from;
+      const b = this.t0 + Math.min(c.to, months);
+      const x = mean(w, c.indicator, a, b);
+      const y = mean(control, c.indicator, a, b);
+      return c.kind === 'rel' ? x / y - 1 : x - y;
+    });
+  }
+
+  // =====================================================================
   // Truy vấn
   // =====================================================================
   private query(q: Query): QueryData {
@@ -576,6 +685,8 @@ export class Session {
         return { hash: eng.hash(w) };
       case 'scenarioReport':
         return this.scenarioReport();
+      case 'scenarioOptions':
+        return this.scenarioOptions();
     }
   }
 
@@ -781,5 +892,5 @@ export class Session {
 }
 
 export function scenarioInfo(d: ScenarioDef): ScenarioInfo {
-  return { id: d.id, title: d.title, role: d.role, scale: d.scale, question: d.question, intro: d.intro, prereq: d.prereq, months: d.months, goals: d.goals.map((g) => ({ id: g.id, label: g.label })), predict: d.predict, untested: d.untested, history: d.history };
+  return { id: d.id, title: d.title, role: d.role, scale: d.scale, question: d.question, intro: d.intro, prereq: d.prereq, months: d.months, goals: d.goals.map((g) => ({ id: g.id, label: g.label })), predict: d.predict, untested: d.untested, history: d.history, options: d.options?.map((o) => ({ id: o.id, label: o.label, note: o.note })) };
 }

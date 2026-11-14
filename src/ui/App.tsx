@@ -300,6 +300,18 @@ function GuessModal() {
             <h2>{scenario.title}</h2>
             <p className="q">{scenario.question}</p>
             <p>{scenario.intro}</p>
+            {scenario.options && (
+              <>
+                <p>Kịch bản này có nhiều lựa chọn. Cuối ván có bảng so sánh song song.</p>
+                <ul className="plain">
+                  {scenario.options.map((o) => (
+                    <li key={o.id}>
+                      <b>{o.label}</b>: {o.note}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
             {scenario.untested && <p className="warn">Kịch bản này nằm ngoài vùng đã kiểm định. Coi kết quả là gợi ý, không phải dự báo.</p>}
             <h3>Đoán trước khi chạy</h3>
           </>

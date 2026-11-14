@@ -1,7 +1,7 @@
 // Giao thức engine <-> UI (gd0 mục 7.2). Mọi tin nhắn đi qua Worker đều có kiểu ở đây.
 // Đổi cấu trúc tin thì tăng PROTOCOL_VERSION.
 
-export const PROTOCOL_VERSION = 1;
+export const PROTOCOL_VERSION = 2;
 
 export type ScaleId = 'S' | 'M' | 'L';
 export type Role = 'observer' | 'government' | 'fiscal' | 'monetary' | 'household' | 'firm';
@@ -32,7 +32,8 @@ export type Query =
   | { kind: 'money'; t0: number; t1: number }
   | { kind: 'flows'; t0: number; t1: number }
   | { kind: 'hash' }
-  | { kind: 'scenarioReport' };
+  | { kind: 'scenarioReport' }
+  | { kind: 'scenarioOptions' };
 
 export type Command =
   | { type: 'init'; scale: ScaleId; seed: number; scenario?: string; setup?: Intervention }
@@ -102,6 +103,8 @@ export interface ScenarioInfo {
   predict: Array<{ indicator: string; question: string }>;
   untested?: boolean;
   history?: string;
+  /** Các lựa chọn song song của kịch bản (nếu có). Cuối ván có bảng so sánh. */
+  options?: Array<{ id: string; label: string; note: string }>;
 }
 
 export interface Catalog {
@@ -281,7 +284,25 @@ export interface ScenarioReport {
   simplifications: string[];
 }
 
-export type QueryData = SeriesResult | CausalTree | AgentDetail | AgentRow[] | MoneyResult | FlowsResult | CounterfactualResult | ScenarioReport | { hash: string } | { bytes: Uint8Array };
+/** Bảng so sánh song song các lựa chọn của một kịch bản. */
+export interface OptionsReport {
+  /** 'rel': nhánh so với đối chứng, tỷ lệ (0,02 là +2%). 'pt': nhánh trừ đối chứng, ở đơn vị của chỉ số (tỷ lệ 0,01 là 1 điểm). */
+  columns: Array<{ indicator: string; label: string; kind: 'rel' | 'pt' }>;
+  rows: Array<{
+    id: string;
+    label: string;
+    note: string;
+    values: number[];
+    /** Khẳng định chung của kịch bản, đo trên nhánh này. */
+    common: ClaimResult[];
+    /** Khẳng định riêng của nhánh. */
+    claims: ClaimResult[];
+  }>;
+  /** Ván của người chơi, chỉ có khi đã chạy hết kịch bản. */
+  player?: { values: number[] };
+}
+
+export type QueryData = SeriesResult | CausalTree | AgentDetail | AgentRow[] | MoneyResult | FlowsResult | CounterfactualResult | ScenarioReport | OptionsReport | { hash: string } | { bytes: Uint8Array };
 
 export type EngineMsg =
   | { type: 'ready'; catalog: Catalog; named: NamedAgent[]; scenario?: ScenarioInfo; seed: number; scale: ScaleId }

@@ -17,7 +17,7 @@ describe('Kiểm định GĐ1', () => {
     const s = baselineChecks(seeds(N), 'S');
     const sAcc = s.checks.filter((c) => ACCOUNTING.includes(c.id));
     const all: Check[] = [...m.checks, ...x, ...l.checks, ...sAcc];
-    const failed = all.filter((c) => !c.pass);
+    const failed = all.filter((c) => !c.pass && !c.infoOnly);
     const md = renderReport('Báo cáo kiểm định GĐ1', [
       {
         heading: `Tóm tắt`,
