@@ -94,7 +94,7 @@ Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tu
 ## D. Chỗ tớ thấy còn yếu
 
 - Lãi suất NHNN tác động lên lạm phát đã có (K1.19), nhưng nhờ S25, S26, S28 thêm sau khi thấy K1.19 hỏng. S28 là chỗ yếu nhất: giá trị chọn để qua kiểm định.
-- K1.19 chỉ đúng trong khoảng 2 năm. Giữ lãi suất cao mãi thì tới năm thứ năm lạm phát lại CAO hơn nhánh gốc khoảng 2 điểm (8 seed). Kênh nghi ngờ: lãi tiền gửi cao thành thu nhập của hộ, và lãi vay vào giá bán. Chưa soi kỹ.
+- K1.19 chỉ đúng trong khoảng 2 năm. Giữ lãi suất cao mãi thì tới năm thứ năm lạm phát lại CAO hơn nhánh gốc khoảng 2 điểm (8 seed). Đã soi (8 seed, `scripts/k119.ts`): lãi suất cao làm tiền lãi Chính phủ trả tăng, bội chi tăng khoảng 70%, nợ công +22% và tiền của công chúng +14% sau 5 năm. Tiền lãi đó thành thu nhập của hộ, nên từ năm thứ tư tiêu dùng thực cao hơn nhánh gốc 3-5%. Đây là tính chất quen thuộc của mô hình kế toán kép khi ngân sách không phản ứng (Godley và Lavoie 2007, trí nhớ), không phải lỗi sổ sách. Ngoài đời Chính phủ thường siết chi khi tiền lãi phình ra; trong mô hình việc đó là của người chơi, hoặc bật `gov.autopilot`.
 - Lạm phát bình quân 6-7% ở phần lớn seed, cao hơn mục tiêu của NHNN. Quy tắc lãi suất tự động chưa kéo về được.
 - K1.22: siết tín dụng chỉ làm sản lượng thấp hơn trong khoảng 3 năm. Sau đó giá giảm, kinh tế bật lại cao hơn nhánh gốc ở năm 6-10 rồi mới về. Tớ chưa chắc cú bật mạnh như vậy là đúng thực tế hay do mô hình thiếu kênh giảm phát nợ (nợ thực nặng lên khi giá giảm làm doanh nghiệp phá sản).
 - K1.26: nộp thuế đủ làm khu vực phi chính thức nghèo đi nhưng không nhỏ đi về số người. Lý do: thuế thu thêm không được chi ra, và hộ kinh doanh không chuyển lên doanh nghiệp được.
