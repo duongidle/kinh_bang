@@ -372,6 +372,11 @@ Hai kiểm tra thêm ở 500 hộ, 10 seed:
 
 **Dương quyết đêm 14/11/2026** (chưa làm, việc 8, 9, 10 trong progress.md): không đổi cửa sổ đo, giữ assertion 24 tháng. Theo hướng 2: thêm cơ chế biên lãi hồi dần để mức chuyển thuế đi từ 0,34 tới gần trọn trong khoảng 2 năm, tốc độ lấy từ bài IMF 2015, giữ bất đối xứng cho chiều giảm. Theo hướng 3: mọi thí nghiệm và kịch bản đổi thuế phải khai tiền thu thêm đi đâu; mặc định chi lại theo cơ cấu chi hiện tại, giữ lại là biến thể. Tìm hiểu vì sao 500 và 5000 hộ khác dấu.
 
+Hai quyết định bổ sung cùng đêm (chưa làm, việc 8, 8b, 9 trong progress.md):
+
+- **Mặc định tài khoá theo hành vi thực tế của Chính phủ Việt Nam.** Tăng thuế: tiền thu thêm được chi lại theo cơ cấu chi hiện tại. Giảm thuế: vay bù, giữ nguyên chi tiêu. Cắt chi và giữ tiền lại là biến thể so sánh. Khi làm, mỗi mặc định phải kèm một câu nói nó dựa trên hành vi nào và nguồn; hiện CHƯA có nguồn, mới là nguyên tắc Dương đặt.
+- **Tăng giá đón trước ngày thuế có hiệu lực sẽ được mô hình hoá** (việc 8b), dùng hệ luật theo ngày hiệu lực, tham số từ IMF 2015. **Cho tới khi làm xong, đây là một đơn giản hoá đã biết**: mô hình thiếu phần giá tăng trước ngày đổi thuế (0,71 trong tổng 1,39 của Benedek 2015, Bảng 3), nên về lâu dài chuyển thuế vào giá ít hơn bằng chứng. Mục tiêu của cơ chế hồi biên lãi (việc 8) chỉ tính phần sau ngày đổi thuế; không ép phần hồi bù cho phần đón trước.
+
 Các lựa chọn đã trình (để đối chiếu):
 
 1. Giữ assertion, đo ở 12 tháng thay cho 24 tháng: đúng 100% số seed ở mọi quy mô, và là điều test muốn nói ("tăng thuế thì giá cao hơn"). Đây là đổi cửa sổ đo.
