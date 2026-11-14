@@ -197,6 +197,15 @@ export class Session {
     this.applied.add(i);
   }
 
+  /** Một bước của lời giải mẫu hoặc của người chơi, gồm nhiều lệnh. Giá trị động được tính ngay lúc này. */
+  act(x: Step | Omit<Step, 'at'>): void {
+    const y = x.dynamic ? x.dynamic(this.eng, this.w) : x;
+    for (const [id, value] of Object.entries(y.laws ?? {})) this.player({ type: 'policy', id, value });
+    for (const [id, value] of Object.entries(y.params ?? {})) this.player({ type: 'param', id, value });
+    for (const [rule, variant] of Object.entries(y.variants ?? {})) this.player({ type: 'lab', rule, variant });
+    if (x.orders) this.player({ type: 'orders', orders: x.orders });
+  }
+
   private advance(): void {
     this.eng.step(this.w);
     this.applyDue();

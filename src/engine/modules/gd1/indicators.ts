@@ -541,6 +541,7 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'gov.tax.hkd', label: 'Thu thuế hộ kinh doanh', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'hkd_tax') },
   { id: 'gov.tax.excise', label: 'Thu thuế gián thu khác', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'excise') },
   { id: 'gov.tax.fees', label: 'Thu từ đất, phí, lệ phí', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'fees') },
+  { id: 'gov.deficitGdp', label: 'Bội chi ngân sách so với GDP', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (gdpNominal(st(w)) > 0 ? (st(w).m.govSpend - govRevenue(w)) / gdpNominal(st(w)) : 0) },
   { id: 'gov.revenueGdp', label: 'Thu ngân sách so với GDP', unit: '%', group: 'Ngân sách', compute: (w) => (gdpNominal(st(w)) > 0 ? govRevenue(w) / gdpNominal(st(w)) : 0) },
   { id: 'gov.debt', label: 'Nợ công', unit: 'đồng', group: 'Ngân sách', good: -1, compute: debt },
   { id: 'gov.debtGdp', label: 'Nợ công so với GDP năm', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (st(w).gdpEma > 0 ? debt(w) / (12 * st(w).gdpEma) : 0) },
