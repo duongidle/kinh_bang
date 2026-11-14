@@ -47,6 +47,21 @@ describe('người bán chỉ chuyển một phần thuế vào giá', () => {
     expect(rise(b)).toBeGreaterThan(0);
     expect(rise(b)).toBeLessThan(rise(a));
   });
+
+  it('giảm GTGT: biến thể symmetric của firm.taxPass làm giá có thuế giảm nhiều hơn mặc định (bất đối xứng)', () => {
+    const eng = gd1Engine();
+    const a = eng.newWorld({ seed: 5, scale: 'S' });
+    eng.run(a, 24);
+    const b = eng.fork(a);
+    eng.setVariant(b, 'firm.taxPass', 'symmetric');
+    for (const w of [a, b]) {
+      eng.setLaw(w, 'vat.rate.standard', 0.02, 'test');
+      eng.run(w, 1);
+    }
+    const change = (w: typeof a) => eng.value(w, 'price.formal.taxed', 24) / eng.value(w, 'price.formal.taxed', 23) - 1;
+    expect(change(b)).toBeLessThan(0);
+    expect(change(b)).toBeLessThan(change(a));
+  });
 });
 
 describe('lương bám lạm phát', () => {

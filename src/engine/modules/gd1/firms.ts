@@ -152,7 +152,8 @@ export function planFirms(w: World, eng: Engine): void {
   const wagePast = eng.variant(w, 'firm.wageIndexBase') !== 'expected';
   const piWage = wagePast ? yoyInflation(s) : piExp;
   const taxPassUp = eng.param(w, 'firm.taxPassUp');
-  const taxPassDown = eng.param(w, 'firm.taxPassDown');
+  // Biến thể `symmetric` (Phòng thí nghiệm): giảm thuế chuyển vào giá bằng đúng mức của tăng thuế.
+  const taxPassDown = eng.variant(w, 'firm.taxPass') === 'symmetric' ? taxPassUp : eng.param(w, 'firm.taxPassDown');
 
   for (let i = 0; i < f.n; i++) {
     if (!f.alive[i]) continue;

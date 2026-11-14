@@ -21,7 +21,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 2 | Sonnet | Tạm thay việc 8: tăng thuế chuyển TRỌN vào giá (`firm.taxPassUp` = 1), giảm thuế giữ 0,065 (Benzarti). Ghi sai-khac.md là đơn giản hoá tạm, thay bằng việc 8 ở GĐ1 update 1 | thay 8 | Xong 15/11 (S36) |
 | 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Xong 15/11 (S37, D14) |
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Xong 15/11 (đo nhanh: đạt 3/3 ở 500 hộ, 1/3 ở 5000 hộ; xem D8) |
-| 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Chưa |
+| 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Xong 15/11 |
 | 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Chưa |
 | 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Đóng 15/11: hết khác dấu sau S36, S37 (số đo ở D13). Đo lại khi làm việc 8 |
 | 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Chưa |
@@ -119,6 +119,7 @@ Sau bảy việc: chạy lại kiểm định đầy đủ, cập nhật sai-kha
 - `session.test.ts`, "bỏ một chính sách": **đã hoàn lại assertion gốc theo yêu cầu của Dương; test đỏ từ 14/11, xanh lại từ 15/11 nhờ S36 (xem D13).** Trước đó Fable đã đổi "CPI ván thật cao hơn đối chứng" thành "khác đối chứng". Lý do: ở 50 hộ, sau 24 tháng tăng GTGT lên 20%, CPI ván thật THẤP hơn đối chứng (108,3 so với 109,9) vì cầu yếu đi. Ý chính của test (thế giới đối chứng trùng ván chưa có chính sách) không đổi. **Đây là chỗ Dương nên soát kỹ nhất**: một lần tăng thuế làm mức giá thấp hơn sau hai năm là kết quả lạ, mới thấy ở một seed, 50 hộ.
 - `scenario-options.test.ts`, "tăng GTGT: giá có thuế tăng ít hơn..." (15/11, S36): mặc định giờ là chuyển trọn (`firm.taxPassUp` = 1), nên đảo vai: thế giới `b` đặt `firm.taxPassUp` = 0,34 và khẳng định `rise(b) < rise(a)`; đổi tên test cho khớp. Ý giữ nguyên: cơ chế chuyển một phần vẫn chạy khi đặt tham số dưới 1.
 - `session.test.ts`, "control = shock" (15/11, S36): ngưỡng chênh CPI đưa về 0,01 như gốc trước 14/11 (đã hạ xuống 0,003 vì chuyển một phần); test qua với 0,01. Chú thích dòng sửa theo.
+- `scenario-options.test.ts`, "giảm GTGT: biến thể symmetric..." (mới, 15/11, việc 3c): seed 5 scale S, 24 tháng, fork; một bản đặt biến thể `firm.taxPass` = `symmetric`; cả hai hạ `vat.rate.standard` xuống 0,02, chạy 1 tháng; giá có thuế bản symmetric giảm (< 0) và giảm nhiều hơn bản mặc định. Test mới, không sửa test cũ.
 - `scenario-options.test.ts` (mới): phân rã ba chỉ số Chính phủ, chuyển thuế vào giá, lương bám lạm phát, so sánh nhánh.
 - `chot-chan.test.ts` (mới): chốt chặn.
 - `revenue-use.test.ts` (mới, 15/11, S37): bốn test của `gov.revenueUse`: không đổi thuế thì `gov.respend` = 0; tăng GTGT 15% thì `base` chi nhiều hơn `keep`; hạ GTGT 5% thì `base` chi bằng `keep`, `balanced` chi thấp hơn (đo 12 tháng đầu, vì xa hơn một vụ cứu ngân hàng ở một nhánh có thể đảo thứ tự); GTGT 8% về 10% theo lịch không kích hoạt.
