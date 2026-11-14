@@ -140,6 +140,31 @@ Hệ quả cho kiểm định với `exp.saveResponse` = 0,35 (20 seed, 500 hộ
 
 **Hệ quả khác phải biết**: lạm phát bình quân giờ 0-1,8% mỗi năm, thấp hơn mục tiêu 4,5% của NHNN; thất nghiệp 5,3-7,4%; niềm tin vào mục tiêu rơi về gần 0 vì lạm phát lệch xa mục tiêu. Trong mô hình không còn gì đẩy giá lên đều đặn: không tăng năng suất, không tăng dân số, ngân sách gần cân, và lương chỉ bám một nửa. Lạm phát giờ chỉ xuất hiện khi có cú đẩy (in tiền, chi tiêu công, tín dụng). Tớ thấy điều này hợp lý về cơ chế, nhưng nó xa số liệu Việt Nam (lạm phát 3-4%).
 
+### D6. Kết quả kiểm định đầy đủ ngày 14/11/2026 (sau các quyết định trên): GĐ1 CHƯA QUA
+
+Chạy `npm run validate:gd1`: 20 seed ở 500 hộ, 5 seed ở 5000 hộ, 20 seed ở 50 hộ. Báo cáo: [validation/gd1.md](../validation/gd1.md). Kế toán (K1.1-K1.4, K1.30) đúng ở mọi seed, mọi quy mô. Bảy mục không qua. **Chưa vá mục nào, chờ Dương quyết.**
+
+| Mục | Số seed đạt | Số đo | Nguyên nhân tớ thấy |
+|---|---|---|---|
+| K1.19 | 1/20 | lạm phát +0,24 đến +1,41 điểm sau khi tăng lãi suất | Đã biết (D1, D2) |
+| K1.12 | 12/20 ở 500 hộ, **5/5 ở 5000 hộ** | tương quan 0,50-0,79; đỉnh ở cùng quý (8 seed) hoặc trễ 1 quý (12 seed) | D5. Thêm: ở 5000 hộ qua hết, nên ở 500 hộ phần lớn là nhiễu do ít doanh nghiệp |
+| K1.24 | 11/20 | tỷ lệ chuyển thuế vào giá: trung bình 0,99, khoảng 0,85-1,26 | Mô hình chuyển **trọn** thuế vào giá: giá = chi phí × (1 + biên lãi) × (1 + thuế), và biên lãi không co lại khi thuế tăng. Ngưỡng đòi "dưới 1" ở từng seed, nên một nửa rơi ra ngoài vì nhiễu. Khẳng định "ít hơn mức thuế" của thiết kế không được tái hiện. Lúc lương bám 100% thì qua 17/20, vì lạm phát chung che bớt |
+| K1.28 | 7/20 | phần lạm phát còn lại sau cú sốc: bật kỳ vọng 74%, tắt 85%; hiệu −11 ± 17 điểm | Lương chỉ bám 50% lạm phát kỳ vọng nên kênh kỳ vọng yếu đi; tín hiệu nhỏ hơn nhiễu. Hệ quả trực tiếp của quyết định S7 |
+| K1.29 | 15/20 (cần 16) | niềm tin làm GDP sau cú sốc thấp thêm 0,89 ± 1,1 điểm | Hiệu đúng dấu nhưng nhỏ. Trước các quyết định ngày 14/11 cũng hỏng (13/20) |
+| K1.31 | 10/20 | lương nhóm thấp +0,0 đến +1,3%; việc làm chính thức −10% đến +4%, dấu chia đôi | Lương các doanh nghiệp tụm sát nhau (lao động đồng nhất), nên sàn ở 97% lương bình quân vẫn gần như không chạm ai. Hiệu ứng việc làm chỉ là nhiễu. GĐ2 có kỹ năng mới có nhóm lương thấp |
+| K1.13 ở 5000 hộ | 0/5 | Gini của cải 0,29-0,33 (ngưỡng 0,4); ở 500 hộ 0,30-0,53, qua 19/20 | Gini phụ thuộc quy mô. Ở 5000 hộ có 250-310 doanh nghiệp, sở hữu trải rộng hơn. Chưa kiểm đây có phải lý do duy nhất |
+
+Nhận xét chung: K1.24, K1.28, K1.31 từng qua khi lương bám 100% và lạm phát cao. Một phần là vì lạm phát nền cao làm mọi thứ "động" hơn và che nhiễu. Giờ lạm phát gần 0, các hiệu ứng nhỏ lộ ra là nhỏ.
+
+Kiểm định kịch bản (10 seed): 13/15 qua hết. Hai kịch bản phải sửa lời giải thích theo điều mô hình nói (đã sửa, chờ chạy lại):
+- `thue-nguoi-giau`: nâng thuế cổ tức và TNDN **không** làm Gini thu nhập giảm (2/10). Thuế thu thêm không được chi ra, thất nghiệp tăng 0,7-1,6 điểm, Gini lương tăng lấn át. Lời giải thích viết lại thành đúng phát hiện này.
+- `hai-tay-lai`: bỏ khẳng định "tiêu dùng thực cao hơn sau vài năm" (6/10, +0,4% ± 0,9).
+- `het-han-giam-thue`: bỏ câu "người bán giữ lại một phần" vì mô hình chuyển gần trọn thuế vào giá (K1.24).
+
+### D7. Tất định giữa trình duyệt và Node (K0.2)
+
+Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. Chờ Dương quyết: tự cài bốn hàm này trong lõi (trùng bit mọi nơi, phải kiểm định lại) hay chấp nhận.
+
 ## E. Ghi chú cũ
 
 

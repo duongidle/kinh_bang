@@ -181,8 +181,8 @@ export const SCENARIOS: ScenarioDef[] = [
     title: 'Đánh thuế người giàu',
     role: 'fiscal',
     scale: 'M',
-    question: 'Nâng thuế cổ tức và thuế doanh nghiệp: bất bình đẳng giảm bao nhiêu, đầu tư có tụt không?',
-    intro: 'Nền kinh tế đã chạy 15 năm, của cải đã phân hoá. Cậu giữ Bộ Tài chính. Thử nâng thuế cổ tức và thuế TNDN.',
+    question: 'Nâng thuế cổ tức và thuế doanh nghiệp có làm bất bình đẳng giảm không, và đầu tư có tụt không?',
+    intro: 'Nền kinh tế đã chạy 15 năm, của cải đã phân hoá. Cậu giữ Bộ Tài chính. Thử nâng thuế cổ tức và thuế TNDN, rồi quyết xem tiền thu thêm dùng làm gì.',
     prereq: ['vach-xuat-phat'],
     warmup: 180,
     months: 120,
@@ -193,11 +193,18 @@ export const SCENARIOS: ScenarioDef[] = [
     ],
     demo: [{ at: 0, laws: { 'pit.rate.dividend': 0.3, 'cit.rate.standard': 0.3 } }],
     claims: [
-      lower('Thuế cổ tức và thuế TNDN cao hơn làm Gini thu nhập thấp hơn.', 'gini.income', 12, END, 'pt'),
       higher('Thu ngân sách so với GDP tăng.', 'gov.revenueGdp', 12, END, 'pt'),
-      lower('Cái giá: tiêu dùng thực thấp hơn, vì tiền thuế thu thêm không quay lại túi các hộ.', 'consumption.real', 12, END),
+      lower('Lợi nhuận sau thuế thấp hơn nên doanh nghiệp đầu tư ít đi.', 'investment', 12, 60),
+      higher('Thất nghiệp cao hơn trong bốn năm đầu: tiền thuế thu thêm không quay lại vòng chi tiêu.', 'unemployment', 12, 48, 'pt'),
+      {
+        text: 'Kết quả ngược mong đợi: Gini thu nhập không thấp hơn. Người mất việc kéo khoảng cách thu nhập rộng ra, lấn át phần thuế lấy bớt của người có vốn.',
+        test(c) {
+          const d = dif(c, 'gini.income', 12, END);
+          return { ok: d > -0.005, detail: `Gini thu nhập ${pts(d)} so với thế giới đối chứng` };
+        },
+      },
     ],
-    explanation: 'Thuế cổ tức lấy bớt thu nhập của nhóm có vốn, nên khoảng cách thu nhập hẹp lại. Nếu Chính phủ không chi phần thu thêm, tiền đó rời khỏi vòng chi tiêu và cầu giảm.',
+    explanation: 'Thuế cổ tức và thuế TNDN lấy bớt thu nhập của nhóm có vốn. Nhưng trong mô hình, Chính phủ không chi phần thu thêm, nên tiền đó rời khỏi vòng chi tiêu. Doanh nghiệp bán ít đi, đầu tư ít đi và bớt người. Người mất việc là người mất thu nhập nhiều nhất, nên bất bình đẳng thu nhập không giảm, có năm còn tăng. Muốn thuế người giàu làm giảm bất bình đẳng thì phải chi phần thu thêm cho nhóm dưới: thử tăng trợ cấp cùng lúc.',
     simplifications: [...BASE_SIMPLE, 'Người giàu không chuyển tài sản ra nước ngoài, không né thuế.', 'Biểu thuế TNCN gần như không chạm ai vì lương chưa phân tán (GĐ2).'],
   },
   {
@@ -257,9 +264,9 @@ export const SCENARIOS: ScenarioDef[] = [
       lower('Đổi lại, thu GTGT thấp hơn.', 'gov.tax.vat', 12, END),
       higher('Tiêu dùng thực cao hơn.', 'consumption.real', 12, END),
     ],
-    explanation: 'Thuế GTGT nằm trong giá bán. Thuế thấp hơn thì giá thấp hơn, nhưng không thấp hơn đủ 2 điểm: người bán giữ lại một phần qua biên lãi. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn.',
+    explanation: 'Thuế GTGT nằm trong giá bán. Trong mô hình, người bán tính giá bằng chi phí cộng biên lãi rồi cộng thuế, nên thuế thấp hơn thì giá thấp hơn gần đúng bằng mức giảm thuế. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn.',
     history: 'Việt Nam giảm GTGT từ 10% xuống 8% cho phần lớn hàng hoá từ 2022 và gia hạn nhiều lần, tới hết 2026.',
-    simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.'],
+    simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.', 'Mô hình chuyển gần trọn thuế vào giá. Ngoài đời người bán thường giữ lại một phần khi thuế giảm.'],
   },
   {
     id: 'keo-vao-luoi-thue',
@@ -539,7 +546,6 @@ export const SCENARIOS: ScenarioDef[] = [
       lower('Lãi suất cao làm dư nợ thấp hơn.', 'credit', 12, 36),
       higher('Nhưng tiền lãi Chính phủ trả phình ra, bội chi lớn hơn.', 'gov.deficitGdp', 12, END, 'pt'),
       higher('Nợ công cao hơn.', 'gov.debt', 48, END),
-      higher('Tiền lãi đó thành thu nhập của người giữ tiền: sau vài năm tiêu dùng thực lại cao hơn.', 'consumption.real', 48, END),
       higher('Kết quả ngược mong đợi: từ năm thứ năm lạm phát cao hơn thế giới không tăng lãi suất.', 'inflation.yoy', 48, END, 'pt'),
     ],
     explanation: 'Lãi suất cao hãm tín dụng, đúng như sách. Nhưng Chính phủ là con nợ lớn nhất, và tiền lãi nó trả là thu nhập của ngân hàng và người gửi tiền. Nếu Bộ Tài chính không cắt chi hay tăng thuế để bù, thì chính sách thắt tiền tệ lại bơm tiền ra qua cửa ngân sách. Hai tay lái phải xoay cùng chiều.',
