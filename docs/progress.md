@@ -4,7 +4,7 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 ## Đang ở đâu
 
-Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập nhật tối 14/11/2026.
+Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập nhật 15/11/2026.
 
 ### Tóm tắt một dòng
 
@@ -18,7 +18,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 |---|---|---|---|---|
 | 0 | Điều phối | Ghi phân việc vào CLAUDE.md, ghi bảng này | | Xong 15/11 |
 | 1 | Điều phối | Lập nhóm "GĐ1 update 1" (làm cùng GĐ3): việc 3, 5, 6, 8, 8b. GĐ1 là nền kinh tế không tăng trưởng; mục tiêu hiệu chỉnh tiền, tín dụng, tăng trưởng chuyển sang GĐ4. Ghi vào đây và lộ trình CLAUDE.md | 3, 5, 6, 8, 8b | Xong 15/11 |
-| 2 | Sonnet | Tạm thay việc 8: tăng thuế chuyển TRỌN vào giá (`firm.taxPassUp` = 1), giảm thuế giữ 0,065 (Benzarti). Ghi sai-khac.md là đơn giản hoá tạm, thay bằng việc 8 ở GĐ1 update 1 | thay 8 | Chưa |
+| 2 | Sonnet | Tạm thay việc 8: tăng thuế chuyển TRỌN vào giá (`firm.taxPassUp` = 1), giảm thuế giữ 0,065 (Benzarti). Ghi sai-khac.md là đơn giản hoá tạm, thay bằng việc 8 ở GĐ1 update 1 | thay 8 | Xong 15/11 (S36) |
 | 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Chưa |
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Chưa |
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Chưa |
@@ -27,7 +27,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Chưa |
 | 5 | Điều phối | Chốt GĐ1 có điều kiện: mục còn hỏng ghi "đã biết" trong sai-khac.md kèm nơi sẽ sửa; mục S13 trong game liệt kê các lỗi này. Cập nhật CLAUDE.md để quy tắc kiểm định không chặn GĐ1.5. Viết báo cáo GĐ0 + GĐ1. Chạy chong-va-ngam.md, liệt kê thay đổi `tests/unit` và khẳng định kịch bản kèm lý do | 7 | Chưa |
 | 6 | Điều phối | Spec GĐ1.5 phạm vi tối thiểu chơi được: 3 vai, kịch bản, sandbox, phòng thí nghiệm, biểu đồ, chuỗi nhân quả, onboarding. Bản đồ isometric tĩnh đơn giản; phần "sống" để sau. Chờ Dương duyệt | | Chưa |
-| 7 | Sonnet | Thêm `cozy_japanese_startup_office.json` vào `.gitignore` | | Chưa |
+| 7 | Sonnet | Thêm `cozy_japanese_startup_office.json` vào `.gitignore` | | Xong 15/11 |
 
 **Nhóm "GĐ1 update 1"** (làm cùng GĐ3, không làm bây giờ). Đặc tả từng việc nằm ở các mục "VIỆC CHO OPUS" bên dưới, giữ nguyên số:
 - Việc 8: biên lãi hồi dần sau khi đổi thuế. Trước đó dùng đơn giản hoá tạm của bước 2.
@@ -40,9 +40,9 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 
 Hết quota giữa chừng: trạng thái trong bảng này cộng `git log` là đủ để phiên sau làm tiếp.
 
-### `npm test` ĐANG ĐỎ CÓ CHỦ Ý (một test)
+### `npm test`: xanh từ 15/11/2026
 
-`tests/unit/session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó" hỏng ở dòng đòi CPI cao hơn đối chứng 24 tháng sau khi tăng GTGT. Số đo và phân rã: sai-khac.md D13. **Dương đã quyết (đêm 14/11/2026): không đổi cửa sổ đo, giữ assertion 24 tháng, sửa cơ chế.** Việc phải làm là việc 8 và 9 dưới đây. Test này phải tự xanh lại nhờ cơ chế đúng; nếu làm xong 8 và 9 mà nó vẫn đỏ thì báo Dương, không sửa test. Các test khác (60 cái) qua.
+Test `session.test.ts` "bỏ một chính sách..." tự xanh lại nhờ S36 (tăng thuế chuyển trọn vào giá, Dương quyết 15/11/2026). Đây là đơn giản hoá tạm; việc 8 sẽ thay ở GĐ1 update 1 và phải giữ test này xanh. 61/61 test qua.
 
 ### KIỂM ĐỊNH GĐ1 ĐẦY ĐỦ: CHƯA CÓ KẾT QUẢ, phải chạy lại
 
@@ -116,7 +116,9 @@ Sau bảy việc: chạy lại kiểm định đầy đủ, cập nhật sai-kha
 
 `tests/unit`:
 - `session.test.ts`, "control = shock": ngưỡng chênh CPI sau khi tăng GTGT hạ từ 1% xuống 0,3%. Lý do: người bán giờ chỉ chuyển ngay một phần thuế vào giá (S31). Test này kiểm thế giới đối chứng khác ván thật, không kiểm mức chuyển thuế.
-- `session.test.ts`, "bỏ một chính sách": **đã hoàn lại assertion gốc theo yêu cầu của Dương; test đang đỏ, xem D13.** Trước đó Fable đã đổi "CPI ván thật cao hơn đối chứng" thành "khác đối chứng". Lý do: ở 50 hộ, sau 24 tháng tăng GTGT lên 20%, CPI ván thật THẤP hơn đối chứng (108,3 so với 109,9) vì cầu yếu đi. Ý chính của test (thế giới đối chứng trùng ván chưa có chính sách) không đổi. **Đây là chỗ Dương nên soát kỹ nhất**: một lần tăng thuế làm mức giá thấp hơn sau hai năm là kết quả lạ, mới thấy ở một seed, 50 hộ.
+- `session.test.ts`, "bỏ một chính sách": **đã hoàn lại assertion gốc theo yêu cầu của Dương; test đỏ từ 14/11, xanh lại từ 15/11 nhờ S36 (xem D13).** Trước đó Fable đã đổi "CPI ván thật cao hơn đối chứng" thành "khác đối chứng". Lý do: ở 50 hộ, sau 24 tháng tăng GTGT lên 20%, CPI ván thật THẤP hơn đối chứng (108,3 so với 109,9) vì cầu yếu đi. Ý chính của test (thế giới đối chứng trùng ván chưa có chính sách) không đổi. **Đây là chỗ Dương nên soát kỹ nhất**: một lần tăng thuế làm mức giá thấp hơn sau hai năm là kết quả lạ, mới thấy ở một seed, 50 hộ.
+- `scenario-options.test.ts`, "tăng GTGT: giá có thuế tăng ít hơn..." (15/11, S36): mặc định giờ là chuyển trọn (`firm.taxPassUp` = 1), nên đảo vai: thế giới `b` đặt `firm.taxPassUp` = 0,34 và khẳng định `rise(b) < rise(a)`; đổi tên test cho khớp. Ý giữ nguyên: cơ chế chuyển một phần vẫn chạy khi đặt tham số dưới 1.
+- `session.test.ts`, "control = shock" (15/11, S36): ngưỡng chênh CPI đưa về 0,01 như gốc trước 14/11 (đã hạ xuống 0,003 vì chuyển một phần); test qua với 0,01. Chú thích dòng sửa theo.
 - `scenario-options.test.ts` (mới): phân rã ba chỉ số Chính phủ, chuyển thuế vào giá, lương bám lạm phát, so sánh nhánh.
 - `chot-chan.test.ts` (mới): chốt chặn.
 

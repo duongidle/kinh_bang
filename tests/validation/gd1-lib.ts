@@ -413,7 +413,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
       const rev = diff(p, 'gov.tax.vat', 6, 24, true);
       return { ok: pass > 0 && pass < 1 && c < 0 && rev > 0, m: Math.min(pass, 1 - pass), value: `chuyển vào giá ${f2(pass)}; tiêu dùng thực ${pc(c)}; thu GTGT ${pc(rev)}` };
     },
-    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 14/11/2026 người bán chỉ chuyển ngay một phần thuế vào giá (firm.taxPassThrough).',
+    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36).',
   );
   each(
     'K1.25',

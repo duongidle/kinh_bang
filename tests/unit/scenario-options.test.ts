@@ -32,12 +32,12 @@ describe('phân rã theo lý do', () => {
 });
 
 describe('người bán chỉ chuyển một phần thuế vào giá', () => {
-  it('tăng GTGT: giá có thuế tăng ít hơn ở mặc định so với chuyển hết, và cả hai đều tăng', () => {
+  it('tăng GTGT: giá có thuế tăng ít hơn khi chuyển một phần (0,34) so với mặc định chuyển hết, và cả hai đều tăng', () => {
     const eng = gd1Engine();
     const a = eng.newWorld({ seed: 5, scale: 'S' });
     eng.run(a, 24);
     const b = eng.fork(a);
-    b.params['firm.taxPassUp'] = 1;
+    b.params['firm.taxPassUp'] = 0.34;
     for (const w of [a, b]) {
       eng.setLaw(w, 'vat.rate.standard', 0.2, 'test');
       eng.run(w, 1);
@@ -45,7 +45,7 @@ describe('người bán chỉ chuyển một phần thuế vào giá', () => {
     const rise = (w: typeof a) => eng.value(w, 'price.formal.taxed', 24) / eng.value(w, 'price.formal.taxed', 23) - 1;
     expect(rise(a)).toBeGreaterThan(0);
     expect(rise(b)).toBeGreaterThan(0);
-    expect(rise(a)).toBeLessThan(rise(b));
+    expect(rise(b)).toBeLessThan(rise(a));
   });
 });
 

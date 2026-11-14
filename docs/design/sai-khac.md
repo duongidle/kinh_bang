@@ -89,6 +89,7 @@ Xếp theo mức ảnh hưởng. Cột "Về thiết kế" là giá trị đưa 
 | S34 | **Hộ thu nhập cao hơn mặt bằng thì tiêu phần nhỏ hơn của thu nhập** (đề xuất A, Dương duyệt 14/11/2026): α1 của hộ = α1 × (thu nhập kỳ vọng của hộ / bình quân)^(−η) | `hh.saveIncomeEta` = 0,09 | 0 | K1.13: mọi hộ tiêu cùng tỷ lệ nên tiền không dồn lại được (D8) | Dynan, Skinner, Zeldes 2004 (JPE 112(2); bản NBER WP 7906, đã đọc toàn văn). Cách quy đổi ở D8 |
 | S35 | **Lần tính giá đầu tiên của nơi bán mới ghi lý do riêng** | mã lý do `p_new` | | Sửa lỗi phân rã, không đổi kinh tế. Trước đó cả mức giá của nơi mới mở bị ghi vào `p_wage` rồi trừ lại ở "yếu tố khác". Xem D11 | |
 | S33 | **Số hộ để chọn nhóm sáng lập thành tham số** | `firm.founderPool` = 60 | | Trước là số viết cứng. Giá trị không đổi. Tìm ra khi soi K1.13 (D8) | TTK |
+| S36 | **Đơn giản hoá tạm: tăng thuế chuyển TRỌN vào giá ngay trong tháng đổi thuế**; giảm thuế vẫn chuyển 6,5% (Benzarti). Thay cho việc 8 cho tới GĐ1 update 1 | `firm.taxPassUp` = 1 | 0,34 | Dương quyết 15/11/2026: hoàn thiện GĐ1, không thêm cơ chế; việc 8 (biên lãi hồi dần, IMF WP/15/214) dời sang GĐ1 update 1 | Hệ quả: chuyển ngay nhiều hơn bằng chứng ngắn hạn (0,26-0,34), gần bằng chứng dài hạn (quanh 1); K1.24 (đòi tỷ lệ chuyển sau 2 năm dưới 1) nhiều khả năng lại hỏng ở khoảng một nửa số seed như kết quả 11/20 ở D6, chờ kiểm định đầy đủ |
 
 Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tuyển số người trả nổi lương; giữ lại lương tháng này cộng một tháng đệm trước khi mua máy; hộ gặp nơi hết hàng thì sang nơi quen kế tiếp trong cùng lượt; thanh lý máy của doanh nghiệp phá sản cho tối đa ba nơi mua; doanh nghiệp hết người hết tiền quá 6 tháng thì giải thể; cơ cấu ngành lúc đầu tính từ cầu để tháng đầu không ngành nào thừa hay thiếu hàng.
 
@@ -383,6 +384,8 @@ Các lựa chọn đã trình (để đối chiếu):
 2. Giữ assertion 24 tháng và coi kết quả là dấu hiệu cơ chế sai: cầu sụt 4-6% GDP sau một lần tăng thuế mà Chính phủ ngồi im là quá mạnh, hoặc 0,34 chuyển ngay rồi không đuổi kịp về lâu dài là quá ít (bằng chứng dài hạn ở D9 nói gần trọn).
 3. Cho thế giới thử nghiệm chi lại tiền thuế, rồi mới so giá.
 
+**Cập nhật 15/11/2026.** Dương quyết tạm thời cho tăng thuế chuyển trọn vào giá (S36). Việc 8 và 8b dời sang GĐ1 update 1. Test `session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó": XANH sau khi đổi (không đo lại số CPI cụ thể; phép đo trước đó với chuyển trọn là +3,2%); ngưỡng của test `control = shock` đưa về 0,01 như trước 14/11 và cũng qua.
+
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
 Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. **Dương quyết 14/11/2026: chấp nhận như gd0 mục 12, không tự cài hàm toán.** K0.2 ghi là đạt theo nghĩa: trạng thái kinh tế trùng từng bit; mã băm toàn cục có thể lệch giữa hai bản V8 khác nhau ở chữ số cuối của hàm toán.
@@ -414,4 +417,5 @@ Dòng mới phải nói: cái gì đổi; số đo theo cách cũ và cách mớ
 | 14/11/2026 | gd1-lib.ts | `4f09af0bfe4b` | Mốc đầu của nhật ký. Trạng thái lúc này: K1.12 chỉ xét ở 5000 hộ; danh sách đã biết gồm K1.19, K1.13, K1.28, K1.29, K1.31; K1.22 đo 3 năm đầu; K1.26 đo doanh số thực; K1.28 đo phần lạm phát còn lại. Lý do từng mục ở D3, D4, D6, D8 | Dương, các quyết định ngày 14/11/2026 |
 | 14/11/2026 | scenarios-lib.ts | `a693afc1a93f` | Mốc đầu. Kịch bản có nhiều nhánh được chấm theo từng nhánh (D10) | Dương, quyết định 5 tối 14/11/2026 |
 | 14/11/2026 | tham số hành vi | `b6c7cd4000f1` | Mốc đầu. Gồm các thay đổi trong ngày: `firm.wageIndex` 0,5; `exp.saveResponse` 0,35; `cb.autopilot` 0; `firm.taxPassUp` 0,34; `firm.taxPassDown` 0,065; `hh.saveIncomeEta` 0,09; `firm.founderPool` 60. Nguồn ở bảng B và D5, D8, D9 | Dương, các quyết định ngày 14/11/2026 |
-
+| 15/11/2026 | tham số hành vi | `9f8023e7fe6c` | `firm.taxPassUp` 0,34 → 1: đơn giản hoá tạm, tăng thuế chuyển trọn vào giá; giảm thuế giữ 0,065. Thay bằng việc 8 (biên lãi hồi dần) ở GĐ1 update 1. Xem S36 | Dương, quyết định 15/11/2026 |
+| 15/11/2026 | gd1-lib.ts | `ad854ec4e50c` | Chỉ sửa chữ chú thích K1.24 theo S36, không đổi ngưỡng hay cách đo | Dương, quyết định 15/11/2026 (S36) |
