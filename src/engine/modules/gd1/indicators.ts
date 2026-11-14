@@ -1,7 +1,7 @@
 // Chỉ số của GĐ1 và hàm phân rã (gd1 mục 11).
 // Phân rã lấy từ sổ cái (dòng tiền theo loại giao dịch) và từ bản ghi quyết định; không có hệ số đặt tay.
 
-import { takeAcc } from '../../causal/causal';
+import { splitProduct, takeAcc } from '../../causal/causal';
 import type { IndicatorDef } from '../../core/engine';
 import { f64, i32, u8 } from '../../core/table';
 import type { World } from '../../core/world';
@@ -227,6 +227,122 @@ const govSpending = (w: World) => {
   return x;
 };
 
+// ---------- phân rã của ba chỉ số chính của vai Chính phủ ----------
+// Cả ba là tỷ số. Mức đổi của tỷ số a/b chia thành phần do tử số và phần do mẫu số (đổi lần lượt, lấy trung bình hai thứ tự),
+// rồi phần tử số chia tiếp theo sổ cái hoặc bản ghi quyết định. Không có hệ số đặt tay.
+
+/** Lương thực = lương bình quân / mức giá. Phần lương chia theo lý do của các quyết định lương tháng này. */
+function realWageContrib(w: World, prev: number, cur: number): Record<string, number> {
+  const s = st(w);
+  const f = F(w);
+  const b0 = 100 / s.cpiPrev;
+  const b1 = 100 / s.cpi;
+  const w0 = prev / b0;
+  const w1 = cur / b1;
+  const [dW, dP] = splitProduct(w0, w1, b0, b1);
+  const out: Record<string, number> = {};
+  let hired = 0;
+  for (let i = 0; i < f.n; i++) if (f.alive[i] && !f.solo[i]) hired += f.formal[i] ? f.workers[i] : Math.max(0, f.workers[i] - 1);
+  let sum = 0;
+  if (hired > 0) {
+    const scale = (b0 + b1) * 0.5;
+    const D = w.causal.decisions;
+    for (let j = D.length - 1; j >= 0 && D[j].tick === w.meta.tick; j--) {
+      const d = D[j];
+      if (d.rule !== 'firm.wage') continue;
+      const i = d.agent & 0xffffff;
+      if (!f.alive[i]) continue;
+      const n = f.formal[i] ? f.workers[i] : Math.max(0, f.workers[i] - 1);
+      if (n <= 0) continue;
+      for (const p of d.parts) {
+        const x = (p.amount * n * scale) / hired;
+        out[p.reason] = (out[p.reason] ?? 0) + x;
+        sum += x;
+      }
+    }
+  }
+  out.rw_mix = dW - sum; // người lao động chuyển giữa nơi trả cao và nơi trả thấp, nơi làm mới mở và đóng cửa
+  out.rw_price = dP;
+  return out;
+}
+
+const GOV_SECTOR = 3;
+const SPEND_REASON: Record<string, string> = {
+  wage_public: 'd_wage_public',
+  gov_purchase: 'd_purchase',
+  transfer_social: 'd_transfer',
+  interest_bond: 'd_interest',
+  bank_recap: 'd_recap',
+};
+
+/** Các khoản chi (dương) và thu (âm) của ngân sách tháng này, lấy từ sổ cái. Tổng đúng bằng bội chi. */
+function deficitParts(w: World): Record<string, number> {
+  const L = w.ledger;
+  const out: Record<string, number> = {};
+  let spend = 0;
+  for (let k = 0; k < L.nkind; k++) {
+    if (!TX_KINDS[k].flow) continue;
+    const v = L.flow[GOV_SECTOR * L.nkind + k];
+    if (v >= 0) continue;
+    const r = SPEND_REASON[TX_KINDS[k].id] ?? 'd_spend_other';
+    out[r] = (out[r] ?? 0) - v;
+    spend -= v;
+  }
+  // chỉ số bội chi không tính tiền lãi trả cho NHNN (NHNN nộp lại lợi nhuận về ngân sách)
+  const adj = st(w).m.govSpend - spend;
+  if (adj !== 0) out.d_spend_other = (out.d_spend_other ?? 0) + adj;
+  out.d_revenue = -govRevenue(w);
+  return out;
+}
+
+/** Bội chi/GDP: phần do từng khoản chi, do thu, và do GDP (mẫu số) đổi. */
+function deficitGdpContrib(w: World): Record<string, number> {
+  const s = st(w);
+  const parts = deficitParts(w);
+  const y1 = gdpNominal(s);
+  const prev = s.prev['deficitGdp'];
+  s.prev['deficitGdp'] = { ...parts, _y: y1 };
+  if (!prev || !(prev._y > 0) || !(y1 > 0)) return {};
+  const y0 = prev._y;
+  let d0 = 0;
+  let d1 = 0;
+  for (const k in prev) if (k !== '_y') d0 += prev[k];
+  for (const k in parts) d1 += parts[k];
+  const inv = (1 / y0 + 1 / y1) * 0.5;
+  const out: Record<string, number> = {};
+  for (const k of new Set([...Object.keys(parts), ...Object.keys(prev)])) {
+    if (k === '_y') continue;
+    const d = ((parts[k] ?? 0) - (prev[k] ?? 0)) * inv;
+    if (d !== 0) out[k] = d;
+  }
+  out.d_gdp = (1 / y1 - 1 / y0) * (d0 + d1) * 0.5;
+  return out;
+}
+
+/** Nợ công/GDP: nợ tăng vì chi vượt thu (chưa kể lãi), vì trả lãi, vì kho bạc giữ thêm tiền; tỷ số giảm khi GDP tăng. */
+function debtGdpContrib(w: World): Record<string, number> {
+  const s = st(w);
+  const L = w.ledger;
+  const b1 = debt(w);
+  const y1 = 12 * s.gdpEma;
+  const tga1 = f64(w.tables.gov, 'tga')[0];
+  const prev = s.prev['debtGdp'];
+  s.prev['debtGdp'] = { b: b1, y: y1, tga: tga1 };
+  if (!prev || !(prev.y > 0) || !(y1 > 0)) return {};
+  const inv = (1 / prev.y + 1 / y1) * 0.5;
+  let net = 0; // mọi dòng thu chi của ngân sách trong tháng (âm là chi vượt thu)
+  for (let k = 0; k < L.nkind; k++) if (TX_KINDS[k].flow) net += L.flow[GOV_SECTOR * L.nkind + k];
+  const interest = -L.flow[GOV_SECTOR * L.nkind + tx('interest_bond')];
+  const out: Record<string, number> = {
+    b_primary: (-net - interest) * inv,
+    b_interest: interest * inv,
+    b_cash: (tga1 - prev.tga) * inv,
+    b_gdp: (1 / y1 - 1 / prev.y) * (prev.b + b1) * 0.5,
+  };
+  // phần nợ đổi không khớp ba dòng trên (tạm ứng của NHNN, nợ lương công chức...) engine tự ghi vào "các yếu tố khác"
+  return out;
+}
+
 export const GD1_INDICATORS: Ind[] = [
   // ---------- sản lượng ----------
   {
@@ -382,7 +498,7 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'public.workers', label: 'Số công chức', unit: 'người', group: 'Lao động', compute: (w) => st(w).nPublic },
   { id: 'wage.formal', label: 'Lương bình quân ở doanh nghiệp', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => st(w).wageAvg },
   { id: 'wage.informal', label: 'Lương bình quân ở hộ kinh doanh', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => st(w).wageInf },
-  { id: 'wage.real', label: 'Lương thực bình quân (giá gốc)', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => (st(w).wageAvgAll * 100) / st(w).cpi },
+  { id: 'wage.real', label: 'Lương thực bình quân (giá gốc)', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => (st(w).wageAvgAll * 100) / st(w).cpi, contrib: realWageContrib },
   { id: 'vacancies', label: 'Chỗ làm đang tuyển', unit: 'số', group: 'Lao động', compute: (w) => st(w).m.vacancies },
   {
     id: 'employment.formal',
@@ -541,10 +657,10 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'gov.tax.hkd', label: 'Thu thuế hộ kinh doanh', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'hkd_tax') },
   { id: 'gov.tax.excise', label: 'Thu thuế gián thu khác', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'excise') },
   { id: 'gov.tax.fees', label: 'Thu từ đất, phí, lệ phí', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'fees') },
-  { id: 'gov.deficitGdp', label: 'Bội chi ngân sách so với GDP', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (gdpNominal(st(w)) > 0 ? (st(w).m.govSpend - govRevenue(w)) / gdpNominal(st(w)) : 0) },
+  { id: 'gov.deficitGdp', label: 'Bội chi ngân sách so với GDP', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (gdpNominal(st(w)) > 0 ? (st(w).m.govSpend - govRevenue(w)) / gdpNominal(st(w)) : 0), contrib: deficitGdpContrib },
   { id: 'gov.revenueGdp', label: 'Thu ngân sách so với GDP', unit: '%', group: 'Ngân sách', compute: (w) => (gdpNominal(st(w)) > 0 ? govRevenue(w) / gdpNominal(st(w)) : 0) },
   { id: 'gov.debt', label: 'Nợ công', unit: 'đồng', group: 'Ngân sách', good: -1, compute: debt },
-  { id: 'gov.debtGdp', label: 'Nợ công so với GDP năm', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (st(w).gdpEma > 0 ? debt(w) / (12 * st(w).gdpEma) : 0) },
+  { id: 'gov.debtGdp', label: 'Nợ công so với GDP năm', unit: '%', group: 'Ngân sách', good: -1, compute: (w) => (st(w).gdpEma > 0 ? debt(w) / (12 * st(w).gdpEma) : 0), contrib: debtGdpContrib },
   { id: 'gov.tga', label: 'Tiền trong kho bạc', unit: 'đồng', group: 'Ngân sách', compute: (w) => f64(w.tables.gov, 'tga')[0] },
   { id: 'gov.purchaseCut', label: 'Phần mua hàng phải cắt vì thiếu tiền', unit: 'đồng', group: 'Ngân sách', good: -1, compute: (w) => st(w).m.purchaseCut },
   { id: 'gov.arrears', label: 'Nợ lương công chức', unit: 'đồng', group: 'Ngân sách', good: -1, compute: (w) => st(w).govArrears },

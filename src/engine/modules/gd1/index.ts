@@ -85,6 +85,23 @@ const REASONS: ReasonDef[] = [
   { id: 't_excise', label: 'thuế gián thu khác', upstream: [law('tax.indirect.other'), ind('consumption')] },
   { id: 't_fees', label: 'thu từ đất, phí, lệ phí', upstream: [law('gov.fees.rate'), ind('gdp.nominal')] },
   { id: 't_other', label: 'cổ tức doanh nghiệp, ngân hàng nhà nước và lợi nhuận NHNN', upstream: [] },
+  // lương thực
+  { id: 'rw_price', label: 'giá tiêu dùng đổi', upstream: [ind('cpi')] },
+  { id: 'rw_mix', label: 'người lao động chuyển giữa nơi trả cao và nơi trả thấp', upstream: [ind('informal.share'), ind('unemployment')] },
+  // bội chi so với GDP
+  { id: 'd_wage_public', label: 'lương công chức', upstream: [law('gov.public.share'), ind('wage.formal', 1)] },
+  { id: 'd_purchase', label: 'Chính phủ mua hàng', upstream: [law('gov.purchase.share'), ind('gov.purchaseCut')] },
+  { id: 'd_transfer', label: 'trợ cấp cho hộ', upstream: [law('gov.transfer.universal'), ind('unemployment')] },
+  { id: 'd_interest', label: 'lãi trái phiếu Chính phủ trả', upstream: [ind('gov.debt', 1), law('cb.rate.refinancing')] },
+  { id: 'd_recap', label: 'Nhà nước bỏ tiền cứu ngân hàng', upstream: [ind('bank.car'), ind('npl')] },
+  { id: 'd_spend_other', label: 'các khoản chi khác', upstream: [] },
+  { id: 'd_revenue', label: 'thu ngân sách đổi (thu tăng thì bội chi giảm)', upstream: [ind('gov.revenue')] },
+  { id: 'd_gdp', label: 'GDP đổi (cùng số tiền bội chi, GDP lớn hơn thì tỷ lệ nhỏ hơn)', upstream: [ind('gdp.nominal')] },
+  // nợ công so với GDP
+  { id: 'b_primary', label: 'chi vượt thu, chưa kể tiền lãi', upstream: [ind('gov.deficitGdp')] },
+  { id: 'b_interest', label: 'tiền lãi trái phiếu phải vay thêm để trả', upstream: [ind('gov.debt', 1), law('cb.rate.refinancing')] },
+  { id: 'b_cash', label: 'kho bạc giữ thêm tiền (vay trước, chi sau)', upstream: [ind('gov.tga')] },
+  { id: 'b_gdp', label: 'GDP đổi (cùng số nợ, GDP lớn hơn thì tỷ lệ nhỏ hơn)', upstream: [ind('gdp.nominal')] },
   // dự trữ ngân hàng
   { id: 'r_cash', label: 'dân rút hoặc nộp tiền mặt', upstream: [ind('money.cash'), ind('informal.consShare')] },
   { id: 'r_omo', label: 'NHNN mua lại trái phiếu của ngân hàng (thị trường mở)', upstream: [law('cb.omo.auto'), ind('money.cash')] },
