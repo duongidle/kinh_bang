@@ -7,6 +7,7 @@ Web app mô phỏng nền kinh tế một quốc gia giả lập theo Việt Nam
 ## Trạng thái
 
 - Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Đang code theo chế độ tự chạy.
+- Mọi sai khác so với thiết kế và các phát hiện còn mở: [docs/design/sai-khac.md](docs/design/sai-khac.md). Cơ chế thêm phải là tham số có tên, có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
 - Việc đang làm, giả định đã chọn, việc kế tiếp: [docs/progress.md](docs/progress.md). Đọc file đó và `git log` trước khi làm bất cứ gì.
 
 ## Tài liệu
@@ -86,6 +87,7 @@ Nội dung từng giai đoạn ở KICKOFF.md, với các thay đổi đã duy�
 - Lương tối thiểu vùng chuyển từ GĐ2 về GĐ1. BHXH và phần còn lại của GĐ2 giữ nguyên.
 - Vốn cố định dạng đơn giản có ngay GĐ1; đời máy, R&D vẫn ở GĐ4.
 - Thêm vào GĐ3: tín dụng ngoài ngân hàng (hụi họ, tín dụng đen) và thị trường liên ngân hàng.
+- Thêm vào GĐ3 (Dương quyết 14/11/2026): vay tiêu dùng của hộ (kênh lãi suất tới cầu, để K1.19 đạt) và cơ chế giảm phát nợ. Lý do và số đo: [sai-khac.md mục D](docs/design/sai-khac.md).
 - Thêm vào GĐ5: vàng và đô la làm nơi trú ẩn; kịch bản 1997, Zimbabwe và siêu lạm phát đầy đủ.
 - Thêm vào GĐ8: mức đồng thuận của các nhóm dân cư với Chính phủ.
 - Mỗi giai đoạn có mục tiêu hiệu chỉnh thô; GĐ9 chỉ còn hiệu chỉnh tinh.

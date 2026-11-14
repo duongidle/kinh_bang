@@ -4,8 +4,10 @@ const n = Number(process.argv[2] ?? 5);
 const what = process.argv[3] ?? 'all';
 const scale = (process.argv[4] ?? 'M') as 'S' | 'M' | 'L';
 const seeds = Array.from({ length: n }, (_, i) => i + 1);
-const show = (cs: Check[]) => { for (const c of cs) console.log(`${c.pass ? 'QUA ' : 'HỎNG'} ${c.id.padEnd(6)} ${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length}  ${c.claim}\n        ${c.perSeed.slice(0, 4).map((p) => p.value).join(' | ')}`); };
+const show = (cs: Check[]) => { for (const c of cs) console.log(`${c.pass ? 'QUA ' : c.known ? 'BIẾT' : 'HỎNG'} ${c.id.padEnd(6)} ${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length}  ${c.claim}\n        ${c.perSeed.slice(0, 4).map((p) => p.value).join(' | ')}`); };
+const params: Record<string, number> = {};
+for (const a of process.argv.slice(5)) { const [k, v] = a.split('='); params[k] = Number(v); }
 const t0 = Date.now();
-if (what !== 'exp') { const r = baselineChecks(seeds, scale); show(r.checks); console.log(r.table.map((x) => x.join('\t')).join('\n')); }
+if (what !== 'exp') { const r = baselineChecks(seeds, scale, 480, { params }); show(r.checks); console.log(r.table.map((x) => x.join('\t')).join('\n')); }
 if (what !== 'base') show(experimentChecks(seeds, scale));
 console.log(`${((Date.now() - t0) / 1000).toFixed(0)} giây`);

@@ -20,6 +20,8 @@ export interface Check {
   pass: boolean;
   share: number;
   note?: string;
+  /** Mục đã biết là chưa đạt, kèm lý do và hướng xử lý. Không tính là lỗi bất ngờ. */
+  known?: string;
 }
 
 export interface Intervention {
@@ -33,6 +35,12 @@ export function apply(eng: Engine, w: World, x: Intervention): void {
   for (const [k, v] of Object.entries(x.params ?? {})) w.params[k] = v;
   for (const [k, v] of Object.entries(x.variants ?? {})) eng.setVariant(w, k, v);
 }
+
+/** Mục chưa đạt đã được Dương ghi nhận (14/11/2026). */
+export const KNOWN_FAIL: Record<string, string> = {
+  'K1.19':
+    'Kênh lãi suất tới cầu còn yếu. Hộ không vay, nên lãi suất chỉ chạm tiêu dùng qua thay thế liên thời gian (exp.saveResponse = 0,35 theo Havránek 2015) và chạm đầu tư. Kênh vay tiêu dùng (thiết kế mục 18) để GĐ3, khi có nhà đất làm tài sản thế chấp. Không nâng tham số để qua mục này.',
+};
 
 export function summarize(id: string, claim: string, threshold: string, perSeed: Check['perSeed'], need = 0.8, note?: string): Check {
   const share = perSeed.filter((p) => p.ok).length / Math.max(1, perSeed.length);
@@ -48,7 +56,7 @@ export function summarize(id: string, claim: string, threshold: string, perSeed:
       byMean = true;
     }
   }
-  return { id, claim, threshold, perSeed, share, pass, byMean, note };
+  return { id, claim, threshold, perSeed, share, pass, byMean, note, known: KNOWN_FAIL[id] };
 }
 
 const f2 = (x: number) => (Number.isFinite(x) ? x.toFixed(2) : 'NaN');
@@ -70,14 +78,14 @@ function cyc(eng: Engine, w: World, id: string, how: 'sum' | 'mean', log = true,
 // =====================================================================
 // Phần 1: các sự thật đo trên lần chạy gốc
 // =====================================================================
-export function baselineChecks(seeds: number[], scale: ScaleId, months = MONTHS): { checks: Check[]; table: string[][] } {
+export function baselineChecks(seeds: number[], scale: ScaleId, months = MONTHS, init: Intervention = {}): { checks: Check[]; table: string[][] } {
   const eng = gd1Engine(); // kiểm bốn đẳng thức mỗi tháng (K1.1)
   const rows: Record<string, Check['perSeed']> = {};
   const push = (id: string, seed: number, ok: boolean, value: string) => (rows[id] ??= []).push({ seed, ok, value });
   const table: string[][] = [['seed', 'thất nghiệp', 'lạm phát', 'phi chính thức', 'thu/GDP', 'tiền mặt', 'Gini của cải', 'doanh nghiệp', 'phá sản/năm', 'mới/năm']];
 
   for (const seed of seeds) {
-    const w = eng.newWorld({ seed, scale });
+    const w = eng.newWorld({ seed, scale, params: init.params, laws: init.laws, variants: init.variants });
     let err = '';
     try {
       eng.run(w, months);
@@ -508,10 +516,11 @@ export function renderReport(title: string, sections: Array<{ heading: string; c
     lines.push(`## ${s.heading}`, '');
     if (s.intro) lines.push(s.intro, '');
     lines.push('| Mã | Sự thật | Ngưỡng | Số seed đạt | Kết quả |', '|---|---|---|---|---|');
-    for (const c of s.checks) lines.push(`| ${c.id} | ${c.claim} | ${c.threshold} | ${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length} | ${c.pass ? (c.byMean ? 'QUA (theo trung bình)' : 'QUA') : '**KHÔNG QUA**'} |`);
+    for (const c of s.checks) lines.push(`| ${c.id} | ${c.claim} | ${c.threshold} | ${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length} | ${c.pass ? (c.byMean ? 'QUA (theo trung bình)' : 'QUA') : c.known ? '**CHƯA ĐẠT (đã biết)**' : '**KHÔNG QUA**'} |`);
     lines.push('');
     for (const c of s.checks) {
       lines.push(`<details><summary>${c.id}: số đo từng seed</summary>`, '');
+      if (c.known && !c.pass) lines.push(`Chưa đạt, đã biết: ${c.known}`, '');
       if (c.note) lines.push(c.note, '');
       for (const p of c.perSeed) lines.push(`- seed ${p.seed}: ${p.ok ? 'đạt' : 'không đạt'} (${p.value})`);
       lines.push('', '</details>', '');

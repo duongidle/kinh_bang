@@ -14,17 +14,13 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
   - Mọi sai khác so với thiết kế ghi ở [design/sai-khac.md](design/sai-khac.md) (S1-S30). Quy tắc của Dương ngày 14/11: cơ chế thêm phải là tham số có tên và có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
   - Bộ kiểm định: `tests/validation/gd1-lib.ts` (K1.1-K1.32), `tests/validation/gd1.test.ts` sinh `docs/validation/gd1.md`. Chạy thử nhanh: `npx tsx scripts/validate.ts 5 [base|exp|all] [S|M|L]`.
   - Chạy thử 5 seed ngày 14/11: mọi mục lần chạy gốc qua; mọi thí nghiệm chạy đôi qua sau khi sửa cách đo K1.22 và K1.26 (xem dưới).
-- **Đang dở**: chạy `npm run validate:gd1` đủ 20 seed, ghi kết quả vào `docs/validation/gd1.md`.
-- **Chờ Dương quyết** (chi tiết ở sai-khac.md mục B và D):
-  1. S28 `exp.saveResponse` = 2: giá trị chọn để K1.19 qua, không có ước lượng đỡ lưng. Với 1 thì K1.19 hỏng.
-  2. K1.19 chỉ đúng khoảng 2 năm; giữ lãi suất cao tới năm thứ năm thì lạm phát lại cao hơn nhánh gốc.
-  3. K1.22 đổi cửa sổ đo sang 3 năm đầu; năm 6-10 GDP nhánh siết tín dụng lại cao hơn.
-  4. K1.26 đổi cách đo sang doanh số thực; thị phần và số lao động phi chính thức không giảm.
-  5. Lạm phát bình quân 6-7%, trên mục tiêu của NHNN.
-- **Bước tiếp theo** (theo thứ tự):
-  1. Đọc kết quả 20 seed. Mục nào hỏng thì soi bằng `scripts/pairdiag.ts` (hiệu chạy đôi theo năm, có khoảng tin cậy) và `scripts/k119.ts`.
-  2. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
-  3. GĐ1 mốc M6: UI, kịch bản, các tính năng S.
+- **Quyết định của Dương 14/11/2026** (đã làm theo): `exp.saveResponse` về 0,35 theo Havránek 2015, K1.19 ghi "chưa đạt (đã biết)"; vay tiêu dùng và giảm phát nợ để GĐ3; giữ cách đo mới của K1.22 và K1.26; giữ hiện tượng lãi suất cao làm tăng lạm phát qua tiền lãi, làm kịch bản 15; chưa chỉnh lạm phát.
+- **Đang chờ Dương**: chọn hướng sửa lạm phát (sai-khac.md mục D5). Với mặc định hiện tại, 20 seed: K1.5 13/20, K1.10 15/20, K1.12 13/20 không qua. Nguyên nhân: S7 + S25 + S20. **Chưa chạy `npm run validate:gd1` đủ bộ** vì kết quả phụ thuộc quyết định này.
+- **Đang dở** (không phụ thuộc quyết định trên): phần GĐ0 còn lại và GĐ1 mốc M6.
+  - Xong: giao thức `src/protocol/index.ts`; kiểu kịch bản `src/engine/scenario/types.ts`; vai người chơi trong engine `src/engine/modules/gd1/player.ts` (ghi đè sau quy tắc tự động, có mã lý do riêng); hộ và doanh nghiệp có tên `names.ts`.
+  - Kế tiếp: `src/engine/session/session.ts` (xử lý lệnh, khung bản đồ, mẫu giao dịch, truy vấn, thế giới đối chứng bằng cách phát lại nhật ký lệnh từ mốc lưu, bản tin, kịch bản); Worker; test K0.2, K0.10; rồi UI.
+- **Bước tiếp theo sau đó**: 15 kịch bản và kiểm định kịch bản; UI ba vai; GĐ1.5 (viết `docs/design/gd1-5.md` trước).
+- Công cụ soi: `scripts/pairdiag.ts` (hiệu chạy đôi theo năm), `scripts/k119.ts`, `scripts/inflation.ts` (phân rã CPI và lương), `scripts/validate.ts <số seed> <base|exp|all> <S|M|L> [k=v]`.
 
 ## 14/11/2026 - Kiểm định GĐ1, sửa hai cơ chế thiếu
 

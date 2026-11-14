@@ -979,7 +979,7 @@ export function announce(w: World, eng: Engine, firm: number): void {
 }
 
 /** Người thất nghiệp mở hộ kinh doanh một người. */
-function startSolo(w: World, eng: Engine, hh: number): void {
+export function startSolo(w: World, eng: Engine, hh: number): void {
   const h = H(w);
   const s = st(w);
   const sec = R(w, STREAM.fallback, hh) < 0.35 ? AGRI : SERVICES;

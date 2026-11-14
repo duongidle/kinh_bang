@@ -8,6 +8,7 @@ import { bondAuction, bondService, closeMonth, govPurchases, payPublic, policy }
 import { cashManagement, householdBudgets, shopping } from './households';
 import { GD1_INDICATORS } from './indicators';
 import { initWorld } from './init';
+import { playerFirm, playerHousehold } from './player';
 import { resetMonth, setupSchema, st } from './schema';
 
 const ind = (id: string, lag = 0): Upstream => ({ kind: 'indicator', id, lag });
@@ -86,6 +87,11 @@ const REASONS: ReasonDef[] = [
   { id: 'r_cash', label: 'dân rút hoặc nộp tiền mặt', upstream: [ind('money.cash'), ind('informal.consShare')] },
   { id: 'r_omo', label: 'NHNN mua lại trái phiếu của ngân hàng (thị trường mở)', upstream: [law('cb.omo.auto'), ind('money.cash')] },
   { id: 'r_refi', label: 'ngân hàng vay hoặc trả tái cấp vốn', upstream: [law('cb.omo.auto'), law('cb.reserve.ratio')] },
+  // người chơi
+  { id: 'p_player', label: 'người chơi tự đặt giá', upstream: [root('Quyết định của người chơi')] },
+  { id: 'w_player', label: 'người chơi tự đặt lương', upstream: [root('Quyết định của người chơi')] },
+  { id: 'c_player', label: 'người chơi tự đặt mức chi tiêu', upstream: [root('Quyết định của người chơi')] },
+  { id: 'u_quit', label: 'người chơi tự nghỉ việc', upstream: [root('Quyết định của người chơi')] },
   { id: 'root_tech', label: 'năng suất', upstream: [root('Năng suất lao động không đổi ở GĐ1')] },
 ];
 
@@ -124,8 +130,14 @@ export const gd1Module: EngineModule = {
       w.params._target = eng.law(w, 'cb.inflation.target');
       policy(w, eng);
     },
-    expect: householdBudgets,
-    plan: planFirms,
+    expect(w, eng) {
+      householdBudgets(w, eng);
+      playerHousehold(w, eng);
+    },
+    plan(w, eng) {
+      planFirms(w, eng);
+      playerFirm(w, eng);
+    },
     credit: creditMarket,
     labor: laborMarket,
     produce,

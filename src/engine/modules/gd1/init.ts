@@ -7,6 +7,7 @@
 // 4. Toàn bộ tiền phát ra lúc dựng được cân lại bằng nợ công: Chính phủ phát hành trái phiếu,
 //    ngân hàng mua bằng dự trữ dư, phần còn lại NHNN giữ. Sau bước này vốn NHNN bằng 0.
 
+import { pickNamed } from './names';
 import type { Engine } from '../../core/engine';
 import { addRow, f64 } from '../../core/table';
 import { BANK, CB_REF, GOV_REF, ref, type World } from '../../core/world';
@@ -457,6 +458,7 @@ export function initWorld(w: World, eng: Engine): void {
   };
   resetMonth(s);
   w.ext.gd1 = s;
+  pickNamed(w);
 }
 
 function dependentsOf(w: World, eng: Engine, i: number): number {

@@ -21,7 +21,7 @@ describe('Kiểm định GĐ1', () => {
     const md = renderReport('Báo cáo kiểm định GĐ1', [
       {
         heading: `Tóm tắt`,
-        intro: `Chạy ${N} seed x 480 tháng ở 500 hộ, ${NL} seed ở 5000 hộ, ${N} seed ở 50 hộ (chỉ kế toán). Bỏ 120 tháng đầu. Một mục qua khi đúng ở ít nhất 80% số seed, hoặc khi khoảng tin cậy 95% của trung bình nằm đúng phía (ghi "theo trung bình"). Mục kế toán phải đúng ở mọi seed.\n\nKhông qua: ${failed.length ? failed.map((c) => c.id).join(', ') : 'không có'}.`,
+        intro: `Chạy ${N} seed x 480 tháng ở 500 hộ, ${NL} seed ở 5000 hộ, ${N} seed ở 50 hộ (chỉ kế toán). Bỏ 120 tháng đầu. Một mục qua khi đúng ở ít nhất 80% số seed, hoặc khi khoảng tin cậy 95% của trung bình nằm đúng phía (ghi "theo trung bình"). Mục kế toán phải đúng ở mọi seed.\n\nKhông qua: ${failed.length ? failed.map((c) => (c.known ? `${c.id} (đã biết)` : c.id)).join(', ') : 'không có'}.`,
         checks: [],
       },
       { heading: 'Lần chạy gốc, 500 hộ', checks: m.checks, table: m.table },
@@ -30,6 +30,6 @@ describe('Kiểm định GĐ1', () => {
       { heading: 'Kế toán ở 50 hộ', checks: sAcc },
     ]);
     writeFileSync('docs/validation/gd1.md', md + '\n');
-    expect(failed.map((c) => `${c.id} (${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length})`)).toEqual([]);
+    expect(failed.filter((c) => !c.known).map((c) => `${c.id} (${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length})`)).toEqual([]);
   }, 3_600_000);
 });

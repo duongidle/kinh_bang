@@ -145,7 +145,7 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'exp.trustLoss', value: 0.04, label: 'Niềm tin mất mỗi tháng cho mỗi 2 điểm lệch mục tiêu', source: 'TTK' },
   { id: 'exp.trustBand', value: 0.02, label: 'Biên quanh mục tiêu coi là "gần"', source: 'TTK' },
   { id: 'exp.flight', value: 1.0, label: 'Tiêu dùng tăng thêm khi lạm phát kỳ vọng vượt lãi tiền gửi', source: 'TTK; dạng cầu tiền Cagan 1956' },
-  { id: 'exp.saveResponse', value: 2.0, label: 'Tiêu dùng giảm khi lãi tiền gửi vượt lạm phát kỳ vọng', source: 'TTK; thay thế liên thời gian trong giáo trình (lãi suất thực cao thì hoãn tiêu dùng)', note: 'Thiết kế mục 10 chỉ nêu chiều mua sớm. Bằng 0 thì quay về đúng thiết kế, và lãi suất của NHNN gần như không chạm tới tiêu dùng.' },
+  { id: 'exp.saveResponse', value: 0.35, label: 'Tiêu dùng giảm khi lãi tiền gửi vượt lạm phát kỳ vọng', source: 'Havránek 2015, "Measuring Intertemporal Substitution: The Importance of Method Choices and Selective Reporting", JEEA 13(6): độ co giãn thay thế liên thời gian sau khi chỉnh thiên lệch công bố là 0,3-0,4 ở ước lượng vi mô (hộ có tài sản), xấp xỉ 0 ở ước lượng vĩ mô; trên 0,8 là trái với bằng chứng. Đã đọc tóm tắt ngày 14/11/2026', note: 'Lấy 0,35. Quy đổi gần đúng: lãi suất thực cao hơn 1 điểm trong một năm thì tiêu dùng năm đó thấp hơn khoảng 0,35%. Thiết kế mục 10 chỉ nêu chiều mua sớm; bằng 0 thì về đúng thiết kế. Dương quyết ngày 14/11/2026: không dùng giá trị 2 (chọn để K1.19 qua).' },
   { id: 'exp.confKappa', value: 1.0, label: 'Tiêu dùng giảm theo thất nghiệp quanh hộ', source: 'TTK; tiết kiệm phòng thân' },
   { id: 'exp.confNormal', value: 0.05, label: 'Mức thất nghiệp coi là bình thường', source: 'TTK' },
 

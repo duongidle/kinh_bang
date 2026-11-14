@@ -80,7 +80,8 @@ Xếp theo mức ảnh hưởng. Cột "Về thiết kế" là giá trị đưa 
 | S25 | **Đợt xét lương năm cộng trừ theo thất nghiệp**: mỗi điểm thất nghiệp dưới (trên) 5% thì lương tăng thêm (bớt) 0,5 điểm; lương danh nghĩa không giảm trong đợt xét | `firm.wagePhillips` = 0,5; mã lý do `w_tight`, `w_slack_review` | 0 | Thiết kế chỉ cho lương tăng khi một doanh nghiệp không tuyển đủ người. Thế thì lương gần như chỉ theo lạm phát kỳ vọng, lạm phát không phản ứng với cầu, và tăng lãi suất không hạ được lạm phát (K1.19 hỏng) | Caiani 3.15: lương xét lại theo ngưỡng thất nghiệp υ. Dạng tuyến tính là TTK |
 | S26 | **Hộ trừ phần lạm phát ăn mòn tiền đang giữ** khỏi thu nhập khi tính tiêu dùng | `hh.inflationLoss` = 1 | 0 | Không có thì lãi tiền gửi danh nghĩa tính trọn là thu nhập: lạm phát cao kéo lãi suất cao, hộ thấy mình giàu lên và tiêu thêm, lạm phát không có gì neo | Godley và Lavoie 2007, thu nhập thực kiểu Haig-Simons (trí nhớ) |
 | S27 | **Hộ kinh doanh thuộc diện nộp thuế tính thuế doanh thu vào giá bán** | không có công tắc riêng; theo luật `hkd.vat.*`, `hkd.pit.*`, `hkd.threshold` và tham số `hkd.declare` | | Trước đó thuế này chỉ trừ vào lãi của chủ hộ, giá không đổi, nên "nộp thuế đủ" không chạm tới người mua (K1.26). Đây là thiếu sót so với mục 5 của thiết kế (thuế gián thu nằm trong giá), không phải cơ chế mới | Thuế khoán tính trên doanh thu là thuế gián thu |
-| S28 | **Lãi suất tiền gửi vượt lạm phát kỳ vọng: mức phản ứng tăng gấp đôi** | `exp.saveResponse` = 2 (S8 ghi 1) | 0 | Đo ngày 14/11, tăng lãi suất 6 điểm, 8 seed: với giá trị 1, lạm phát năm thứ hai đổi −0,19 ± 1,00 điểm (4/8 seed giảm), K1.19 hỏng; với giá trị 2 là −1,17 ± 0,80 (7/8 seed giảm) | TTK. **Giá trị này chọn để K1.19 qua, chưa có ước lượng nào đỡ lưng.** Nó nghĩa là lãi suất thực cao hơn 1 điểm thì hộ bớt khoảng 2% phần tiêu dùng theo thu nhập, khá mạnh so với giáo trình. Cần Dương quyết giữ hay bỏ |
+| S28 | **(Đã bỏ 14/11/2026)** `exp.saveResponse` = 2 | | | Dương quyết: không dùng giá trị chọn để K1.19 qua | Xem S8 bản mới ngay dưới |
+| S8b | **Lãi tiền gửi cao hơn lạm phát kỳ vọng thì hộ hoãn mua**, mức phản ứng lấy theo tài liệu | `exp.saveResponse` = 0,35 | 0 | Thay cho giá trị 1 (S8) và 2 (S28) | Havránek 2015, JEEA 13(6): độ co giãn thay thế liên thời gian sau khi chỉnh thiên lệch công bố là 0,3-0,4 ở ước lượng vi mô, xấp xỉ 0 ở vĩ mô, trên 0,8 là trái bằng chứng. Đã đọc tóm tắt 14/11/2026. Quy đổi sang tham số của mô hình là gần đúng |
 | S29 | **Hệ số của quy tắc lãi suất tự động thành tham số** | `cb.taylorPi` = 1,5; `cb.taylorSpeed` = 0,3 | | Trước là số viết cứng trong code. Giá trị không đổi | Taylor 1993 |
 | S30 | **Chi phí lãi vay trong giá tính theo số lãi thực trả tháng trước** | chi tiết triển khai | | Trước đó nhân cả dư nợ với lãi suất của khoản vay mới nhất, nên một lần tăng lãi suất đẩy giá lên ngay cả với nợ cũ lãi cố định, ngược chiều với K1.19 | Khoản vay giữ lãi suất lúc ký (thiết kế mục 7) |
 
@@ -91,7 +92,47 @@ Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tu
 - Chính phủ nhỏ (công chức 3%): bỏ theo quyết định mục 3.
 - "Hoãn tăng lương ở nơi đang lỗ" (thử ngày 14/11): làm lương thực mòn dần giống `firm.wageIndex` < 1. Đã xoá khỏi code.
 
-## D. Chỗ tớ thấy còn yếu
+## D. Phát hiện và việc còn mở (cập nhật 14/11/2026 theo quyết định của Dương)
+
+### D1. K1.19 chưa đạt
+
+Với `exp.saveResponse` = 0,35, tăng lãi suất 6 điểm không hạ được lạm phát ở đủ số seed. Ghi "chưa đạt (đã biết)" trong báo cáo kiểm định, không nâng tham số. Kênh vay tiêu dùng (thiết kế mục 18) **để GĐ3**: tớ đánh giá là nặng cho GĐ1, vì (1) Caiani không có hộ vay nên không có quy tắc và tham số tham chiếu; (2) khoản vay lớn nhất của hộ Việt Nam là vay mua nhà, cần đất và nhà của GĐ3 làm tài sản thế chấp; (3) thêm một nguồn tạo tiền mới buộc hiệu chỉnh và kiểm định lại toàn bộ GĐ1.
+
+### D2. Phát hiện: lãi suất cao kéo dài làm lạm phát tăng qua tiền lãi Chính phủ trả
+
+Giữ nguyên, không sửa. Số đo (8 seed, `scripts/k119.ts`, khi còn dùng giá trị 2): tăng lãi suất 6 điểm và giữ mãi thì bội chi tăng khoảng 70%, nợ công +22%, tiền của công chúng +14% sau 5 năm; tiêu dùng thực cao hơn nhánh gốc 3-5% từ năm thứ tư; lạm phát cao hơn gần 2 điểm ở năm thứ năm. Tiền lãi trái phiếu thành thu nhập của hộ. Đây là tính chất của mô hình kế toán kép khi ngân sách không phản ứng (Godley và Lavoie 2007, trí nhớ). Thành kịch bản Phòng thí nghiệm số 15 "Hai tay lái" về phối hợp tài khoá - tiền tệ.
+
+### D3. K1.22: cú bật lại có thể bị phóng đại
+
+Giữ cách đo 3 năm đầu. Sau năm thứ năm nhánh siết tín dụng có GDP cao hơn nhánh gốc 2-6%. Mô hình thiếu cơ chế giảm phát nợ (giá giảm làm nợ thực nặng lên, doanh nghiệp vỡ nợ, ngân hàng mất vốn, tín dụng co tiếp), nên giá giảm chỉ có mặt lợi. Cơ chế này **đưa vào GĐ3**.
+
+### D4. K1.26: giữ cách đo doanh số thực
+
+Nộp thuế đủ làm khu vực phi chính thức nghèo đi, không nhỏ đi về số người.
+
+### D5. Vì sao lạm phát bình quân 6-7% và rất khác nhau giữa các seed (CHƯA SỬA, chờ Dương quyết)
+
+Đo bằng `scripts/inflation.ts` (phân rã CPI và lương theo mã lý do, năm 11-40) và `scripts/validate.ts 20 base M k=v`. Mục tiêu của NHNN là 4,5%.
+
+1. **Giá tăng gần như hoàn toàn do lương.** Trong 7,5 điểm lạm phát mỗi năm (bình quân 5 seed): chi phí lương `p_wage` +5,9; đổi nơi mua `p_mix` +1,4; biên lãi ròng +0,5; chi phí vốn và lãi vay `p_capital` +0,8.
+2. **Lương tăng gần như hoàn toàn do chỉ số hoá.** Trong 8,5 điểm tăng lương mỗi năm: `w_index` (xét lương theo lạm phát kỳ vọng) +8,2; `w_tight` trừ `w_slack_review` +0,26; `w_shortage` +0,04.
+3. **Lạm phát không có neo.** Lương theo đủ 100% lạm phát kỳ vọng (S7). Lạm phát kỳ vọng theo lạm phát quá khứ khi niềm tin vào mục tiêu thấp (bình quân 0,2-0,4). Vậy lạm phát năm nay bằng lạm phát năm trước cộng một cú đẩy nhỏ: nó trôi, không quay về đâu cả.
+4. **Cú đẩy nhỏ nhưng luôn dương**: thất nghiệp thực tế 4,3-5% nằm dưới mức "bình thường" 5% của S25 nên `w_tight` > 0; biên lãi ròng tăng.
+5. **Quy tắc lãi suất tự động (S20) làm tệ thêm chứ không kéo về.** Bật: lạm phát 1,6-15,7% giữa 20 seed, K1.5 hỏng (13/20). Tắt (`cb.autopilot` = 0): 1,6-6,1%, phần lớn 4-6%, niềm tin 0,6-0,8, K1.5 qua 20/20. Lý do: lãi suất cao hầu như không giảm được cầu (hộ không vay, S8b nhỏ), nhưng làm tăng tiền lãi Chính phủ trả (chính là D2) và tăng chi phí lãi vay trong giá. Seed 2: lãi cho vay bình quân 20,6%, bội chi 6% GDP, lạm phát 13,6%.
+6. Thử từng cơ chế (5 seed, CPI mỗi năm): gốc 3,4-13,6%; tắt S20 4,5-5,6%; tắt S25 (`firm.wagePhillips` = 0) 2,3-4,9%; S7 về 0,6 (`firm.wageIndex`) −0,1 đến 1,3% và thất nghiệp lên 6-8%; bật S23 (`gov.autopilot`) 5,8-8,0%.
+
+Kết luận: nguyên nhân là tổ hợp **S7 + S25 + S20** trong bảng B, khuếch đại bởi D2. Không phải lỗi sổ sách.
+
+Hệ quả cho kiểm định với `exp.saveResponse` = 0,35 (20 seed, 500 hộ): K1.5 13/20, K1.10 15/20, K1.12 13/20 không qua. Tắt S20 thì K1.5 và K1.10 qua, K1.12 15/20.
+
+Các hướng sửa tớ thấy có cơ sở, để Dương chọn:
+- (a) Tắt S20 theo mặc định, về đúng thiết kế mục 8 (lãi suất do người chơi đặt; quy tắc tự động là lựa chọn trong sandbox). Rẻ nhất, và trung thực với điều mô hình nói: ở GĐ1 lãi suất chưa phải công cụ chống lạm phát tốt.
+- (b) Giữ S20 nhưng cho ngân sách phản ứng với tiền lãi (bật S23 hoặc một quy tắc giữ cân đối cơ bản). S23 hiện làm khu vực chính thức phình dần, nên phải sửa nó trước.
+- (c) Hạ mức "thất nghiệp bình thường" của S25 về mức mô hình tự đứng (khoảng 4,5%). Đây là chỉnh số cho đẹp, tớ không khuyên.
+
+## E. Ghi chú cũ
+
+
 
 - Lãi suất NHNN tác động lên lạm phát đã có (K1.19), nhưng nhờ S25, S26, S28 thêm sau khi thấy K1.19 hỏng. S28 là chỗ yếu nhất: giá trị chọn để qua kiểm định.
 - K1.19 chỉ đúng trong khoảng 2 năm. Giữ lãi suất cao mãi thì tới năm thứ năm lạm phát lại CAO hơn nhánh gốc khoảng 2 điểm (8 seed). Đã soi (8 seed, `scripts/k119.ts`): lãi suất cao làm tiền lãi Chính phủ trả tăng, bội chi tăng khoảng 70%, nợ công +22% và tiền của công chúng +14% sau 5 năm. Tiền lãi đó thành thu nhập của hộ, nên từ năm thứ tư tiêu dùng thực cao hơn nhánh gốc 3-5%. Đây là tính chất quen thuộc của mô hình kế toán kép khi ngân sách không phản ứng (Godley và Lavoie 2007, trí nhớ), không phải lỗi sổ sách. Ngoài đời Chính phủ thường siết chi khi tiền lãi phình ra; trong mô hình việc đó là của người chơi, hoặc bật `gov.autopilot`.
