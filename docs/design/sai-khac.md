@@ -77,6 +77,12 @@ Xếp theo mức ảnh hưởng. Cột "Về thiết kế" là giá trị đưa 
 | S22 | **Ngân hàng trả lại chủ phần vốn vượt gấp đôi mục tiêu** | `bank.idlePayout` | 0 | Vốn nằm chết trong ngân hàng, rút dần tiền khỏi hộ | TTK |
 | S23 | **Bộ Tài chính tự chỉnh mức mua hàng theo mục tiêu bội chi** | `gov.autopilot` | 0 (**đang tắt**) | Bản trước bật. Đo lại thì chính nó làm khu vực chính thức phình dần: Chính phủ chỉ mua của doanh nghiệp, mua nhiều hơn thì thu thuế nhiều hơn, rồi lại mua nhiều hơn. Tắt đi là về đúng thiết kế "giữ chi theo tỷ lệ GDP". Giữ làm công tắc cho người chơi | TTK |
 | S24 | **Gini của cải tính trên của cải ròng** (tiền cộng phần vốn sở hữu doanh nghiệp, ngân hàng, hộ kinh doanh) | chỉ số `gini.wealth`; bản chỉ tính tiền là `gini.liquid` | | gd0 mục 4.1 đã định giá trị cổ phần là vốn ròng chia theo tỷ lệ. Bỏ phần sở hữu ra thì bỏ mất chính kênh bất bình đẳng mà mục 5.7 mô tả | Định nghĩa thông thường của của cải ròng |
+| S25 | **Đợt xét lương năm cộng trừ theo thất nghiệp**: mỗi điểm thất nghiệp dưới (trên) 5% thì lương tăng thêm (bớt) 0,5 điểm; lương danh nghĩa không giảm trong đợt xét | `firm.wagePhillips` = 0,5; mã lý do `w_tight`, `w_slack_review` | 0 | Thiết kế chỉ cho lương tăng khi một doanh nghiệp không tuyển đủ người. Thế thì lương gần như chỉ theo lạm phát kỳ vọng, lạm phát không phản ứng với cầu, và tăng lãi suất không hạ được lạm phát (K1.19 hỏng) | Caiani 3.15: lương xét lại theo ngưỡng thất nghiệp υ. Dạng tuyến tính là TTK |
+| S26 | **Hộ trừ phần lạm phát ăn mòn tiền đang giữ** khỏi thu nhập khi tính tiêu dùng | `hh.inflationLoss` = 1 | 0 | Không có thì lãi tiền gửi danh nghĩa tính trọn là thu nhập: lạm phát cao kéo lãi suất cao, hộ thấy mình giàu lên và tiêu thêm, lạm phát không có gì neo | Godley và Lavoie 2007, thu nhập thực kiểu Haig-Simons (trí nhớ) |
+| S27 | **Hộ kinh doanh thuộc diện nộp thuế tính thuế doanh thu vào giá bán** | không có công tắc riêng; theo luật `hkd.vat.*`, `hkd.pit.*`, `hkd.threshold` và tham số `hkd.declare` | | Trước đó thuế này chỉ trừ vào lãi của chủ hộ, giá không đổi, nên "nộp thuế đủ" không chạm tới người mua (K1.26). Đây là thiếu sót so với mục 5 của thiết kế (thuế gián thu nằm trong giá), không phải cơ chế mới | Thuế khoán tính trên doanh thu là thuế gián thu |
+| S28 | **Lãi suất tiền gửi vượt lạm phát kỳ vọng: mức phản ứng tăng gấp đôi** | `exp.saveResponse` = 2 (S8 ghi 1) | 0 | Đo ngày 14/11, tăng lãi suất 6 điểm, 8 seed: với giá trị 1, lạm phát năm thứ hai đổi −0,19 ± 1,00 điểm (4/8 seed giảm), K1.19 hỏng; với giá trị 2 là −1,17 ± 0,80 (7/8 seed giảm) | TTK. **Giá trị này chọn để K1.19 qua, chưa có ước lượng nào đỡ lưng.** Nó nghĩa là lãi suất thực cao hơn 1 điểm thì hộ bớt khoảng 2% phần tiêu dùng theo thu nhập, khá mạnh so với giáo trình. Cần Dương quyết giữ hay bỏ |
+| S29 | **Hệ số của quy tắc lãi suất tự động thành tham số** | `cb.taylorPi` = 1,5; `cb.taylorSpeed` = 0,3 | | Trước là số viết cứng trong code. Giá trị không đổi | Taylor 1993 |
+| S30 | **Chi phí lãi vay trong giá tính theo số lãi thực trả tháng trước** | chi tiết triển khai | | Trước đó nhân cả dư nợ với lãi suất của khoản vay mới nhất, nên một lần tăng lãi suất đẩy giá lên ngay cả với nợ cũ lãi cố định, ngược chiều với K1.19 | Khoản vay giữ lãi suất lúc ký (thiết kế mục 7) |
 
 Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tuyển số người trả nổi lương; giữ lại lương tháng này cộng một tháng đệm trước khi mua máy; hộ gặp nơi hết hàng thì sang nơi quen kế tiếp trong cùng lượt; thanh lý máy của doanh nghiệp phá sản cho tối đa ba nơi mua; doanh nghiệp hết người hết tiền quá 6 tháng thì giải thể; cơ cấu ngành lúc đầu tính từ cầu để tháng đầu không ngành nào thừa hay thiếu hàng.
 
@@ -87,6 +93,10 @@ Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tu
 
 ## D. Chỗ tớ thấy còn yếu
 
-- Lãi suất NHNN tác động yếu lên lạm phát. Sẽ biết rõ ở kiểm định K1.19.
+- Lãi suất NHNN tác động lên lạm phát đã có (K1.19), nhưng nhờ S25, S26, S28 thêm sau khi thấy K1.19 hỏng. S28 là chỗ yếu nhất: giá trị chọn để qua kiểm định.
+- K1.19 chỉ đúng trong khoảng 2 năm. Giữ lãi suất cao mãi thì tới năm thứ năm lạm phát lại CAO hơn nhánh gốc khoảng 2 điểm (8 seed). Kênh nghi ngờ: lãi tiền gửi cao thành thu nhập của hộ, và lãi vay vào giá bán. Chưa soi kỹ.
+- Lạm phát bình quân 6-7% ở phần lớn seed, cao hơn mục tiêu của NHNN. Quy tắc lãi suất tự động chưa kéo về được.
+- K1.22: siết tín dụng chỉ làm sản lượng thấp hơn trong khoảng 3 năm. Sau đó giá giảm, kinh tế bật lại cao hơn nhánh gốc ở năm 6-10 rồi mới về. Tớ chưa chắc cú bật mạnh như vậy là đúng thực tế hay do mô hình thiếu kênh giảm phát nợ (nợ thực nặng lên khi giá giảm làm doanh nghiệp phá sản).
+- K1.26: nộp thuế đủ làm khu vực phi chính thức nghèo đi nhưng không nhỏ đi về số người. Lý do: thuế thu thêm không được chi ra, và hộ kinh doanh không chuyển lên doanh nghiệp được.
 - Tiền mặt khoảng 15% tổng phương tiện thanh toán, trên mục tiêu thô 7-13%.
 - Thất nghiệp 5-6%, sát mép trên mục tiêu thô 2-6%.

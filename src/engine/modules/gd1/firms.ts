@@ -133,6 +133,10 @@ export function planFirms(w: World, eng: Engine): void {
   const wageIndex = eng.param(w, 'firm.wageIndex');
   const flexWage = eng.variant(w, 'firm.wage') === 'flex';
   const hkdFlex = eng.param(w, 'hkd.wageFlex') >= 0.5;
+  const phillips = eng.param(w, 'firm.wagePhillips');
+  const uRef = eng.param(w, 'firm.wageSlackU');
+  const hkdThreshold = eng.law(w, 'hkd.threshold');
+  const hkdDeclare = eng.variant(w, 'tax.compliance') === 'full' ? 1 : eng.param(w, 'hkd.declare');
   const normalCost = eng.param(w, 'firm.normalCostPricing') >= 0.5;
   const month = (w.meta.startMonth - 1 + w.meta.tick) % 12;
   const target = eng.law(w, 'cb.inflation.target');
@@ -175,10 +179,14 @@ export function planFirms(w: World, eng: Engine): void {
       w1 += down;
       parts.push({ reason: 'w_slack', amount: down });
     }
-    if (!f.solo[i] && i % 12 === month && piExp > 0 && f.born[i] < w.meta.tick - 6) {
-      const up = w1 * wageIndex * piExp;
-      w1 += up;
-      parts.push({ reason: 'w_index', amount: up });
+    if (!f.solo[i] && i % 12 === month && f.born[i] < w.meta.tick - 6) {
+      // đợt xét lương năm: theo lạm phát kỳ vọng, cộng trừ theo độ căng của thị trường lao động (Caiani 3.15: ngưỡng thất nghiệp υ)
+      const up = w1 * wageIndex * Math.max(0, piExp);
+      const slack = w1 * phillips * (uRef - s.unemp);
+      const adj = Math.max(-up, slack); // lương danh nghĩa không giảm trong đợt xét năm
+      if (up !== 0) parts.push({ reason: 'w_index', amount: up });
+      if (adj !== 0) parts.push({ reason: adj > 0 ? 'w_tight' : 'w_slack_review', amount: adj });
+      w1 += up + adj;
     }
     if (f.formal[i]) {
       const floor = minWageOf(w, eng, f.zone[i]);
@@ -198,10 +206,14 @@ export function planFirms(w: World, eng: Engine): void {
     // để bán chậm không tự đẩy giá lên
     const yNorm = normalCost ? Math.max(aL, aL * capW * uBar) : Math.max(aL, f.salesE[i]);
     const ucWage = (f.solo[i] ? s.wageInf : f.wage[i]) / aL; // người tự làm tính công mình theo lương phi chính thức
-    const ucCap = f.formal[i] ? (delta * f.capValue[i] + (f.debt[i] * f.lastRate[i]) / 12) / yNorm : 0;
+    // lãi vay tính theo số lãi thực trả tháng trước (khoản vay cũ giữ lãi suất cũ), không nhân cả dư nợ với lãi suất mới nhất
+    const interest = w.meta.tick > 0 ? f.intPaid[i] : (f.debt[i] * f.lastRate[i]) / 12;
+    const ucCap = f.formal[i] ? (delta * f.capValue[i] + interest) / yNorm : 0;
     const expectFactor = 1 + piExp / 12;
     const p0 = f.priceG[i];
-    const vat = taxWedge(w, eng, sec, f.formal[i] === 1); // GTGT và thuế gián thu khác trong giá
+    let vat = taxWedge(w, eng, sec, f.formal[i] === 1); // GTGT và thuế gián thu khác trong giá
+    // hộ kinh doanh thuộc diện nộp thuế theo doanh thu thì tính thuế đó vào giá
+    if (!f.formal[i] && f.rev12[i] * hkdDeclare > hkdThreshold) vat += hkdDeclare * (eng.law(w, `hkd.vat.${SECTOR_KEY[sec]}`) + eng.law(w, `hkd.pit.${SECTOR_KEY[sec]}`));
     const mu0 = f.markup[i];
     let mu1 = mu0;
     const tight = sec === SERVICES ? f.sales[i] >= 0.97 * f.output[i] && f.output[i] > 0 : f.inv[i] < nu * f.salesE[i];
@@ -542,6 +554,7 @@ export function payWages(w: World, eng: Engine): void {
   for (let i = 0; i < h.n; i++) {
     h.income[i] = 0;
     h.grossWage[i] = 0;
+    h.pitPaid[i] = 0;
     const e = h.employer[i];
     if (e < 0) continue;
     if (h.ownBiz[i] === e) continue; // chủ hộ kinh doanh lãnh phần còn lại ở pha profit
@@ -560,6 +573,7 @@ export function payWages(w: World, eng: Engine): void {
       if (tax > 0) {
         const t = payFlex(w, hhRef(i), GOV_REF, tax, formal ? MED_DEP : MED_CASH, K_PIT);
         net -= t;
+        h.pitPaid[i] = t;
         s.m.taxPit += t;
       }
     }

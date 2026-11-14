@@ -30,6 +30,7 @@ export function householdBudgets(w: World, eng: Engine): void {
   const uNorm = eng.param(w, 'exp.confNormal');
   const flight = eng.param(w, 'exp.flight');
   const saveResp = eng.param(w, 'exp.saveResponse');
+  const hsOn = eng.param(w, 'hh.inflationLoss');
   const depRate = Math.max(0, eng.law(w, 'cb.rate.refinancing') - eng.param(w, 'bank.depSpread'));
   const foodMin = eng.param(w, 'hh.foodMin');
   const shA = eng.param(w, 'hh.share.agri');
@@ -77,7 +78,8 @@ export function householdBudgets(w: World, eng: Engine): void {
     const mInfl = Math.max(0.7, Math.min(1.5, 1 + (gapR > 0 ? flight : saveResp) * gapR));
 
     const wealth = h.cash[i] + h.dep[i];
-    const incTerm = a1 * h.expInc[i];
+    // thu nhập thực kiểu Haig-Simons: trừ phần sức mua mà lạm phát kỳ vọng ăn mất của tiền đang giữ (Godley và Lavoie 2007)
+    const incTerm = a1 * Math.max(0, h.expInc[i] - (hsOn * Math.max(0, piE) * wealth) / 12);
     const wealthTerm = a2 * wealth;
     let budget = incTerm * mConf * mInfl + wealthTerm;
     budget = Math.max(0, Math.min(budget, wealth));

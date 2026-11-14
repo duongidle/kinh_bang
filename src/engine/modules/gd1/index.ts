@@ -27,6 +27,8 @@ const REASONS: ReasonDef[] = [
   { id: 'w_shortage', label: 'không tuyển đủ người nên nâng lương', upstream: [ind('vacancies', 1), ind('unemployment', 1)] },
   { id: 'w_slack', label: 'nhiều người thất nghiệp nên hạ lương', upstream: [ind('unemployment', 1)] },
   { id: 'w_index', label: 'đợt xét lương năm theo lạm phát kỳ vọng', upstream: [ind('inflation.expected', 1)] },
+  { id: 'w_tight', label: 'đợt xét lương năm tăng thêm vì ít người thất nghiệp', upstream: [ind('unemployment', 1)] },
+  { id: 'w_slack_review', label: 'đợt xét lương năm tăng ít đi vì nhiều người thất nghiệp', upstream: [ind('unemployment', 1)] },
   { id: 'w_minwage', label: 'lương tối thiểu vùng buộc nâng lương', upstream: [law('minwage.zone.1'), law('minwage.zone.2'), law('minwage.zone.3'), law('minwage.zone.4')] },
   // tiêu dùng
   { id: 'c_income', label: 'thu nhập kỳ vọng của hộ đổi', upstream: [ind('gdp.nominal', 1), ind('unemployment', 1)] },

@@ -6,30 +6,33 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
-- **Giai đoạn**: GĐ1, mốc M1-M5 (engine), đang **hiệu chỉnh thô, chưa xong**. Chưa chạy kiểm định thống kê.
+- **Giai đoạn**: GĐ1, engine xong, đang ở bước **kiểm định thống kê** (cuối mốc M1-M5).
 - **Xong**:
   - GĐ0 phần lõi: engine, sổ cái, luật theo ngày, chuỗi nhân quả, nền đồ chơi. Test K0.1, K0.3-K0.9, K0.11, K0.12 qua.
-  - GĐ1 engine: `src/engine/modules/gd1/` (schema, init, households, firms, banks, gov, indicators, index), tham số ở `src/config/model/gd1.ts`.
-  - Test nhanh `tests/unit/gd1.test.ts` (37 test qua): K1.1-K1.4, K1.30, tất định, lưu/tải, mọi biến thể Phòng thí nghiệm giữ sổ cân.
-  - Kế toán đúng ở mọi lần chạy: bốn đẳng thức giữ, GDP chi tiêu = GDP thu nhập, tiền thay đổi khớp sổ cái.
-- **Đang dở: hành vi vĩ mô chưa đạt K1.5.** Kết quả mới nhất, 3 seed × 40 năm ở 500 hộ (`npx tsx scripts/run-gd1.ts M <seed> 480 8`):
-  - Không còn sụp: cả 3 seed chạy hết 40 năm, lạm phát 0-5%, nợ công 35-70% GDP.
-  - Thất nghiệp còn cao: 5-20% (K1.5 cho phép 1-15%, mục tiêu thô 2-6%). Cùng lúc có 2-22% GDP nhu cầu mua không được đáp ứng: thiếu máy, không thiếu cầu.
-  - Không có doanh nghiệp mới nào (cột DNmới = 0) từ khi bắt người sáng lập tự có 40% vốn. Số doanh nghiệp giảm dần từ 40 còn 8-9.
-  - Tỷ lệ phi chính thức trôi từ 62% xuống 30-45%.
-  - Gini của cải 0,25-0,31 sau 40 năm (K1.13 cần trên 0,4).
-- **Đã chẩn đoán, chưa sửa**:
-  1. Gia nhập doanh nghiệp: hộ trong mô hình không đủ giàu để góp 40% vốn một doanh nghiệp hai người (khoảng 140 triệu theo giá gốc). Hạ ngưỡng thì doanh nghiệp mới thiếu vốn, không mua nổi máy, sống lay lắt. Cần chọn: hạ vốn cố định mỗi lao động, cho vay khởi nghiệp rộng hơn, hay cho nhiều người góp vốn hơn.
-  2. Cân bằng giữa doanh nghiệp và hộ kinh doanh không bền: hàng đồng nhất, người mua chọn nơi rẻ nhất, nên bên nào rẻ hơn một chút sẽ lấn dần thị trường. Chưa có cơ chế nào giữ hai khu vực cùng tồn tại. **Chạm thiết kế mục 6, cần Dương quyết.**
-  3. Quy tắc tự động của Bộ Tài chính (bám mục tiêu bội chi) cùng chiều chu kỳ.
-  4. Lãi suất của NHNN ít tác dụng lên đầu tư (hàm đầu tư chưa có chi phí vay).
-  5. Tín dụng vẫn bị từ chối 35-80% số tiền xin vay, chủ yếu vì `cr_repay`.
+  - GĐ1 engine: `src/engine/modules/gd1/`, tham số ở `src/config/model/gd1.ts`. Test nhanh `tests/unit` 38 test qua.
+  - Hiệu chỉnh thô: 5 seed × 40 năm ở 500 hộ, thất nghiệp 4,5-5,8%, lạm phát 3-7%, phi chính thức 60-64%, thu ngân sách 15-17% GDP, Gini của cải 0,45-0,51.
+  - Mọi sai khác so với thiết kế ghi ở [design/sai-khac.md](design/sai-khac.md) (S1-S30). Quy tắc của Dương ngày 14/11: cơ chế thêm phải là tham số có tên và có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
+  - Bộ kiểm định: `tests/validation/gd1-lib.ts` (K1.1-K1.32), `tests/validation/gd1.test.ts` sinh `docs/validation/gd1.md`. Chạy thử nhanh: `npx tsx scripts/validate.ts 5 [base|exp|all] [S|M|L]`.
+  - Chạy thử 5 seed ngày 14/11: mọi mục lần chạy gốc qua; mọi thí nghiệm chạy đôi qua sau khi sửa cách đo K1.22 và K1.26 (xem dưới).
+- **Đang dở**: chạy `npm run validate:gd1` đủ 20 seed, ghi kết quả vào `docs/validation/gd1.md`.
+- **Chờ Dương quyết** (chi tiết ở sai-khac.md mục B và D):
+  1. S28 `exp.saveResponse` = 2: giá trị chọn để K1.19 qua, không có ước lượng đỡ lưng. Với 1 thì K1.19 hỏng.
+  2. K1.19 chỉ đúng khoảng 2 năm; giữ lãi suất cao tới năm thứ năm thì lạm phát lại cao hơn nhánh gốc.
+  3. K1.22 đổi cửa sổ đo sang 3 năm đầu; năm 6-10 GDP nhánh siết tín dụng lại cao hơn.
+  4. K1.26 đổi cách đo sang doanh số thực; thị phần và số lao động phi chính thức không giảm.
+  5. Lạm phát bình quân 6-7%, trên mục tiêu của NHNN.
 - **Bước tiếp theo** (theo thứ tự):
-  1. Sửa gia nhập doanh nghiệp (mục 1 ở trên), chạy lại 3 seed. Công cụ soi: `scripts/debug3.ts` (lý do từ chối tín dụng, lý do thất nghiệp, từng doanh nghiệp), `DBG=1 npx tsx scripts/debug-gd1.ts <tháng> | grep BUST` (vì sao phá sản), `scripts/debug2.ts` (dòng tiền theo khu vực, bảng cân đối ngân hàng).
-  2. Quyết cách giữ hai khu vực cùng tồn tại (mục 2). Việc này chạm thiết kế mục 6, có thể phải hỏi Dương.
-  3. Khi K1.5 đạt ở 3 seed: viết `tests/validation/gd1.test.ts` (K1.5-K1.31), chạy `npm run validate:gd1`, ghi `docs/validation/gd1.md`.
-  4. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
-  5. GĐ1 mốc M6: UI, kịch bản, các tính năng S.
+  1. Đọc kết quả 20 seed. Mục nào hỏng thì soi bằng `scripts/pairdiag.ts` (hiệu chạy đôi theo năm, có khoảng tin cậy) và `scripts/k119.ts`.
+  2. Phần GĐ0 còn lại: giao thức, Worker, khung UI, bản đồ, PWA (K0.2, K0.10, K0.13, K0.14).
+  3. GĐ1 mốc M6: UI, kịch bản, các tính năng S.
+
+## 14/11/2026 - Kiểm định GĐ1, sửa hai cơ chế thiếu
+
+- **Lương phản ứng với thất nghiệp** (S25) và **hộ trừ phần lạm phát ăn mòn tiền** (S26): thêm sau khi K1.19 hỏng. Kèm S28 (tăng `exp.saveResponse`) và S30 (lãi vay trong giá tính theo lãi thực trả).
+- **Thuế hộ kinh doanh vào giá bán** (S27): thiếu sót so với thiết kế, đã bổ sung. K1.24 qua.
+- **K1.22** soi bằng 10 seed: siết tín dụng làm GDP thực thấp hơn 3-4% trong 3 năm đầu, rồi giá giảm, kinh tế bật lại cao hơn 2-6% ở năm 6-9, kể cả khi tắt quy tắc lãi suất tự động và tắt S26. Đây là một chu kỳ dài, không phải lợi ích bền. Đổi cửa sổ đo, in kèm số năm 6-10.
+- **K1.26** soi bằng 10 seed: thu/GDP +0,6 điểm; giá hàng hộ kinh doanh +2,7% năm đầu; GDP thực −1 đến −3%; thu nhập thực phi chính thức −2 đến −6%; số hộ kinh doanh +11%, lao động phi chính thức +1 điểm. Bật quy tắc ngân sách tự động (để thuế thu thêm được chi ra) không đổi kết luận trong 8 năm. Đổi cách đo sang doanh số thực, ghi rõ giới hạn trong báo cáo.
+- Chỉ số mới cho kiểm định: `consumption.real`, `price.formal.taxed`, `price.informal.taxed`, `employment.formal`, `wage.formal.low`, `gini.wageNet`, `income.real.*`, `profits.formal.real`, `wages.fixed.real`. Thêm cột `pitPaid` cho hộ.
 
 ## 13/11/2026 - Hiệu chỉnh thô GĐ1 (đang dở)
 

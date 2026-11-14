@@ -38,6 +38,7 @@ const HH_COLS: ColSpec[] = [
   { name: 'mInfl', type: 'f64', def: 1 },
   { name: 'income', type: 'f64' }, // thu nhập khả dụng tháng này
   { name: 'grossWage', type: 'f64' },
+  { name: 'pitPaid', type: 'f64' }, // thuế TNCN từ lương tháng này
   { name: 'cons', type: 'f64' }, // chi tiêu tháng này
   { name: 'consCash', type: 'f64' },
   { name: 'cons0', type: 'f64' },
@@ -155,6 +156,7 @@ export function H(w: World) {
     mInfl: f64(t, 'mInfl'),
     income: f64(t, 'income'),
     grossWage: f64(t, 'grossWage'),
+    pitPaid: f64(t, 'pitPaid'),
     cons: f64(t, 'cons'),
     consCash: f64(t, 'consCash'),
     consS: [f64(t, 'cons0'), f64(t, 'cons1'), f64(t, 'cons2')],

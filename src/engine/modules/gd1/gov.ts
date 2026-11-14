@@ -67,9 +67,9 @@ export function policy(w: World, eng: Engine): void {
     const target = eng.law(w, 'cb.inflation.target');
     const pi = yoyInflation(s);
     const neutral = target + 0.0;
-    const want = Math.max(0.005, Math.min(0.3, neutral + 1.5 * (pi - target)));
+    const want = Math.max(0.005, Math.min(0.3, neutral + eng.param(w, 'cb.taylorPi') * (pi - target)));
     const cur = eng.law(w, 'cb.rate.refinancing');
-    const next = Math.round((cur + 0.3 * (want - cur)) * 400) / 400;
+    const next = Math.round((cur + eng.param(w, 'cb.taylorSpeed') * (want - cur)) * 400) / 400;
     if (next !== cur) eng.setLaw(w, 'cb.rate.refinancing', next, 'NHNN tự động');
   }
 }
@@ -112,6 +112,7 @@ export function payPublic(w: World, eng: Engine): void {
       const tax = paid > eng.law(w, 'pit.deduction.self') ? pitOnWage(w, eng, paid, h.dependents[i]) : 0;
       const t = tax > 0 ? transfer(w, hhRef(i), GOV_REF, tax, MED_DEP, K_PIT) : 0;
       s.m.taxPit += t;
+      h.pitPaid[i] = t;
       h.income[i] += paid - t;
     } else if (h.employer[i] === UNEMPLOYED && dole > 0) {
       const paid = transfer(w, GOV_REF, hhRef(i), dole, MED_DEP, K_TRANSFER, 0, true);

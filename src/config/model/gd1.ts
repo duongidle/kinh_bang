@@ -60,6 +60,7 @@ export const GD1_PARAMS: ParamDef[] = [
   // ---------- hộ gia đình ----------
   { id: 'hh.alpha1', value: 0.5, label: 'Khuynh hướng tiêu dùng theo thu nhập', source: `${C}: α1 = 0,38581 (quý)`, note: 'Nâng lên 0,5 và hạ α2 để của cải mục tiêu của hộ khoảng 6 tháng thu nhập, cho nợ công ban đầu ở mức hợp lý. Hiệu chỉnh thô.' },
   { id: 'hh.alpha2', value: 0.0833, label: 'Khuynh hướng tiêu dùng theo của cải (tháng)', source: `${C}: α2 = 0,25 mỗi quý, chia 3` },
+  { id: 'hh.inflationLoss', value: 1, label: 'Hộ trừ phần lạm phát ăn mòn tiền đang giữ khỏi thu nhập khi tính tiêu dùng (1 bật)', source: 'Godley và Lavoie 2007, thu nhập khả dụng thực kiểu Haig-Simons', note: 'Bằng 0 thì về đúng thiết kế mục 4.1. Khi đó lãi tiền gửi danh nghĩa tính trọn là thu nhập, lạm phát cao làm hộ thấy mình giàu lên, và lạm phát không có gì neo (sai-khac.md S26).' },
   { id: 'hh.lambdaInc', value: 0.25, label: 'Tốc độ cập nhật thu nhập kỳ vọng', source: `${C}: λ = 0,25` },
   { id: 'hh.foodMin', value: 15, label: 'Lương thực tối thiểu mỗi tháng (đơn vị hàng)', source: 'TTK; quy luật Engel', note: 'Khoảng một phần tư lương bình quân ở mức giá gốc.' },
   { id: 'hh.share.agri', value: 0.15, label: 'Phần ngân sách còn lại cho lương thực', source: 'TTK' },
@@ -95,6 +96,7 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'firm.fireMax', value: 0.25, label: 'Tỷ lệ lao động tối đa bị sa thải mỗi tháng', source: 'TTK; ma sát sa thải' },
   { id: 'firm.wageSlackU', value: 0.05, label: 'Thất nghiệp trên mức này thì lương mềm mới giảm', source: `${C}: υ = 0,08`, note: 'Hạ xuống 5%.' },
   { id: 'firm.wageShortageStep', value: 1, label: 'Bước tăng lương khi không tuyển đủ người (số lần bước chuẩn)', source: `${C} 3.5` },
+  { id: 'firm.wagePhillips', value: 0.5, label: 'Đợt xét lương năm cộng trừ theo thất nghiệp: mỗi điểm thất nghiệp dưới (trên) mức bình thường thì lương tăng thêm (bớt) bấy nhiêu điểm', source: `${C} 3.15: lương xét lại theo ngưỡng thất nghiệp υ; dạng tuyến tính là TTK`, note: 'Bằng 0 thì lương chỉ theo lạm phát kỳ vọng, lạm phát gần như không phản ứng với cầu, và lãi suất NHNN không hạ được lạm phát (sai-khac.md S25).' },
   { id: 'firm.wageIndex', value: 1, label: 'Phần lạm phát kỳ vọng đưa vào đợt xét lương năm', source: 'TTK', note: 'Dưới 1 thì lương thực ở doanh nghiệp mòn dần mỗi năm cho tới khi ngang lương hộ kinh doanh, và khoảng cách lương hai khu vực biến mất.' },
   { id: 'firm.gamma1', value: 0.01 / 3, label: 'Trọng số lợi nhuận trong hàm đầu tư (tháng)', source: `${C}: γ1 = 0,01 mỗi quý` },
   { id: 'firm.gamma2', value: 0.02, label: 'Trọng số sử dụng công suất trong hàm đầu tư (tháng)', source: `${C}: γ2 = 0,02 mỗi quý`, note: 'Quy đổi thẳng sang tháng là 0,0067. Dùng 0,02: doanh nghiệp trong mô hình chỉ vài người, với hệ số gốc phải mất nhiều năm mới mua đủ máy cho thêm một người. Hiệu chỉnh thô.' },
@@ -143,7 +145,7 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'exp.trustLoss', value: 0.04, label: 'Niềm tin mất mỗi tháng cho mỗi 2 điểm lệch mục tiêu', source: 'TTK' },
   { id: 'exp.trustBand', value: 0.02, label: 'Biên quanh mục tiêu coi là "gần"', source: 'TTK' },
   { id: 'exp.flight', value: 1.0, label: 'Tiêu dùng tăng thêm khi lạm phát kỳ vọng vượt lãi tiền gửi', source: 'TTK; dạng cầu tiền Cagan 1956' },
-  { id: 'exp.saveResponse', value: 1.0, label: 'Tiêu dùng giảm khi lãi tiền gửi vượt lạm phát kỳ vọng', source: 'TTK; thay thế liên thời gian trong giáo trình (lãi suất thực cao thì hoãn tiêu dùng)', note: 'Thiết kế mục 10 chỉ nêu chiều mua sớm. Bằng 0 thì quay về đúng thiết kế, và lãi suất của NHNN gần như không chạm tới tiêu dùng.' },
+  { id: 'exp.saveResponse', value: 2.0, label: 'Tiêu dùng giảm khi lãi tiền gửi vượt lạm phát kỳ vọng', source: 'TTK; thay thế liên thời gian trong giáo trình (lãi suất thực cao thì hoãn tiêu dùng)', note: 'Thiết kế mục 10 chỉ nêu chiều mua sớm. Bằng 0 thì quay về đúng thiết kế, và lãi suất của NHNN gần như không chạm tới tiêu dùng.' },
   { id: 'exp.confKappa', value: 1.0, label: 'Tiêu dùng giảm theo thất nghiệp quanh hộ', source: 'TTK; tiết kiệm phòng thân' },
   { id: 'exp.confNormal', value: 0.05, label: 'Mức thất nghiệp coi là bình thường', source: 'TTK' },
 
@@ -162,6 +164,9 @@ export const GD1_PARAMS: ParamDef[] = [
   { id: 'bank.youngFirmMonths', value: 24, label: 'Doanh nghiệp trẻ hơn mức này được xét vay theo phương án kinh doanh (tháng; 0 tắt)', source: 'TTK' },
   { id: 'hkd.soloUpgrade', value: 0.25, label: 'Xác suất mỗi tháng người tự làm bán hết hàng thuê thêm người (0 tắt)', source: 'TTK' },
   { id: 'bank.idlePayout', value: 0.25, label: 'Phần vốn vượt gấp đôi mục tiêu ngân hàng trả lại chủ mỗi quý (0 tắt)', source: 'TTK' },
+
+  { id: 'cb.taylorPi', value: 1.5, label: 'Quy tắc lãi suất tự động: lãi suất tăng bao nhiêu điểm cho mỗi điểm lạm phát vượt mục tiêu', source: 'Taylor 1993: 1,5' },
+  { id: 'cb.taylorSpeed', value: 0.3, label: 'Quy tắc lãi suất tự động: mỗi quý đi được bao nhiêu phần quãng đường tới mức mong muốn', source: 'TTK; điều chỉnh từ từ' },
 
   // ---------- khởi tạo ----------
   { id: 'init.soloShare', value: 0.35, label: 'Phần lao động phi chính thức là người tự làm một mình lúc đầu', source: 'Giá trị tạm; lao động tự làm chiếm khoảng một nửa lao động phi chính thức ở Việt Nam (Cục Thống kê, theo trí nhớ)', note: 'Thiết kế mục 2 chỉ ghi 90 hộ kinh doanh có thuê người. Thêm nhóm tự làm để thị trường lao động có lực lượng dự trữ ngay từ đầu.' },

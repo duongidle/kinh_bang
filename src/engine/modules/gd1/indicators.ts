@@ -136,6 +136,22 @@ function cpiContrib(w: World, prev: number, cur: number): Record<string, number>
   return out;
 }
 
+function realIncome(w: World, formalSide: boolean): number {
+  const h = H(w);
+  const f = F(w);
+  let x = 0;
+  let n = 0;
+  for (let i = 0; i < h.n; i++) {
+    const e = h.employer[i];
+    if (e === UNEMPLOYED) continue;
+    const isFormal = e < 0 || f.formal[e] === 1;
+    if (isFormal !== formalSide) continue;
+    x += h.income[i];
+    n++;
+  }
+  return n > 0 ? (x / n) * (100 / st(w).cpi) : 0;
+}
+
 function nplRatio(w: World, months: number): number {
   const L = w.tables.loan;
   const al = u8(L, 'alive');
@@ -269,6 +285,7 @@ export const GD1_INDICATORS: Ind[] = [
       return w.meta.tick > 0 ? parts : {};
     },
   },
+  { id: 'consumption.real', label: 'Tiêu dùng thực của hộ (giá gốc, tháng)', unit: 'đồng', group: 'Sản lượng', good: 1, compute: (w) => (vol(w, 'consumption') * 100) / st(w).cpi },
   { id: 'investment', label: 'Đầu tư máy móc (tháng)', unit: 'đồng', group: 'Sản lượng', good: 1, compute: (w) => st(w).m.invNom },
   { id: 'inventories', label: 'Giá trị tồn kho', unit: 'đồng', group: 'Sản lượng', compute: (w) => st(w).invTotal },
   { id: 'unsold.services', label: 'Dịch vụ làm ra không bán được', unit: 'số', group: 'Sản lượng', good: -1, compute: (w) => st(w).m.unsold },
@@ -317,6 +334,20 @@ export const GD1_INDICATORS: Ind[] = [
     },
   },
   { id: 'trust', label: 'Mức tin vào mục tiêu lạm phát', unit: 'tỷ lệ', group: 'Giá', good: 1, compute: (w) => st(w).trust },
+  {
+    id: 'price.formal.taxed',
+    label: 'Giá bình quân hàng công nghiệp và dịch vụ của doanh nghiệp (chịu GTGT)',
+    unit: 'đồng',
+    group: 'Giá',
+    compute: (w) => (st(w).pSeg[1][1] + st(w).pSeg[1][2]) / 2,
+  },
+  {
+    id: 'price.informal.taxed',
+    label: 'Giá bình quân hàng công nghiệp và dịch vụ của hộ kinh doanh (không chịu GTGT)',
+    unit: 'đồng',
+    group: 'Giá',
+    compute: (w) => (st(w).pSeg[0][1] + st(w).pSeg[0][2]) / 2,
+  },
   { id: 'price.agri', label: 'Giá lương thực bình quân', unit: 'đồng', group: 'Giá', compute: (w) => st(w).pSector[0] },
   { id: 'price.industry', label: 'Giá hàng công nghiệp bình quân', unit: 'đồng', group: 'Giá', compute: (w) => st(w).pSector[1] },
   { id: 'price.services', label: 'Giá dịch vụ bình quân', unit: 'đồng', group: 'Giá', compute: (w) => st(w).pSector[2] },
@@ -353,6 +384,34 @@ export const GD1_INDICATORS: Ind[] = [
   { id: 'wage.informal', label: 'Lương bình quân ở hộ kinh doanh', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => st(w).wageInf },
   { id: 'wage.real', label: 'Lương thực bình quân (giá gốc)', unit: 'đồng', group: 'Lao động', good: 1, compute: (w) => (st(w).wageAvgAll * 100) / st(w).cpi },
   { id: 'vacancies', label: 'Chỗ làm đang tuyển', unit: 'số', group: 'Lao động', compute: (w) => st(w).m.vacancies },
+  {
+    id: 'employment.formal',
+    label: 'Số người làm ở doanh nghiệp',
+    unit: 'người',
+    group: 'Lao động',
+    compute(w) {
+      const f = F(w);
+      let n = 0;
+      for (let i = 0; i < f.n; i++) if (f.alive[i] && f.formal[i]) n += f.workers[i];
+      return n;
+    },
+  },
+  {
+    id: 'wage.formal.low',
+    label: 'Lương bình quân của nửa doanh nghiệp trả thấp hơn',
+    unit: 'đồng',
+    group: 'Lao động',
+    compute(w) {
+      const f = F(w);
+      const xs: number[] = [];
+      for (let i = 0; i < f.n; i++) if (f.alive[i] && f.formal[i] && f.workers[i] > 0) xs.push(f.wage[i]);
+      xs.sort((a, b) => a - b);
+      const k = Math.max(1, Math.floor(xs.length / 2));
+      let x = 0;
+      for (let i = 0; i < k && i < xs.length; i++) x += xs[i];
+      return xs.length ? x / Math.min(k, xs.length) : 0;
+    },
+  },
   { id: 'wage.belowMin', label: 'Doanh nghiệp trả dưới lương tối thiểu', unit: 'số', group: 'Lao động', good: -1, compute: (w) => st(w).m.belowMin },
 
   // ---------- tiền và tín dụng ----------
@@ -524,6 +583,32 @@ export const GD1_INDICATORS: Ind[] = [
     compute: (w) => gini(H(w).grossWage.subarray(0, H(w).n)),
   },
   {
+    id: 'gini.wageNet',
+    label: 'Gini lương sau thuế TNCN',
+    unit: 'chỉ số',
+    group: 'Phân phối',
+    compute(w) {
+      const h = H(w);
+      const x = new Float64Array(h.n);
+      for (let i = 0; i < h.n; i++) x[i] = h.grossWage[i] - h.pitPaid[i];
+      return gini(x);
+    },
+  },
+  {
+    id: 'income.real.formal',
+    label: 'Thu nhập thực bình quân của người làm ở doanh nghiệp và Nhà nước',
+    unit: 'đồng',
+    group: 'Phân phối',
+    compute: (w) => realIncome(w, true),
+  },
+  {
+    id: 'income.real.informal',
+    label: 'Thu nhập thực bình quân của người làm ở khu vực phi chính thức',
+    unit: 'đồng',
+    group: 'Phân phối',
+    compute: (w) => realIncome(w, false),
+  },
+  {
     id: 'top10.wealth',
     label: 'Phần của cải của nhóm 10% giàu nhất',
     unit: '%',
@@ -554,6 +639,32 @@ export const GD1_INDICATORS: Ind[] = [
   },
 
   // ---------- doanh nghiệp ----------
+  {
+    id: 'profits.formal.real',
+    label: 'Lợi nhuận thực của doanh nghiệp (giá gốc, tháng)',
+    unit: 'đồng',
+    group: 'Doanh nghiệp',
+    good: 1,
+    compute(w) {
+      const f = F(w);
+      let x = 0;
+      for (let i = 0; i < f.n; i++) if (f.alive[i] && f.formal[i]) x += f.profit[i];
+      return (x * 100) / st(w).cpi;
+    },
+  },
+  {
+    id: 'wages.fixed.real',
+    label: 'Quỹ lương thực của người làm ở doanh nghiệp và Nhà nước (giá gốc, tháng)',
+    unit: 'đồng',
+    group: 'Phân phối',
+    compute(w) {
+      const f = F(w);
+      const s = st(w);
+      let x = s.m.wagesPublic;
+      for (let i = 0; i < f.n; i++) if (f.alive[i] && f.formal[i]) x += f.wagesPaid[i];
+      return (x * 100) / s.cpi;
+    },
+  },
   { id: 'firms.formal', label: 'Số doanh nghiệp', unit: 'số', group: 'Doanh nghiệp', compute: (w) => countFirms(w, (f, i) => f.formal[i] === 1) },
   { id: 'firms.hkd', label: 'Số hộ kinh doanh có thuê người', unit: 'số', group: 'Doanh nghiệp', compute: (w) => countFirms(w, (f, i) => !f.formal[i] && !f.solo[i]) },
   { id: 'firms.solo', label: 'Số người tự làm', unit: 'số', group: 'Doanh nghiệp', compute: (w) => countFirms(w, (f, i) => f.solo[i] === 1) },
