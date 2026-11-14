@@ -16,6 +16,12 @@ const K_GOV_BUY = tx('gov_purchase');
 const K_TRANSFER = tx('transfer_social');
 const K_CB_PROFIT = tx('cb_profit');
 
+/** Dấu người ban hành của việc tự chỉnh ngưỡng theo lạm phát; gov.revenueUse dùng nó để không coi đó là đổi thuế. */
+export const INDEXATION_BY = 'Điều chỉnh theo lạm phát (tự động)';
+
+/** Luật thuế: đổi một trong các luật này (ngoài tự chỉnh theo lạm phát) hoặc đổi tax.compliance thì gov.revenueUse kích hoạt. */
+const isTaxLaw = (id: string): boolean => id.startsWith('vat.') || id.startsWith('pit.') || id.startsWith('cit.') || id === 'hkd.threshold' || id === 'tax.indirect.other';
+
 const TAX_THRESHOLDS = ['pit.deduction.self', 'pit.deduction.dependent', 'pit.limit.1', 'pit.limit.2', 'pit.limit.3', 'pit.limit.4', 'hkd.threshold', 'cit.limit.small', 'cit.limit.mid'];
 
 // =====================================================================
@@ -31,7 +37,7 @@ export function policy(w: World, eng: Engine): void {
   // Ngưỡng thuế: khi CPI đã tăng quá 20% kể từ lần chỉnh trước (Luật Thuế TNCN có điều khoản này cho mức giảm trừ;
   // mô hình áp chung cho các ngưỡng thuế khác: đơn giản hoá). Lương tối thiểu vùng: mỗi tháng 1 theo lạm phát năm trước.
   if (eng.param(w, 'gov.indexation') >= 0.5 && w.meta.tick > 0) {
-    const by = 'Điều chỉnh theo lạm phát (tự động)';
+    const by = INDEXATION_BY;
     const ratio = s.cpi / s.cpiTaxBase;
     if (ratio > 1.2) {
       for (const id of TAX_THRESHOLDS) eng.setLaw(w, id, Math.round((eng.law(w, id) * ratio) / 1000) * 1000, by);
@@ -42,6 +48,8 @@ export function policy(w: World, eng: Engine): void {
       if (pi > 0) for (let z = 1; z <= 4; z++) eng.setLaw(w, `minwage.zone.${z}`, Math.round((eng.law(w, `minwage.zone.${z}`) * (1 + pi)) / 1000) * 1000, by);
     }
   }
+
+  revenueUse(w, eng, s);
 
   // Bộ Tài chính tự động (khi người chơi không giữ vai): dự toán hằng năm.
   // Mỗi tháng 1 chỉnh mức mua hàng để bội chi 12 tháng qua tiến về mục tiêu. [TTK]
@@ -74,6 +82,72 @@ export function policy(w: World, eng: Engine): void {
   }
 }
 
+// =====================================================================
+// Quy tắc gov.revenueUse (sai-khac.md D14): tiền thuế thu thêm đi đâu
+// =====================================================================
+const K_VAT = tx('vat');
+const K_PIT_T = tx('pit');
+const K_CIT = tx('cit');
+const K_HKD = tx('hkd_tax');
+const K_EXCISE = tx('excise');
+
+/** Thu thuế tháng này theo sổ cái: GTGT, TNCN, TNDN, thuế hộ kinh doanh, thuế gián thu khác (không gồm phí và đất). */
+function taxRevenueNow(w: World): number {
+  const v = w.ledger.volume;
+  return v[K_VAT] + v[K_PIT_T] + v[K_CIT] + v[K_HKD] + v[K_EXCISE];
+}
+
+function sumLast(a: number[], n: number): number {
+  let x = 0;
+  for (let k = Math.max(0, a.length - n); k < a.length; k++) x += a[k];
+  return x;
+}
+
+/**
+ * Đặt hệ số chi lại s.respend cho tháng này, rồi nhân vào lương công chức và ngân sách mua hàng.
+ * Hai mức trợ cấp nhân ở payPublic và bondAuction. Không đổi giá trị luật nào.
+ */
+function revenueUse(w: World, eng: Engine, s: Gd1State): void {
+  const variant = eng.variant(w, 'gov.revenueUse');
+  // Phát hiện kích hoạt: mục override thuế mới (không phải tự chỉnh theo lạm phát, không phải điều kiện ban đầu) hoặc đổi tax.compliance.
+  let ovCount = 0;
+  for (const id in w.lawOverrides) {
+    if (!isTaxLaw(id)) continue;
+    for (const o of w.lawOverrides[id]) if (o.fromTick > 0 && o.by !== INDEXATION_BY) ovCount++;
+  }
+  const comp = eng.variant(w, 'tax.compliance');
+  let triggered = false;
+  if (w.meta.tick > 0 && (ovCount > s.taxOvSeen || comp !== s.compSeen)) triggered = true;
+  s.taxOvSeen = ovCount;
+  s.compSeen = comp;
+  if (triggered && s.revBase < 0 && s.taxHist.length >= 3) {
+    const g = sumLast(s.gdpHist, 12);
+    if (g > 0) {
+      s.revBase = sumLast(s.taxHist, 12) / g;
+      if (variant === 'base') eng.event(w, { type: 'policy', id: 'gov.revenueUse', label: 'Chính phủ bắt đầu chi lại phần thu thêm từ thuế (hụt thu thì vay bù)', by: 'Mô hình' });
+      else if (variant === 'balanced') eng.event(w, { type: 'policy', id: 'gov.revenueUse', label: 'Chính phủ bắt đầu chi lại phần thu thêm từ thuế (hụt thu thì cắt chi)', by: 'Mô hình' });
+    }
+  }
+  s.respend = 1;
+  s.respendAmt = 0;
+  if (s.revBase < 0 || variant === 'keep') return;
+
+  const h = H(w);
+  const dole = eng.law(w, 'gov.transfer.unemployed') * s.wageRef;
+  let nUnemp = 0;
+  if (dole > 0) for (let i = 0; i < h.n; i++) if (h.employer[i] === UNEMPLOYED) nUnemp++;
+  const spend = s.nPublic * s.publicWage + s.purchaseBudget + h.n * eng.law(w, 'gov.transfer.universal') + dole * nUnemp;
+  const g = sumLast(s.gdpHist, 12);
+  if (!(g > 0)) return;
+  const extra = (sumLast(s.taxHist, 12) / g - s.revBase) * s.gdpEma;
+  const x = spend > 0 ? extra / spend : 0;
+  s.respend = variant === 'balanced' ? Math.max(0, 1 + x) : 1 + Math.max(0, x);
+  if (s.respend === 1) return;
+  s.respendAmt = (s.respend - 1) * spend;
+  s.publicWage = Math.max(minWageOf(w, eng, 2), Math.round(s.publicWage * s.respend));
+  s.purchaseBudget = Math.round(s.purchaseBudget * s.respend);
+}
+
 export function yoyInflation(s: Gd1State): number {
   const hst = s.cpiHist;
   if (hst.length < 2) return 0;
@@ -88,8 +162,12 @@ export function payPublic(w: World, eng: Engine): void {
   const h = H(w);
   const s = st(w);
   const wage = s.publicWage;
-  const dole = eng.law(w, 'gov.transfer.unemployed') * s.wageRef;
-  const universal = eng.law(w, 'gov.transfer.universal');
+  let dole = eng.law(w, 'gov.transfer.unemployed') * s.wageRef;
+  let universal = eng.law(w, 'gov.transfer.universal');
+  if (s.respend !== 1) {
+    dole = Math.round(dole * s.respend);
+    universal = Math.round(universal * s.respend);
+  }
 
   // Kho bạc không đủ cho lương và trợ cấp tháng này: nếu được phép thì NHNN mua trái phiếu ngay.
   let need = s.nPublic * wage + h.n * universal;
@@ -204,7 +282,8 @@ export function bondAuction(w: World, eng: Engine): void {
 
   // mục tiêu: kho bạc đủ cho chi tiêu tháng tới
   const h = H(w);
-  let outlays = s.nPublic * s.publicWage + s.purchaseBudget + h.n * eng.law(w, 'gov.transfer.universal');
+  const universal = eng.law(w, 'gov.transfer.universal');
+  let outlays = s.nPublic * s.publicWage + s.purchaseBudget + h.n * (s.respend !== 1 ? Math.round(universal * s.respend) : universal);
   const Bd = w.tables.bond;
   for (let r = 0; r < Bd.n; r++) {
     if (!u8(Bd, 'alive')[r]) continue;
@@ -362,9 +441,11 @@ export function closeMonth(w: World, eng: Engine): void {
     for (let k = 0; k < L.nkind; k++) if (TX_KINDS[k].flow) bal += L.flow[3 * L.nkind + k];
     s.balHist.push(bal);
     s.gdpHist.push(gdp);
+    s.taxHist.push(taxRevenueNow(w));
     if (s.balHist.length > 36) {
       s.balHist.shift();
       s.gdpHist.shift();
+      s.taxHist.shift();
     }
   }
   s.gdpEma += 0.25 * (gdp - s.gdpEma);

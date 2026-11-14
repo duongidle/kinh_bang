@@ -258,6 +258,12 @@ export interface Gd1State {
   cpiPrev: number;
   balHist: number[]; // cân đối ngân sách 12 tháng gần nhất
   gdpHist: number[];
+  taxHist: number[]; // thu thuế từng tháng (GTGT, TNCN, TNDN, hộ kinh doanh, gián thu khác; không gồm phí và đất), cùng độ dài với gdpHist
+  revBase: number; // mốc tỷ lệ thu thuế / GDP của gov.revenueUse; -1 là chưa kích hoạt
+  respend: number; // hệ số chi lại của tháng này (1 là không chỉnh)
+  respendAmt: number; // số tiền chi thêm (hoặc bớt) vì hệ số chi lại, tháng này
+  taxOvSeen: number; // số mục override luật thuế của người chơi đã thấy
+  compSeen: string; // biến thể tax.compliance đã thấy ở tháng trước
   cpiTaxBase: number; // CPI ở lần chỉnh ngưỡng thuế gần nhất
   omega: number[]; // trọng số sở thích hàng phi chính thức theo ngành, hiệu chỉnh theo cơ cấu ban đầu
   pSeg: number[][]; // giá bình quân gồm thuế theo [phân khúc][ngành]

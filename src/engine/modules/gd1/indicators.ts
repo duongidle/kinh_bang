@@ -650,6 +650,7 @@ export const GD1_INDICATORS: Ind[] = [
       }),
   },
   { id: 'gov.spending', label: 'Chi ngân sách (tháng)', unit: 'đồng', group: 'Ngân sách', compute: govSpending },
+  { id: 'gov.respend', label: 'Chi lại phần thu thêm từ thuế (tháng)', unit: 'đồng', group: 'Ngân sách', compute: (w) => st(w).respendAmt },
   { id: 'gov.balance', label: 'Cân đối ngân sách (tháng)', unit: 'đồng', group: 'Ngân sách', good: 1, compute: (w) => govRevenue(w) - govSpending(w) },
   { id: 'gov.tax.vat', label: 'Thu thuế GTGT', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'vat') },
   { id: 'gov.tax.pit', label: 'Thu thuế TNCN', unit: 'đồng', group: 'Ngân sách', compute: (w) => vol(w, 'pit') },
