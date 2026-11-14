@@ -19,9 +19,9 @@ export const toyModule: EngineModule = {
   dependsOn: [],
   schemaVersion: 1,
   params: [
-    { id: 'toy.wage', value: 6_000_000, label: 'Lương tháng', source: 'đồ chơi' },
-    { id: 'toy.propensity', value: 0.9, label: 'Tỷ lệ tiêu dùng', source: 'đồ chơi' },
-    { id: 'toy.tax', value: 0.1, label: 'Thuế phẳng', source: 'đồ chơi' },
+    { id: 'toy.wage', value: 6_000_000, basis: 'chuan-hoa', label: 'Lương tháng', source: 'đồ chơi' },
+    { id: 'toy.propensity', value: 0.9, basis: 'chuan-hoa', label: 'Tỷ lệ tiêu dùng', source: 'đồ chơi' },
+    { id: 'toy.tax', value: 0.1, basis: 'chuan-hoa', label: 'Thuế phẳng', source: 'đồ chơi' },
   ],
   rules: [
     {

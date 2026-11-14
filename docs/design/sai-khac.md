@@ -350,3 +350,20 @@ Hệ quả: câu ở D5 mục 1 "trong 7,5 điểm lạm phát, chi phí lương
 - K1.26: nộp thuế đủ làm khu vực phi chính thức nghèo đi nhưng không nhỏ đi về số người. Lý do: thuế thu thêm không được chi ra, và hộ kinh doanh không chuyển lên doanh nghiệp được.
 - Tiền mặt khoảng 15% tổng phương tiện thanh toán, trên mục tiêu thô 7-13%.
 - Thất nghiệp 5-6%, sát mép trên mục tiêu thô 2-6%.
+
+## F. Nhật ký đổi thước đo và đổi tham số
+
+Mục này được test `tests/unit/chot-chan.test.ts` đọc. Mỗi lần đổi một trong ba thứ dưới đây, `npm test` hỏng cho tới khi có một dòng mới ở đây chứa dấu vân tay mới (in bằng `npx tsx scripts/chot-chan.ts`):
+
+- `tests/validation/gd1-lib.ts`: ngưỡng, cửa sổ đo, cách đo, danh sách "chưa đạt, đã biết" của kiểm định GĐ1.
+- `tests/validation/scenarios-lib.ts`: cách chấm kiểm định kịch bản.
+- Bộ giá trị tham số hành vi (`src/config/model/gd1.ts`).
+
+Dòng mới phải nói: cái gì đổi; số đo theo cách cũ và cách mới (nếu đổi thước đo) hoặc giá trị cũ, mới và nguồn (nếu đổi tham số); ai duyệt. Chỉ sửa chữ hay dọn code cũng ghi một dòng nói vậy. Không xoá dòng cũ.
+
+| Ngày | Thứ đổi | Dấu vân tay | Cái gì đổi và vì sao | Ai duyệt |
+|---|---|---|---|---|
+| 14/11/2026 | gd1-lib.ts | `4f09af0bfe4b` | Mốc đầu của nhật ký. Trạng thái lúc này: K1.12 chỉ xét ở 5000 hộ; danh sách đã biết gồm K1.19, K1.13, K1.28, K1.29, K1.31; K1.22 đo 3 năm đầu; K1.26 đo doanh số thực; K1.28 đo phần lạm phát còn lại. Lý do từng mục ở D3, D4, D6, D8 | Dương, các quyết định ngày 14/11/2026 |
+| 14/11/2026 | scenarios-lib.ts | `a693afc1a93f` | Mốc đầu. Kịch bản có nhiều nhánh được chấm theo từng nhánh (D10) | Dương, quyết định 5 tối 14/11/2026 |
+| 14/11/2026 | tham số hành vi | `b6c7cd4000f1` | Mốc đầu. Gồm các thay đổi trong ngày: `firm.wageIndex` 0,5; `exp.saveResponse` 0,35; `cb.autopilot` 0; `firm.taxPassUp` 0,34; `firm.taxPassDown` 0,065; `hh.saveIncomeEta` 0,09; `firm.founderPool` 60. Nguồn ở bảng B và D5, D8, D9 | Dương, các quyết định ngày 14/11/2026 |
+

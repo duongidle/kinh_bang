@@ -3,15 +3,18 @@
 
 export type Verification = 'A' | 'B' | 'C';
 
-export interface LawVersion {
+interface LawVersionBase {
   value: number;
   from: string; // ISO yyyy-mm-dd
   to?: string; // hết hiệu lực sau ngày này
   source: { doc: string; article?: string; url?: string };
-  verification: Verification;
-  chuaXacMinh?: true; // bắt buộc khi mức C
   simplification?: string;
 }
+/**
+ * Chốt chặn (chong-va-ngam.md B): mức C mà thiếu nhãn `chuaXacMinh` thì không biên dịch;
+ * mức A, B mà gắn nhãn đó cũng không biên dịch.
+ */
+export type LawVersion = LawVersionBase & ({ verification: 'A' | 'B'; chuaXacMinh?: never } | { verification: 'C'; chuaXacMinh: true });
 
 export interface LawParam {
   id: string;

@@ -1,5 +1,6 @@
 // Kiểm định thống kê GĐ1 (gd1 mục 14): 20 seed x 480 tháng ở 500 hộ, 5 seed ở 5000 hộ, kế toán ở 50 hộ.
 // Chạy: npm run validate:gd1. Sinh báo cáo docs/validation/gd1.md.
+import { execSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { baselineChecks, experimentChecks, renderReport, type Check } from './gd1-lib';
@@ -8,6 +9,17 @@ const N = Number(process.env.KB_SEEDS ?? 20);
 const NL = Number(process.env.KB_SEEDS_L ?? 5);
 const seeds = (n: number) => Array.from({ length: n }, (_, i) => i + 1);
 const ACCOUNTING = ['K1.1', 'K1.2', 'K1.3', 'K1.4', 'K1.30'];
+
+/** Chốt chặn D (chong-va-ngam.md): báo cáo ghi mã commit đã chạy, và báo nếu cây mã có thay đổi chưa commit. */
+function stamp(): string {
+  try {
+    const hash = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
+    const dirty = execSync('git status --porcelain -- src tests', { encoding: 'utf8' }).trim() !== '';
+    return `Bản code: commit \`${hash}\`${dirty ? ' **CÓ THAY ĐỔI CHƯA COMMIT trong src hoặc tests: kết quả này không gắn được với một commit**' : ''}.`;
+  } catch {
+    return 'Bản code: không đọc được mã commit.';
+  }
+}
 
 describe('Kiểm định GĐ1', () => {
   it('toàn bộ danh sách', () => {
@@ -29,7 +41,7 @@ describe('Kiểm định GĐ1', () => {
       { heading: 'Lần chạy gốc, 5000 hộ', checks: l.checks, table: l.table },
       { heading: 'Kế toán ở 50 hộ', checks: sAcc },
     ]);
-    writeFileSync('docs/validation/gd1.md', md + '\n');
+    writeFileSync('docs/validation/gd1.md', md.replace('\n', `\n\n${stamp()}\n`) + '\n');
     expect(failed.filter((c) => !c.known).map((c) => `${c.id} (${c.perSeed.filter((p) => p.ok).length}/${c.perSeed.length})`)).toEqual([]);
   }, 3_600_000);
 });

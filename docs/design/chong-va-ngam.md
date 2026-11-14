@@ -98,6 +98,46 @@ GĐ1 đã mắc gần đủ các kiểu. Mỗi mục dưới đây có ca thật
 - [ ] Báo cáo nêu: cái gì đã làm, cái gì **chưa kiểm**, số seed, và những chỗ bằng chứng yếu. Phần "chưa kiểm" đứng trước phần "đã đạt".
 - [ ] Mỗi con số Việt Nam trong báo cáo có mức xác minh A, B, C. Số theo trí nhớ thì ghi là trí nhớ.
 
+## Mục nào máy chặn, mục nào cần người soát
+
+Thêm ngày 14/11/2026. Chốt chặn nằm ở `tests/unit/chot-chan.test.ts` (chạy trong `npm test`) và ở kiểu dữ liệu (chạy trong `npx tsc --noEmit`). Test hỏng thì làm đúng việc thông báo lỗi yêu cầu; **không nới test**.
+
+**Máy chặn được**
+
+| Mục | Chốt chặn | Hỏng khi |
+|---|---|---|
+| B: tham số có lý lịch | Kiểu `ParamDef.basis` bắt buộc: `nguon`, `tri-nho`, `tu-thiet-ke`, `chuan-hoa` | Thêm tham số hành vi mà không khai cơ sở: không biên dịch |
+| B: mức C phải gắn nhãn | Kiểu `LawVersion` | Luật mức C thiếu `chuaXacMinh`, hoặc mức A, B mà gắn nhãn: không biên dịch |
+| B: nguồn không để trống | Test | Tham số, luật, quy tắc, mã lý do thiếu nguồn hoặc mô tả; ghi `nguon` mà nguồn là "TTK"; nguồn ghi "trí nhớ" mà `basis` khác `tri-nho` |
+| B: nợ trí nhớ không tăng | Test, hai con số trần (12 tham số, 6 chỗ trong luật) | Thêm một mục ghi theo trí nhớ. Con số trần chỉ được hạ |
+| B: không đổi giá trị tham số lặng lẽ | Test so dấu vân tay của bộ giá trị với sai-khac.md mục F | Đổi bất kỳ giá trị nào trong `gd1.ts` mà chưa ghi dòng nhật ký |
+| C: không đổi thước đo lặng lẽ | Test so dấu vân tay của `gd1-lib.ts`, `scenarios-lib.ts` với mục F | Đổi ngưỡng, cửa sổ, cách đo, danh sách "đã biết" mà chưa ghi dòng nhật ký |
+| C: danh sách "đã biết" có người ký | Test | Một mã trong `KNOWN_FAIL` không có trong sai-khac.md, hoặc lời ghi không nêu ai quyết hay giai đoạn nào sửa |
+| D: báo cáo gắn với commit | `gd1.test.ts`, `scenarios.test.ts` ghi mã commit và cảnh báo nếu có thay đổi chưa commit | Không hỏng test; in cảnh báo đậm ngay đầu báo cáo |
+| E: phần "khác" của phân rã | Test: mỗi chỉ số có trần riêng, mặc định 0,001% | Phần "yếu tố khác" vượt trần. Trần chỉ được hạ |
+| H: quy tắc tự động tắt mặc định | Test | `gov.autopilot` hoặc `cb.autopilot` khác 0 |
+| Quy tắc 3: tất định | Test quét `src/engine` | Có `Math.random`, `Date`, `performance.now` |
+
+Nợ mà chốt chặn E đang ghi nhận (trần đang phải để cao): `gdp.nominal` 11% chưa gán được lý do; `credit.denied` 5,5%; `gov.revenue` 2,9%; `gov.debtGdp` 1,7%; `bank.reserves` 31% (theo thiết kế, chưa tách thu chi ngân sách). Đo ở 50 hộ, 48 tháng, có hai lần đổi luật.
+
+**Cần người soát** (máy không phân biệt được đúng sai)
+
+| Mục | Vì sao máy không chặn được | Ai soát, lúc nào |
+|---|---|---|
+| A: cơ chế mới có trong thiết kế không, ngoài đời ai làm việc đó | Cần hiểu nội dung | Opus trước khi giao Sonnet code; Dương khi duyệt |
+| A: quy tắc mượn có hợp quy mô và bước thời gian không | Cần đọc mô hình gốc | Opus, khi viết spec |
+| B: nguồn đã đọc toàn văn chưa, con số trích có đúng không | Máy chỉ thấy nhãn `nguon`, không thấy người ghi đã đọc hay chưa | Opus mở lại nguồn cho mọi tham số quyết định một kết quả |
+| B: giá trị được chọn trước hay sau khi nhìn kết quả kiểm định | Thứ tự thời gian không nằm trong code | Dòng nhật ký ở mục F phải nói; Dương soát mục F |
+| B: phép quy đổi từ bài báo sang tham số | Là lập luận | Opus viết phép tính vào sai-khac.md |
+| C: phân loại nguyên nhân một kiểm định hỏng | Là chẩn đoán | Opus; báo Dương |
+| C: kiểm định vừa qua nhờ thứ khác che | Cần so hai lượt chạy | Opus so báo cáo mới với báo cáo trước, từng mục đổi trạng thái |
+| C: sửa assertion trong test nhanh | Dấu vân tay chỉ phủ hai file thư viện kiểm định, không phủ `tests/unit` | Opus đọc diff của `tests/unit` trong mỗi lần Sonnet báo xong |
+| D: số viết cứng không tăng theo dân số | Số nào cũng có thể hợp lệ | Opus `grep` số trong `src/engine/modules` cuối mỗi mốc |
+| D: hiệu ứng nhỏ hơn nhiễu | Cần đọc số đo từng seed | Opus, khi viết khẳng định kịch bản |
+| F: khẳng định kịch bản và giả định ngầm | `src/content/scenarios.ts` không có dấu vân tay vì chữ đổi thường xuyên | Opus hỏi "tiền đi đâu, tiền từ đâu" cho từng kịch bản thuế, chi tiêu |
+| G: công cụ chẩn đoán sai | Mỗi script một kiểu | Opus đo bằng hai cách trước khi tin một phát hiện bất ngờ |
+| I: báo cáo nêu phần chưa kiểm trước phần đã đạt | Là cách viết | Opus; Dương |
+
 ## Khi nào phải dừng lại báo Dương
 
 Dừng, không code tiếp, khi gặp một trong các điều sau:

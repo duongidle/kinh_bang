@@ -63,9 +63,20 @@ export interface RuleDef {
   variants: Array<{ id: string; label: string }>; // phần tử đầu là gốc
 }
 
+/**
+ * Cơ sở của một giá trị tham số (chong-va-ngam.md B). Bắt buộc: thiếu thì không biên dịch.
+ * - `nguon`: lấy từ tài liệu đã mở và đọc; `source` ghi tài liệu và chỗ lấy.
+ * - `tri-nho`: ghi theo trí nhớ, CHƯA mở lại nguồn. Là món nợ; test chốt chặn không cho số mục này tăng.
+ * - `tu-thiet-ke`: không có nguồn, tự đặt. Phải thử độ nhạy trước khi một kết luận dựa vào nó.
+ * - `chuan-hoa`: chỉ là đơn vị đo hoặc điều kiện ban đầu suy ra từ tham số khác.
+ */
+export type ParamBasis = 'nguon' | 'tri-nho' | 'tu-thiet-ke' | 'chuan-hoa';
+
 export interface ParamDef {
   id: string;
   value: number;
+  /** Cơ sở của giá trị. Xem ParamBasis. */
+  basis: ParamBasis;
   label: string;
   source: string;
   note?: string;
