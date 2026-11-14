@@ -37,7 +37,7 @@ describe('người bán chỉ chuyển một phần thuế vào giá', () => {
     const a = eng.newWorld({ seed: 5, scale: 'S' });
     eng.run(a, 24);
     const b = eng.fork(a);
-    b.params['firm.taxPassThrough'] = 1;
+    b.params['firm.taxPassUp'] = 1;
     for (const w of [a, b]) {
       eng.setLaw(w, 'vat.rate.standard', 0.2, 'test');
       eng.run(w, 1);

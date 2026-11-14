@@ -49,9 +49,16 @@ export function householdBudgets(w: World, eng: Engine): void {
     if (h.employer[i] === UNEMPLOYED) gU[g]++;
   }
 
+  // thu nhập kỳ vọng (Caiani 3.1), và mức bình quân để so từng hộ với mặt bằng chung
+  let incAvg = 0;
   for (let i = 0; i < h.n; i++) {
-    // thu nhập kỳ vọng (Caiani 3.1)
     h.expInc[i] += lam * (h.income[i] - h.expInc[i]);
+    incAvg += h.expInc[i];
+  }
+  incAvg /= Math.max(1, h.n);
+  const saveEta = eng.param(w, 'hh.saveIncomeEta');
+
+  for (let i = 0; i < h.n; i++) {
 
     // lạm phát mà hộ này gặp: theo cơ cấu chi tiêu của chính nó
     const c = h.cons[i];
@@ -79,7 +86,9 @@ export function householdBudgets(w: World, eng: Engine): void {
 
     const wealth = h.cash[i] + h.dep[i];
     // thu nhập thực kiểu Haig-Simons: trừ phần sức mua mà lạm phát kỳ vọng ăn mất của tiền đang giữ (Godley và Lavoie 2007)
-    const incTerm = a1 * Math.max(0, h.expInc[i] - (hsOn * Math.max(0, piE) * wealth) / 12);
+    // hộ thu nhập cao hơn mặt bằng thì tiêu phần nhỏ hơn của thu nhập (Dynan, Skinner và Zeldes 2004)
+    const a1i = saveEta > 0 && incAvg > 0 ? Math.min(1, a1 * Math.pow(Math.max(0.1, Math.min(10, h.expInc[i] / incAvg)), -saveEta)) : a1;
+    const incTerm = a1i * Math.max(0, h.expInc[i] - (hsOn * Math.max(0, piE) * wealth) / 12);
     const wealthTerm = a2 * wealth;
     let budget = incTerm * mConf * mInfl + wealthTerm;
     budget = Math.max(0, Math.min(budget, wealth));

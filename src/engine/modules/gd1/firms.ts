@@ -151,7 +151,8 @@ export function planFirms(w: World, eng: Engine): void {
   // Biến thể `expected` quay về thiết kế mục 10: bám lạm phát kỳ vọng.
   const wagePast = eng.variant(w, 'firm.wageIndexBase') !== 'expected';
   const piWage = wagePast ? yoyInflation(s) : piExp;
-  const taxPass = eng.param(w, 'firm.taxPassThrough');
+  const taxPassUp = eng.param(w, 'firm.taxPassUp');
+  const taxPassDown = eng.param(w, 'firm.taxPassDown');
 
   for (let i = 0; i < f.n; i++) {
     if (!f.alive[i]) continue;
@@ -229,10 +230,12 @@ export function planFirms(w: World, eng: Engine): void {
     const step = foldedStep(w, eng, STREAM.markup, i);
     if (w.meta.tick > 0) mu1 = tight ? mu0 * (1 + step) : mu0 * (1 - step);
     mu1 = Math.max(0, Math.min(3, mu1));
-    // Thuế trong giá đổi: người bán chỉ chuyển một phần `firm.taxPassThrough` vào giá ngay, phần còn lại ăn vào biên lãi.
+    // Thuế trong giá đổi: người bán chỉ chuyển một phần vào giá ngay, phần còn lại ăn vào biên lãi.
+    // Tăng thuế chuyển nhiều (`firm.taxPassUp`), giảm thuế chuyển ít (`firm.taxPassDown`): Benzarti và cộng sự 2020.
     // Sau đó biên lãi lại đi theo sức mua như thường (bán chạy thì nâng dần lên).
     const vatWas = f.price[i] > 0 && f.priceG[i] > 0 ? f.priceG[i] / f.price[i] - 1 : vat;
     let muT = mu1;
+    const taxPass = vat > vatWas ? taxPassUp : taxPassDown;
     if (w.meta.tick > 0 && taxPass !== 1 && Math.abs(vat - vatWas) > 5e-4) {
       // ngưỡng 0,05 điểm: giá gồm thuế làm tròn tới đồng nên thuế suy ngược từ giá lệch cỡ 0,001 điểm
       muT = Math.max(0, Math.min(3, (1 + mu1) * Math.pow((1 + vat) / (1 + vatWas), taxPass - 1) - 1));
@@ -253,7 +256,9 @@ export function planFirms(w: World, eng: Engine): void {
       const d = c2 * expectFactor;
       const scale0 = base0 > 0 ? f.price[i] / base0 : 1; // phần kỳ vọng đã nằm trong giá cũ
       const g0 = 1 + vatPrev;
-      recordDecision(
+      // Lần tính giá đầu tiên của một nơi bán mới: giá cũ là giá thị trường lúc mở cửa, chưa có chi phí riêng để so.
+      if (base0 <= 0) recordDecision(w, firmRef(i), 'firm.price', 'priceG', p0, pG, [{ reason: 'p_new', amount: pG - p0 }], f.sales[i]);
+      else recordDecision(
         w,
         firmRef(i),
         'firm.price',

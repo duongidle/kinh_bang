@@ -23,7 +23,8 @@ const REASONS: ReasonDef[] = [
   { id: 'p_markup_down', label: 'người bán hạ biên lãi vì hàng ế', upstream: [ind('consumption', 1), ind('inventories', 1)] },
   { id: 'p_expect', label: 'người bán tính trước lạm phát kỳ vọng vào giá', upstream: [ind('inflation.expected', 1)] },
   { id: 'p_vat', label: 'thuế trong giá bán đổi (GTGT, thuế gián thu khác)', upstream: [law('vat.rate.standard'), law('vat.rate.agri'), law('tax.indirect.other')] },
-  { id: 'p_tax_absorb', label: 'người bán tự gánh một phần thuế mới bằng cách hạ biên lãi (thuế giảm thì giữ lại một phần)', upstream: [law('vat.rate.standard'), law('vat.rate.agri'), law('tax.indirect.other')] },
+  { id: 'p_tax_absorb', label: 'người bán tự gánh một phần thuế mới bằng cách hạ biên lãi (thuế giảm thì giữ lại phần lớn)', upstream: [law('vat.rate.standard'), law('vat.rate.agri'), law('tax.indirect.other')] },
+  { id: 'p_new', label: 'nơi bán mới mở tự tính giá lần đầu theo chi phí của mình', upstream: [ind('firms.entries'), ind('firms.solo')] },
   { id: 'p_mix', label: 'người mua đổi nơi mua, người bán cũ và mới thay nhau', upstream: [] },
   // lương
   { id: 'w_shortage', label: 'không tuyển đủ người nên nâng lương', upstream: [ind('vacancies', 1), ind('unemployment', 1)] },
