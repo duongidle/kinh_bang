@@ -126,7 +126,7 @@ Khi doanh nghiệp chính thức tuyển lại với lương cao hơn thu nhập
 ### 5.3 Lương
 
 - Tháng trước đăng tuyển mà không đủ người: tăng lương chào một lượng ngẫu nhiên. [BAM], [Lengnick]
-- Lương người đang làm không giảm về danh nghĩa. Mỗi năm xét tăng theo một phần lạm phát kỳ vọng. Lương danh nghĩa cứng chiều xuống là hiện tượng thực nghiệm được ghi nhận rộng rãi (Bewley 1999) **(trí nhớ)**; đây cũng là thứ làm suy thoái sinh ra thất nghiệp thay vì giảm lương.
+- Lương người đang làm không giảm về danh nghĩa. Mỗi năm xét tăng theo một phần lạm phát kỳ vọng (**đổi 14/11/2026: theo một phần lạm phát 12 tháng qua**, sai-khac.md S32). Lương danh nghĩa cứng chiều xuống là hiện tượng thực nghiệm được ghi nhận rộng rãi (Bewley 1999) **(trí nhớ)**; đây cũng là thứ làm suy thoái sinh ra thất nghiệp thay vì giảm lương.
 - GĐ1 mỗi doanh nghiệp một mức lương.
 - **Lương tối thiểu vùng** (kéo về GĐ1 theo quyết định 13/11/2026): mỗi doanh nghiệp chính thức và Nhà nước thuộc một trong bốn vùng, gán lúc khởi tạo theo phân phối cấu hình (giá trị tạm, C). Lương chào và lương đang trả không được dưới sàn vùng: 5,31 / 4,73 / 4,14 / 3,70 triệu đồng/tháng (Nghị định 293/2025/NĐ-CP, từ 01/01/2026, mức B). Khi sàn tăng, lương dưới sàn được nâng lên ngay và ghi lý do `min_wage`. Hộ kinh doanh không có hợp đồng lao động nên sàn không ràng buộc họ; đây là đơn giản hoá, luật áp dụng cho mọi quan hệ lao động có hợp đồng. GĐ1 chưa có địa lý nên vùng chỉ là một nhãn.
 
@@ -360,13 +360,13 @@ Mỗi quyết định có phương án của quy tắc tự động và lý do, 
 | K1.9 | Thất nghiệp ngược chiều chu kỳ (Okun) | Tương quan với GDP đã lọc < −0,3 | [Caiani] |
 | K1.10 | Đường Phillips và đường Beveridge dốc xuống | Hệ số tương quan âm | [Lengnick] |
 | K1.11 | Tín dụng doanh nghiệp cùng chiều chu kỳ | Tương quan > 0 | [Caiani], [K+S] |
-| K1.12 | Lạm phát cùng chiều chu kỳ và trễ | Tương quan chéo lớn nhất ở trễ ≥ 1 quý | [Caiani] |
+| K1.12 | Lạm phát cùng chiều chu kỳ và trễ | Tương quan chéo lớn nhất ở trễ ≥ 1 quý. **Chỉ xét ở 5000 hộ** (Dương, 14/11/2026): kết quả phụ thuộc quy mô, ở 500 hộ đỉnh nhảy giữa cùng quý và trễ một quý vì ít doanh nghiệp | [Caiani] |
 
 **Phân phối**
 
 | Mã | Sự thật | Ngưỡng | Nguồn |
 |---|---|---|---|
-| K1.13 | Bất bình đẳng tự hình thành từ xuất phát điểm đồng đều | Gini của cải từ 0 lên > 0,4 sau 30 năm; phân phối lệch phải | [BAM], [Caiani] |
+| K1.13 | Bất bình đẳng tự hình thành từ xuất phát điểm đồng đều | Gini của cải từ 0 lên > 0,4 sau 30 năm; phân phối lệch phải. **Chưa đạt ở 5000 hộ, thiếu cơ chế** (sai-khac.md D8). Không đổi quy mô để qua | [BAM], [Caiani] |
 | K1.14 | Quy mô doanh nghiệp lệch phải | Độ lệch > 1 | [Lengnick], [Caiani] |
 | K1.15 | Chia đều cổ tức (biến thể) làm Gini thấp hơn rõ | Hiệu chạy đôi < 0 | [TTK] |
 
@@ -387,7 +387,7 @@ Mỗi quyết định có phương án của quy tắc tự động và lý do, 
 | Mã | Sự thật | Ngưỡng | Nguồn |
 |---|---|---|---|
 | K1.23 | Tăng chi ngân sách bằng vay nợ làm GDP tăng trong ngắn hạn và nợ công tăng | Số nhân năm đầu > 0 | giáo trình; [K+S] |
-| K1.24 | Tăng GTGT: giá tiêu dùng tăng nhưng ít hơn mức thuế về lâu dài; tiêu dùng thực giảm; thu ngân sách tăng | Tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1 | giáo trình về phạm vi ảnh hưởng của thuế |
+| K1.24 | Tăng GTGT: giá tiêu dùng tăng nhưng ít hơn mức thuế về lâu dài; tiêu dùng thực giảm; thu ngân sách tăng | Tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1 | giáo trình về phạm vi ảnh hưởng của thuế; IMF WP/21/61 (sai-khac.md S31, D9) |
 | K1.25 | Thuế TNCN luỹ tiến làm Gini thu nhập sau thuế thấp hơn trước thuế | Hiệu > 0 | tính chất của biểu thuế |
 | K1.26 | Bật "nộp thuế đủ" làm thu ngân sách tăng và khu vực phi chính thức co lại | Hiệu chạy đôi | [TTK] |
 | K1.27 | Kinh tế xấu đi thì tỷ lệ lao động phi chính thức tăng | Tương quan với GDP đã lọc < 0 | Loayza và Rigolini 2011 (trí nhớ) |
@@ -397,7 +397,7 @@ Mỗi quyết định có phương án của quy tắc tự động và lý do, 
 | Mã | Sự thật | Ngưỡng | Nguồn |
 |---|---|---|---|
 | K1.30 | Không doanh nghiệp chính thức nào trả dưới sàn vùng | Tuyệt đối, mọi tháng | luật |
-| K1.31 | Nâng mạnh lương tối thiểu: lương nhóm thấp ở khu vực chính thức tăng, việc làm chính thức giảm hoặc tỷ lệ phi chính thức tăng | Hiệu chạy đôi đúng dấu khi sàn tăng 30% | giáo trình về giá sàn; [TTK] về phần phi chính thức |
+| K1.31 | Nâng mạnh lương tối thiểu: lương nhóm thấp ở khu vực chính thức tăng, việc làm chính thức giảm hoặc tỷ lệ phi chính thức tăng | Hiệu chạy đôi đúng dấu khi sàn tăng 30%. **Chuyển sang GĐ2** (Dương, 14/11/2026): cần lương phân tán theo kỹ năng | giáo trình về giá sàn; [TTK] về phần phi chính thức |
 
 **Kỳ vọng**
 

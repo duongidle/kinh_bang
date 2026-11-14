@@ -42,7 +42,7 @@ export const NOTES: Note[] = [
     title: 'Vì sao để yên thì lạm phát gần bằng 0?',
     near: ['cb.inflation.target'],
     body: [
-      'Trong mô hình không có gì tự đẩy giá lên đều đặn: năng suất và dân số đứng yên, ngân sách gần cân, lương chỉ bám một nửa lạm phát kỳ vọng. Giá chỉ tăng khi có cú đẩy: in tiền, chi tiêu công, tín dụng mở rộng.',
+      'Trong mô hình không có gì tự đẩy giá lên đều đặn: năng suất và dân số đứng yên, ngân sách gần cân, lương chỉ bám một nửa lạm phát của năm vừa qua. Giá chỉ tăng khi có cú đẩy: in tiền, chi tiêu công, tín dụng mở rộng.',
       'Vì vậy mục tiêu lạm phát của NHNN tự nó không kéo được lạm phát về đúng mức. Khi lạm phát thật lệch xa mục tiêu lâu, người dân thôi tin vào mục tiêu.',
     ],
   },

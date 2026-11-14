@@ -84,6 +84,9 @@ Xếp theo mức ảnh hưởng. Cột "Về thiết kế" là giá trị đưa 
 | S8b | **Lãi tiền gửi cao hơn lạm phát kỳ vọng thì hộ hoãn mua**, mức phản ứng lấy theo tài liệu | `exp.saveResponse` = 0,35 | 0 | Thay cho giá trị 1 (S8) và 2 (S28) | Havránek 2015, JEEA 13(6): độ co giãn thay thế liên thời gian sau khi chỉnh thiên lệch công bố là 0,3-0,4 ở ước lượng vi mô, xấp xỉ 0 ở vĩ mô, trên 0,8 là trái bằng chứng. Đã đọc tóm tắt 14/11/2026. Quy đổi sang tham số của mô hình là gần đúng |
 | S29 | **Hệ số của quy tắc lãi suất tự động thành tham số** | `cb.taylorPi` = 1,5; `cb.taylorSpeed` = 0,3 | | Trước là số viết cứng trong code. Giá trị không đổi | Taylor 1993 |
 | S30 | **Chi phí lãi vay trong giá tính theo số lãi thực trả tháng trước** | chi tiết triển khai | | Trước đó nhân cả dư nợ với lãi suất của khoản vay mới nhất, nên một lần tăng lãi suất đẩy giá lên ngay cả với nợ cũ lãi cố định, ngược chiều với K1.19 | Khoản vay giữ lãi suất lúc ký (thiết kế mục 7) |
+| S31 | **Người bán chỉ chuyển ngay một phần thay đổi thuế vào giá**, phần còn lại ăn vào biên lãi; sau đó biên lãi lại đi theo sức mua như thường. Áp cho mọi thuế nằm trong giá (GTGT, gián thu khác, thuế doanh thu của hộ kinh doanh), cả chiều tăng lẫn giảm | `firm.taxPassThrough` = 0,31; mã lý do `p_tax_absorb` | 1 | Dương quyết 14/11/2026 sau khi K1.24 hỏng: mô hình cũ chuyển trọn thuế vào giá vì biên lãi không co | IMF WP/21/61 (14 nước khu vực đồng euro, 1999-2013, 846 lần đổi GTGT): bình quân 31%, phần lớn ngay trong tháng đổi thuế. Đã đọc bản trích 14/11/2026. Xem D9 về độ chắc của con số này |
+| S32 | **Đợt xét lương năm bám lạm phát 12 tháng qua**, thay cho lạm phát kỳ vọng | quy tắc `firm.wageIndexBase` (biến thể `expected` về thiết kế mục 10); mã lý do `w_index`, `w_index_exp` | biến thể `expected` | Dương quyết 14/11/2026 theo bằng chứng | Rabanal và Sbrancia 2024 (đã dẫn ở D5): lương bám lạm phát CPI năm trước |
+| S33 | **Số hộ để chọn nhóm sáng lập thành tham số** | `firm.founderPool` = 60 | | Trước là số viết cứng. Giá trị không đổi. Tìm ra khi soi K1.13 (D8) | TTK |
 
 Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tuyển số người trả nổi lương; giữ lại lương tháng này cộng một tháng đệm trước khi mua máy; hộ gặp nơi hết hàng thì sang nơi quen kế tiếp trong cùng lượt; thanh lý máy của doanh nghiệp phá sản cho tối đa ba nơi mua; doanh nghiệp hết người hết tiền quá 6 tháng thì giải thể; cơ cấu ngành lúc đầu tính từ cầu để tháng đầu không ngành nào thừa hay thiếu hàng.
 
@@ -110,7 +113,7 @@ Giữ cách đo 3 năm đầu. Sau năm thứ năm nhánh siết tín dụng có
 
 Nộp thuế đủ làm khu vực phi chính thức nghèo đi, không nhỏ đi về số người.
 
-### D5. Vì sao lạm phát bình quân 6-7% và rất khác nhau giữa các seed (CHƯA SỬA, chờ Dương quyết)
+### D5. Vì sao lạm phát bình quân 6-7% và rất khác nhau giữa các seed (đã xử lý theo quyết định 14/11/2026)
 
 Đo bằng `scripts/inflation.ts` (phân rã CPI và lương theo mã lý do, năm 11-40) và `scripts/validate.ts 20 base M k=v`. Mục tiêu của NHNN là 4,5%.
 
@@ -131,7 +134,7 @@ Hệ quả cho kiểm định với `exp.saveResponse` = 0,35 (20 seed, 500 hộ
 2. **S7 thay bằng bám một phần**: `firm.wageIndex` = 0,5. Nguồn: Rabanal và Sbrancia 2024, IMF WP/24/105 (Uruguay): hệ số của lạm phát CPI năm trước trong phương trình lương cao nhất 0,48; hệ số bám lương trong mô hình DSGE 0,36-0,57; bài dẫn WEO 10/2022 chương 3 cho nhóm nước mới nổi: cũng bám một phần. Đã đọc PDF. Giới hạn phải nói thật:
    - Uruguay có thương lượng lương tập trung, nên 0,5 nhiều khả năng là cận trên cho Việt Nam.
    - Không tìm được ước lượng cho Việt Nam. Nguyen 2020 (Dynare WP 56, số liệu 1999-2017) chỉ ước lượng mức bám của giá trong nước: 0,06. Trinh và Vasilev 2026 (EERI RP 2026/02) có phương trình lương cho Việt Nam nhưng không cho hệ số bám.
-   - Bằng chứng nói lương bám lạm phát **quá khứ**, ít bám lạm phát kỳ vọng. Mô hình vẫn dùng lạm phát kỳ vọng theo thiết kế mục 10. Đây là chỗ lệch còn lại, Dương xem có muốn đổi không.
+   - Bằng chứng nói lương bám lạm phát **quá khứ**, ít bám lạm phát kỳ vọng. **Dương quyết tối 14/11/2026: theo bằng chứng.** Đợt xét lương năm giờ bám lạm phát 12 tháng qua (S32). Lương đòi hỏi của người đang tìm việc (thiết kế mục 4) không đổi.
    - **Chưa phân biệt chính thức và phi chính thức**: không tìm được ước lượng riêng. Đã tách thành hai tham số (`firm.wageIndex`, `hkd.wageIndex`), đang để bằng nhau.
 3. **S25: mức thất nghiệp bình thường tự sinh từ mô hình.** Bỏ con số 5% đặt tay. Giờ là trung bình trượt mũ 60 tháng của chính tỷ lệ thất nghiệp (`firm.nairuWindow`). Nguồn: Ball và Mankiw 2002, JEP 16(4): mức này đổi theo thời gian và được ước lượng bằng xu thế làm trơn (lọc Hodrick-Prescott) của thất nghiệp đã chỉnh theo thay đổi lạm phát; hai ông viết thẳng là tham số làm trơn "phần lớn là tuỳ ý". Đã đọc PDF. Đơn giản hoá: bỏ số hạng chỉnh theo lạm phát, dùng trung bình trượt thay lọc HP. Độ dài 60 tháng là tự thiết kế.
 4. **Kết quả 20 seed, 500 hộ** (`scripts/validate.ts 20 base M`): K1.5 20/20, K1.10 18/20 qua. **K1.12 vẫn không qua: 12/20.**
@@ -142,7 +145,7 @@ Hệ quả cho kiểm định với `exp.saveResponse` = 0,35 (20 seed, 500 hộ
 
 ### D6. Kết quả kiểm định đầy đủ ngày 14/11/2026 (sau các quyết định trên): GĐ1 CHƯA QUA
 
-Chạy `npm run validate:gd1`: 20 seed ở 500 hộ, 5 seed ở 5000 hộ, 20 seed ở 50 hộ. Báo cáo: [validation/gd1.md](../validation/gd1.md). Kế toán (K1.1-K1.4, K1.30) đúng ở mọi seed, mọi quy mô. Bảy mục không qua. **Chưa vá mục nào, chờ Dương quyết.**
+Chạy `npm run validate:gd1`: 20 seed ở 500 hộ, 5 seed ở 5000 hộ, 20 seed ở 50 hộ. Báo cáo: [validation/gd1.md](../validation/gd1.md). Kế toán (K1.1-K1.4, K1.30) đúng ở mọi seed, mọi quy mô. Bảy mục không qua. Quyết định của Dương cho từng mục ở ngay dưới bảng.
 
 | Mục | Số seed đạt | Số đo | Nguyên nhân tớ thấy |
 |---|---|---|---|
@@ -161,9 +164,95 @@ Kiểm định kịch bản (10 seed): 13/15 qua hết. Hai kịch bản phải 
 - `hai-tay-lai`: bỏ khẳng định "tiêu dùng thực cao hơn sau vài năm" (6/10, +0,4% ± 0,9).
 - `het-han-giam-thue`: bỏ câu "người bán giữ lại một phần" vì mô hình chuyển gần trọn thuế vào giá (K1.24).
 
+**Quyết định của Dương tối 14/11/2026 cho bảy mục trên:**
+
+| Mục | Quyết định | Đã làm |
+|---|---|---|
+| K1.12 | Kiểm ở 5000 hộ, ghi rõ phụ thuộc quy mô | Ở 500 hộ chỉ in để tham khảo, không tính đạt hay hỏng |
+| K1.13 | KHÔNG đổi quy mô. Ghi "chưa đạt, thiếu cơ chế" | Phân tích và đề xuất ở D8, chờ duyệt |
+| K1.31 | Sang GĐ2 | Ghi "đã biết, chuyển GĐ2" trong bộ kiểm định; ghi vào lộ trình |
+| K1.24 | Sửa cơ chế: biên lãi co khi thuế tăng, có nguồn | S31. Thử 5 seed: tỷ lệ chuyển sau 2 năm 0,27-0,43, qua 5/5 |
+| K1.19, K1.28, K1.29 | Ghi nhận "đã biết" | Ghi trong bộ kiểm định |
+
+Lương bám lạm phát **quá khứ** (S32). Hệ quả đo được ở 5 seed: nền kinh tế vẫn ổn định, lạm phát bình quân 0,1-1,0%, thất nghiệp 6,0-6,8%. K1.28 giờ sai dấu rõ hơn (1/5): tắt kỳ vọng không còn chạm tới lương, nên không làm lạm phát tắt nhanh hơn.
+
+### D8. K1.13: vì sao Gini của cải thấp ở 5000 hộ, và mô hình thiếu cơ chế gì (CHỜ DƯƠNG DUYỆT ĐỀ XUẤT)
+
+Đo bằng `scripts/k113.ts`, năm thứ 30:
+
+| | 500 hộ (3 seed) | 5000 hộ (2 seed) |
+|---|---|---|
+| Gini của cải ròng | 0,48-0,51 | 0,28-0,29 |
+| Gini tiền mặt và tiền gửi | 0,19-0,25 | 0,18 |
+| Gini thu nhập | 0,34-0,43 | 0,32-0,33 |
+| Phần của cải của 10% giàu nhất | 45-48% | 21-23% |
+| Số hộ còn giữ cổ phần doanh nghiệp | 28-39% | 71-72% |
+| Gini của riêng cổ phần | 0,86-0,91 | 0,50-0,51 |
+| Doanh nghiệp phá sản mỗi năm so với số đang có | khoảng 17% | khoảng 6% |
+
+Điều tớ đọc ra:
+
+1. **Ở 500 hộ, bất bình đẳng sinh ra từ nhiễu, không từ một cơ chế tích tụ.** Nền kinh tế nhỏ dao động mạnh hơn, doanh nghiệp chết nhanh gấp gần ba lần. Mỗi lần một doanh nghiệp chết, các chủ của nó mất trắng phần vốn. Sau 30 năm chỉ còn một phần ba số hộ giữ cổ phần. Ở 5000 hộ, dao động chung nhỏ hơn, doanh nghiệp sống lâu hơn, 71% số hộ vẫn là chủ. Nghĩa là con số 0,4 ở 500 hộ đạt được vì lý do không bền.
+2. **Giả thuyết "chọn người góp vốn trong 60 hộ" chỉ đúng một phần.** Con số 60 không tăng theo dân số (S33). Thử nâng lên 600 ở 5000 hộ: Gini 0,27 và 0,36. Có tác dụng ở một seed, không ở seed kia. Không phải nguyên nhân chính.
+3. **Mô hình có một lực san bằng mạnh.** Mọi hộ tiêu cùng một tỷ lệ: 50% thu nhập cộng 8,3% tiền đang giữ mỗi tháng. Hộ nào có nhiều tiền hơn mức khoảng 6 tháng thu nhập thì tiêu bớt về mức đó. Cổ tức (90% lợi nhuận) về tay chủ rồi cũng bị tiêu đi theo đúng quy tắc này. Nên tiền không dồn lại được: Gini tiền chỉ 0,18, thấp hơn cả Gini thu nhập.
+
+Các cơ chế còn thiếu, xếp theo giai đoạn:
+
+| Cơ chế | Vì sao tạo bất bình đẳng | Giai đoạn | Chi phí |
+|---|---|---|---|
+| **A. Người giàu tiết kiệm phần lớn hơn của thu nhập** | Khuynh hướng tiêu dùng giảm khi thu nhập tăng, nên tiền dồn về nhóm trên thay vì bị tiêu về mức chung | **Làm được trong GĐ1** | Rẻ: một tham số trong quy tắc tiêu dùng của hộ. Nguồn: Dynan, Skinner và Zeldes 2004, "Do the Rich Save More?", JPE 112(2) (trí nhớ, phải mở lại để lấy độ dốc) |
+| **B. Lợi tức vốn dồn tích: chủ tái đầu tư cổ tức** | Người đã có vốn dùng cổ tức góp vào doanh nghiệp mới, phần sở hữu lớn dần. Hiện cổ tức chỉ thành tiền gửi rồi bị tiêu | **Làm được trong GĐ1** | Vừa: đổi cách chọn người góp vốn thành xác suất theo của cải ròng (Caiani 2016: hộ góp vốn theo của cải), và bỏ con số 60. Phải kiểm lại gia nhập doanh nghiệp |
+| C. Chênh lệch kỹ năng và lương | Lương phân tán thì thu nhập và tiết kiệm phân tán | GĐ2 (đã có trong lộ trình) | |
+| D. Đất, nhà và thừa kế | Tài sản tăng giá, truyền qua thế hệ | GĐ3 | |
+| E. Sở hữu tập trung: doanh nghiệp lớn, độc quyền | Lợi nhuận dồn về ít chủ | GĐ4 | |
+| F. Mua bán cổ phần | Người giàu mua lại phần của người cần tiền | GĐ3 (thị trường tài sản) | |
+
+**Đề xuất của tớ, chờ duyệt**: làm A trong GĐ1, vì rẻ, có nguồn, và đánh thẳng vào lực san bằng ở điểm 3. B làm sau A nếu A chưa đủ. Chưa làm gì cho tới khi Dương duyệt. Rủi ro của A: nó đổi tổng cầu (nhóm trên tiêu ít đi), nên phải hiệu chỉnh thô và chạy lại toàn bộ kiểm định.
+
+### D9. Tỷ lệ chuyển thuế vào giá: bằng chứng không thống nhất (Dương nên biết)
+
+`firm.taxPassThrough` = 0,31 lấy từ IMF WP/21/61. Nhưng các nguồn lệch nhau nhiều:
+
+- Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, 17 nước khu vực đồng euro, cùng bộ số liệu gốc): khoảng **100%** cho thay đổi thuế suất phổ thông, khoảng 30% cho thuế suất ưu đãi, gần 0 cho việc chuyển nhóm hàng. Tớ mới đọc tóm tắt.
+- IMF WP/21/61: **31%** bình quân mọi lần đổi thuế, sau khi thêm hiệu ứng cố định tương tác. Đã đọc bản trích. Chưa xác minh được tên tác giả và bài này giải thích thế nào về chênh lệch với bài 2015.
+- Benzarti, Carloni, Harju và Kosonen 2020 (JPE 128(12)): giá phản ứng với tăng thuế mạnh gấp đôi so với giảm thuế. Mới đọc bài tóm tắt của tác giả, chưa có con số mức.
+- Không có ước lượng cho Việt Nam (đã tìm đợt giảm GTGT 10% xuống 8%, chỉ có bài bình luận).
+
+Thuế GTGT trong mô hình là thuế suất phổ thông. Theo bài 2015 thì mô hình cũ (chuyển trọn) không sai. Tớ chọn 0,31 vì đó là con số duy nhất tớ đọc trực tiếp, và vì quyết định là "biên lãi co khi thuế tăng". Khoảng hợp lý theo tài liệu là 0,3 đến 1. Đo ở 5 seed: sau 2 năm tỷ lệ chuyển trong mô hình là 0,27-0,43. Mô hình chưa có bất đối xứng tăng và giảm.
+
+### D10. Kịch bản có giả định ngầm về tiền thuế (Dương quyết 14/11/2026)
+
+Kết quả `thue-nguoi-giau` cũ phụ thuộc vào việc tiền thu thêm không được chi. Đã làm lại thành kịch bản ba nhánh chạy song song từ cùng một trạng thái: trợ cấp, đầu tư công (ở GĐ1 là mua hàng), trả nợ. Phần thu thêm tính như lập dự toán: thu thực 12 tháng sau khi tăng thuế trừ 12 tháng trước đó đã chỉnh theo GDP danh nghĩa; chi từ năm thứ hai. Không thêm cơ chế nào vào engine.
+
+Số đo 10 seed, hiệu so với không tăng thuế (`scripts/optdiag.ts`):
+
+| | Trợ cấp | Đầu tư công | Trả nợ |
+|---|---|---|---|
+| Gini thu nhập (điểm phần trăm) | −0,35 (từ −3,4 tới +2,4) | −0,21 (từ −2,1 tới +1,9) | **+3,2** (10/10 seed tăng) |
+| GDP thực | −0,4% | −0,2% | **−6,5%** (10/10 giảm) |
+| Đầu tư 5 năm đầu | +6,6% (rất nhiễu) | +0,5% | **−28%** (10/10 giảm) |
+| Nợ công tính bằng đồng, 2 năm cuối | −2,4% | −5,0% | −5,7% (10/10 giảm) |
+| Nợ công/GDP, 2 năm cuối (điểm) | +0,05 | −1,0 | +0,6 (7/10 seed TĂNG) |
+
+Hai điều đáng nói: (1) chi lại tiền thuế thì cú hãm biến mất, nhưng Gini thu nhập chỉ giảm nhẹ và không chắc, vì chênh lệch thu nhập trong mô hình chủ yếu là có việc hay mất việc; (2) giữ tiền trả nợ làm số nợ giảm nhưng tỷ lệ nợ/GDP không giảm, vì GDP co lại.
+
+Rà 14 kịch bản còn lại:
+
+| Kịch bản | Giả định ngầm | Đã làm |
+|---|---|---|
+| `keo-vao-luoi-thue` | Giống hệt: thuế thu thêm không được chi | Làm thành ba nhánh. Kết luận chính không đổi ở cả ba: khu vực phi chính thức nghèo đi (−1,8% tới −3,2% thu nhập thực) và không nhỏ đi về số người |
+| `het-han-giam-thue` | Gia hạn giảm thuế được bù bằng vay nợ, Chính phủ không cắt chi | Ghi rõ trong lời giải thích và mục đơn giản hoá. Sửa câu "giá giảm gần đúng bằng mức thuế" theo S31 |
+| `can-ngan-sach` | Tiền cắt chi dùng để vay ít đi | Ghi rõ |
+| `that-lung-buoc-bung` | Chính phủ và NHNN không bù phần cầu mất đi | Ghi rõ |
+| `hai-tay-lai` | Bộ Tài chính không phản ứng | Đây chính là đề bài, đã nói rõ từ đầu |
+| `may-in-tien`, `song-bang-luong`, `tin-dung-nong`, `gia-luong-tien` | Nguồn tiền là in tiền, nói rõ trong đề | Không cần sửa |
+| `mot-khoan-vay`, `vach-xuat-phat`, `room-hay-lai-suat`, `chu-xuong`, `luong-toi-thieu` | Không có giả định tài khoá ngầm | Không cần sửa |
+
+Cùng loại giả định trong bộ kiểm định: K1.26 (nộp thuế đủ) và K1.24 (tăng GTGT) đều giữ tiền thu thêm lại. Ghi chú của K1.26 đã nói điều này.
+
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
-Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. Chờ Dương quyết: tự cài bốn hàm này trong lõi (trùng bit mọi nơi, phải kiểm định lại) hay chấp nhận.
+Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. **Dương quyết 14/11/2026: chấp nhận như gd0 mục 12, không tự cài hàm toán.** K0.2 ghi là đạt theo nghĩa: trạng thái kinh tế trùng từng bit; mã băm toàn cục có thể lệch giữa hai bản V8 khác nhau ở chữ số cuối của hàm toán.
 
 ## E. Ghi chú cũ
 

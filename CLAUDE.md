@@ -85,6 +85,7 @@ GĐ0 nền móng kỹ thuật → GĐ1 lõi kinh tế → **GĐ1.5** đánh bón
 
 Nội dung từng giai đoạn ở KICKOFF.md, với các thay đổi đã duyệt:
 - Lương tối thiểu vùng chuyển từ GĐ2 về GĐ1. BHXH và phần còn lại của GĐ2 giữ nguyên.
+- Kiểm định K1.31 (nâng mạnh lương tối thiểu) chuyển sang GĐ2 (Dương quyết 14/11/2026): cần lương phân tán theo kỹ năng. Lý do: [sai-khac.md mục D6](docs/design/sai-khac.md).
 - Vốn cố định dạng đơn giản có ngay GĐ1; đời máy, R&D vẫn ở GĐ4.
 - Thêm vào GĐ3: tín dụng ngoài ngân hàng (hụi họ, tín dụng đen) và thị trường liên ngân hàng.
 - Thêm vào GĐ3 (Dương quyết 14/11/2026): vay tiêu dùng của hộ (kênh lãi suất tới cầu, để K1.19 đạt) và cơ chế giảm phát nợ. Lý do và số đo: [sai-khac.md mục D](docs/design/sai-khac.md).

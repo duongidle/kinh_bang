@@ -38,6 +38,21 @@ export interface ClaimDef {
   test(c: Ctx): { ok: boolean; detail: string };
 }
 
+/**
+ * Một lựa chọn của kịch bản có nhiều nhánh. Các nhánh chạy từ cùng một trạng thái, cùng seed, để so sánh song song.
+ * Dùng khi kết quả của một chính sách phụ thuộc vào một quyết định đi kèm (ví dụ: tiền thuế thu thêm dùng làm gì).
+ */
+export interface OptionDef {
+  id: string;
+  label: string;
+  /** Một câu nói rõ nhánh này làm gì với phần còn bỏ ngỏ. */
+  note: string;
+  /** Các bước của nhánh, áp SAU các bước chung trong `demo` của kịch bản. */
+  steps: Step[];
+  /** Khẳng định riêng của nhánh, đo so với thế giới đối chứng. Kiểm định như khẳng định chung: đúng ở ít nhất 80% số seed. */
+  claims: ClaimDef[];
+}
+
 export interface ScenarioDef {
   id: string;
   title: string;
@@ -60,6 +75,10 @@ export interface ScenarioDef {
   predict: Array<{ indicator: string; question: string }>;
   /** Lời giải mẫu dùng cho kiểm định: các hành động một người chơi hiểu cơ chế sẽ làm. */
   demo: Step[];
+  /** Các nhánh so sánh song song. Có thì `demo` là phần chung của mọi nhánh, và `claims` chỉ gồm khẳng định đúng ở mọi nhánh. */
+  options?: OptionDef[];
+  /** Chỉ số đặt cạnh nhau trong bảng so sánh các nhánh: mã chỉ số, cách so với đối chứng, cửa sổ tháng [a, b). */
+  compare?: Array<{ indicator: string; label: string; kind: 'rel' | 'pt'; from: number; to: number }>;
   /** Thế giới đối chứng bỏ gì: hành động của người chơi (mặc định) hay cú sốc của kịch bản. */
   control?: 'player' | 'shock';
   claims: ClaimDef[];

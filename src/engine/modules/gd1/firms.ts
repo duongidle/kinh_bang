@@ -1099,6 +1099,7 @@ function entry(w: World, eng: Engine): void {
   const share = eng.param(w, 'firm.founderShare');
   const nFounders = Math.max(1, Math.round(eng.param(w, 'firm.founders')));
   const eqMin = eng.param(w, 'firm.founderEquityMin');
+  const pool = Math.max(nFounders, Math.round(eng.param(w, 'firm.founderPool')));
   const pK = s.pK;
   const profit = new Float64Array(NSECTOR);
   const capital = new Float64Array(NSECTOR);
@@ -1124,9 +1125,9 @@ function entry(w: World, eng: Engine): void {
     const wage = Math.max(s.wageAvg, minWageOf(w, eng, 1));
     const needCap = (kappaOf(w, eng, sec) * 2 * pK) / uBar + 6 * wage;
     for (let e = 0; e < n; e++) {
-      // người sáng lập và người góp vốn: những hộ nhiều tiền gửi nhất trong 60 hộ lấy ngẫu nhiên
+      // người sáng lập và người góp vốn: những hộ nhiều tiền gửi nhất trong `firm.founderPool` hộ lấy ngẫu nhiên
       const picks: number[] = [];
-      for (let k = 0; k < 60; k++) {
+      for (let k = 0; k < pool; k++) {
         const c = Math.floor(R(w, STREAM.founder, sec * 100 + e, k) * h.n);
         if (!picks.includes(c)) picks.push(c);
       }

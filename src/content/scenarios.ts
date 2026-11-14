@@ -2,7 +2,8 @@
 // Mỗi khẳng định trong lời giải thích là một phép đo trên ván của người chơi so với thế giới đối chứng.
 // Không có câu nào viết sẵn kết quả: câu chỉ hiện "đúng" khi số đo của chính ván đó đúng.
 
-import type { ClaimDef, Ctx, GoalDef, ScenarioDef } from '../engine/scenario/types';
+import type { Engine } from '../engine/core/engine';
+import type { ClaimDef, Ctx, GoalDef, OptionDef, ScenarioDef, Step } from '../engine/scenario/types';
 import type { World } from '../engine/core/world';
 
 const pct = (x: number, d = 1) => `${x >= 0 ? '+' : '−'}${Math.abs(x * 100).toFixed(d).replace('.', ',')}%`;
@@ -69,6 +70,49 @@ const above = (id: string, label: string, ind: string, min: number, months = 12,
   },
 });
 const watch: GoalDef = { id: 'watch', label: 'Xem hết giai đoạn', test: (c) => ({ ok: true, value: `${c.t1 - c.t0} tháng` }) };
+
+// ---------- tiền thuế thu thêm dùng làm gì ----------
+// Một sắc thuế tăng thì ngân sách thu thêm. Kết quả của cả chính sách phụ thuộc vào việc số tiền đó đi đâu.
+// Ba nhánh dưới đây dùng chung một cách tính, giống cách lập dự toán: sau năm đầu, lấy số thu thực của các sắc thuế vừa đổi
+// trong 12 tháng qua, trừ số thu 12 tháng trước đó (đã chỉnh theo mức tăng GDP danh nghĩa). Phần chênh là "thu thêm".
+// Từ năm thứ hai, nhánh trợ cấp và nhánh mua hàng chi đúng số đó mỗi tháng; nhánh trả nợ không chi.
+function extraRevenue(eng: Engine, w: World, taxes: string[]): { perMonth: number; gdpMonth: number } {
+  const t = w.meta.tick;
+  const sum = (id: string, a: number, b: number) => {
+    let x = 0;
+    for (const v of eng.seriesOf(w, id, Math.max(0, a), b)) x += v;
+    return x;
+  };
+  const rev = (a: number, b: number) => taxes.reduce((x, id) => x + sum(id, a, b), 0);
+  const g1 = sum('gdp.nominal', t - 12, t);
+  const g0 = sum('gdp.nominal', t - 24, t - 12);
+  const extra = rev(t - 12, t) - (g0 > 0 ? (rev(t - 24, t - 12) * g1) / g0 : 0);
+  return { perMonth: Math.max(0, extra) / 12, gdpMonth: g1 / 12 };
+}
+
+export function revenueUseOptions(taxes: string[], claims: Record<'transfer' | 'purchase' | 'debt', ClaimDef[]>): OptionDef[] {
+  const transfer: Step = {
+    at: 12,
+    label: 'Chia đều phần thu thêm cho mọi hộ',
+    dynamic(eng, w) {
+      const x = extraRevenue(eng, w, taxes);
+      return { laws: { 'gov.transfer.universal': eng.law(w, 'gov.transfer.universal') + Math.round(x.perMonth / w.tables.hh.n / 1000) * 1000 } };
+    },
+  };
+  const purchase: Step = {
+    at: 12,
+    label: 'Dùng phần thu thêm để Chính phủ mua thêm hàng',
+    dynamic(eng, w) {
+      const x = extraRevenue(eng, w, taxes);
+      return { laws: { 'gov.purchase.share': eng.law(w, 'gov.purchase.share') + (x.gdpMonth > 0 ? Math.round((x.perMonth / x.gdpMonth) * 1e4) / 1e4 : 0) } };
+    },
+  };
+  return [
+    { id: 'transfer', label: 'Trợ cấp', note: 'Từ năm thứ hai, phần thu thêm chia đều cho mọi hộ mỗi tháng.', steps: [transfer], claims: claims.transfer },
+    { id: 'purchase', label: 'Đầu tư công', note: 'Từ năm thứ hai, Chính phủ dùng phần thu thêm mua thêm hàng của doanh nghiệp. Ở GĐ1 khoản mua này chưa tạo ra đường sá hay tài sản công làm tăng năng suất.', steps: [purchase], claims: claims.purchase },
+    { id: 'debt', label: 'Trả nợ', note: 'Không chi thêm. Phần thu thêm làm bội chi nhỏ lại và nợ công thấp dần.', steps: [], claims: claims.debt },
+  ];
+}
 
 const BASE_SIMPLE = ['Nền kinh tế đóng: không tỷ giá, không nhập khẩu, không vàng.', 'Hộ không vay; không có đất và nhà.', 'Không tăng năng suất, không tăng dân số.'];
 const PRINT = { 'cb.monetize': 1 };
@@ -181,31 +225,46 @@ export const SCENARIOS: ScenarioDef[] = [
     title: 'Đánh thuế người giàu',
     role: 'fiscal',
     scale: 'M',
-    question: 'Nâng thuế cổ tức và thuế doanh nghiệp có làm bất bình đẳng giảm không, và đầu tư có tụt không?',
-    intro: 'Nền kinh tế đã chạy 15 năm, của cải đã phân hoá. Cậu giữ Bộ Tài chính. Thử nâng thuế cổ tức và thuế TNDN, rồi quyết xem tiền thu thêm dùng làm gì.',
+    question: 'Nâng thuế cổ tức và thuế doanh nghiệp có làm bất bình đẳng giảm không? Câu trả lời phụ thuộc vào việc tiền thuế đi đâu.',
+    intro: 'Nền kinh tế đã chạy 15 năm, của cải đã phân hoá. Cậu giữ Bộ Tài chính. Nâng thuế cổ tức và thuế TNDN, rồi chọn một trong ba cách dùng tiền thu thêm: chia cho mọi hộ, mua thêm hàng của doanh nghiệp, hay không chi để trả bớt nợ. Cuối ván có bảng so ba cách với nhau.',
     prereq: ['vach-xuat-phat'],
     warmup: 180,
     months: 120,
     goals: [below('gini', 'Gini thu nhập bình quân 3 năm cuối thấp hơn lúc bắt đầu', 'gini.income', 0, 36)],
     predict: [
-      { indicator: 'gini.income', question: 'Nâng thuế cổ tức lên 30% thì Gini thu nhập sẽ' },
+      { indicator: 'gini.income', question: 'Nâng thuế cổ tức lên 30% mà không chi phần thu thêm thì Gini thu nhập sẽ' },
       { indicator: 'investment', question: 'Đầu tư của doanh nghiệp sẽ' },
     ],
     demo: [{ at: 0, laws: { 'pit.rate.dividend': 0.3, 'cit.rate.standard': 0.3 } }],
-    claims: [
-      higher('Thu ngân sách so với GDP tăng.', 'gov.revenueGdp', 12, END, 'pt'),
-      lower('Lợi nhuận sau thuế thấp hơn nên doanh nghiệp đầu tư ít đi.', 'investment', 12, 60),
-      higher('Thất nghiệp cao hơn trong bốn năm đầu: tiền thuế thu thêm không quay lại vòng chi tiêu.', 'unemployment', 12, 48, 'pt'),
-      {
-        text: 'Kết quả ngược mong đợi: Gini thu nhập không thấp hơn. Người mất việc kéo khoảng cách thu nhập rộng ra, lấn át phần thuế lấy bớt của người có vốn.',
-        test(c) {
-          const d = dif(c, 'gini.income', 12, END);
-          return { ok: d > -0.005, detail: `Gini thu nhập ${pts(d)} so với thế giới đối chứng` };
-        },
-      },
+    claims: [higher('Ở cả ba cách, thu ngân sách so với GDP đều tăng.', 'gov.revenueGdp', 12, END, 'pt')],
+    options: revenueUseOptions(['gov.tax.cit', 'gov.tax.pit'], {
+      transfer: [
+        higher('Chia phần thu thêm cho mọi hộ thì sản lượng không tụt như khi giữ tiền lại: GDP thực chỉ lệch vài phần trăm so với không tăng thuế.', 'gdp.real', 24, END, 'rel', -0.05),
+        lower('Bất bình đẳng thu nhập không tăng như ở cách trả nợ. Nhưng nó cũng không giảm chắc chắn: có ván giảm, có ván tăng.', 'gini.income', 24, END, 'pt', 0.03),
+      ],
+      purchase: [
+        higher('Chính phủ mua thêm hàng thì sản lượng cũng không tụt: tiền thuế quay lại thành đơn hàng của doanh nghiệp.', 'gdp.real', 24, END, 'rel', -0.05),
+        lower('Bất bình đẳng thu nhập không tăng như ở cách trả nợ.', 'gini.income', 24, END, 'pt', 0.03),
+      ],
+      debt: [
+        lower('Không chi phần thu thêm: doanh nghiệp đầu tư ít hẳn đi.', 'investment', 12, 60),
+        lower('Sản lượng thực thấp hơn: tiền thuế rời khỏi vòng chi tiêu.', 'gdp.real', 24, END),
+        higher('Thất nghiệp cao hơn trong bốn năm đầu.', 'unemployment', 12, 48, 'pt'),
+        higher('Kết quả ngược mong đợi: Gini thu nhập cao hơn. Người mất việc kéo khoảng cách rộng ra, lấn át phần thuế lấy bớt của người có vốn.', 'gini.income', 24, END, 'pt'),
+        lower('Đổi lại, số nợ công tính bằng đồng thấp hơn.', 'gov.debt', 96, END),
+      ],
+    }),
+    compare: [
+      { indicator: 'gini.income', label: 'Gini thu nhập', kind: 'pt', from: 24, to: END },
+      { indicator: 'unemployment', label: 'Thất nghiệp', kind: 'pt', from: 24, to: END },
+      { indicator: 'gdp.real', label: 'GDP thực', kind: 'rel', from: 24, to: END },
+      { indicator: 'investment', label: 'Đầu tư (5 năm đầu)', kind: 'rel', from: 12, to: 60 },
+      { indicator: 'consumption.real', label: 'Tiêu dùng thực', kind: 'rel', from: 24, to: END },
+      { indicator: 'gov.debt', label: 'Nợ công (2 năm cuối)', kind: 'rel', from: 96, to: END },
+      { indicator: 'gov.debtGdp', label: 'Nợ công/GDP (2 năm cuối)', kind: 'pt', from: 96, to: END },
     ],
-    explanation: 'Thuế cổ tức và thuế TNDN lấy bớt thu nhập của nhóm có vốn. Nhưng trong mô hình, Chính phủ không chi phần thu thêm, nên tiền đó rời khỏi vòng chi tiêu. Doanh nghiệp bán ít đi, đầu tư ít đi và bớt người. Người mất việc là người mất thu nhập nhiều nhất, nên bất bình đẳng thu nhập không giảm, có năm còn tăng. Muốn thuế người giàu làm giảm bất bình đẳng thì phải chi phần thu thêm cho nhóm dưới: thử tăng trợ cấp cùng lúc.',
-    simplifications: [...BASE_SIMPLE, 'Người giàu không chuyển tài sản ra nước ngoài, không né thuế.', 'Biểu thuế TNCN gần như không chạm ai vì lương chưa phân tán (GĐ2).'],
+    explanation: 'Thuế cổ tức và thuế TNDN lấy bớt thu nhập của nhóm có vốn. Phần còn lại của câu chuyện là tiền đó đi đâu. Nếu Chính phủ giữ lại để trả nợ, tiền rời khỏi vòng chi tiêu: doanh nghiệp bán ít đi, đầu tư ít đi, bớt người, và người mất việc làm bất bình đẳng thu nhập tăng. Nợ công tính bằng đồng có giảm, nhưng GDP cũng nhỏ đi nên tỷ lệ nợ trên GDP không giảm rõ. Nếu Chính phủ chi lại số tiền đó, bằng trợ cấp hay mua hàng, cú hãm gần như biến mất. Còn bất bình đẳng thu nhập thì chỉ giảm nhẹ và không chắc: trong mô hình, phần lớn chênh lệch thu nhập đến từ có việc hay mất việc, không phải từ cổ tức.',
+    simplifications: [...BASE_SIMPLE, 'Người giàu không chuyển tài sản ra nước ngoài, không né thuế.', 'Biểu thuế TNCN gần như không chạm ai vì lương chưa phân tán (GĐ2).', '"Đầu tư công" ở GĐ1 chỉ là Chính phủ mua thêm hàng. Nó chưa tạo ra đường sá hay tài sản công làm tăng năng suất.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán. Năm đầu ở cả ba cách tiền đều chưa được chi.'],
   },
   {
     id: 'room-hay-lai-suat',
@@ -264,17 +323,17 @@ export const SCENARIOS: ScenarioDef[] = [
       lower('Đổi lại, thu GTGT thấp hơn.', 'gov.tax.vat', 12, END),
       higher('Tiêu dùng thực cao hơn.', 'consumption.real', 12, END),
     ],
-    explanation: 'Thuế GTGT nằm trong giá bán. Trong mô hình, người bán tính giá bằng chi phí cộng biên lãi rồi cộng thuế, nên thuế thấp hơn thì giá thấp hơn gần đúng bằng mức giảm thuế. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn.',
+    explanation: 'Thuế GTGT nằm trong giá bán. Khi thuế đổi, người bán không chuyển hết vào giá ngay: trong mô hình khoảng một phần ba đi vào giá, phần còn lại ăn vào biên lãi, rồi biên lãi lại đi theo sức mua. Thuế thấp hơn thì giá thấp hơn, nhưng ít hơn mức giảm thuế. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn, và phần thu hụt đó Chính phủ phải vay để bù.',
     history: 'Việt Nam giảm GTGT từ 10% xuống 8% cho phần lớn hàng hoá từ 2022 và gia hạn nhiều lần, tới hết 2026.',
-    simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.', 'Mô hình chuyển gần trọn thuế vào giá. Ngoài đời người bán thường giữ lại một phần khi thuế giảm.'],
+    simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.', 'Tỷ lệ chuyển thuế vào giá lấy từ số liệu châu Âu (IMF WP/21/61: bình quân 31%); chưa có ước lượng cho Việt Nam.', 'Mô hình chưa có bất đối xứng: ngoài đời giá tăng theo thuế mạnh hơn là giảm theo thuế (Benzarti và cộng sự 2020).', 'Giả định ngầm: Chính phủ không cắt chi khi thu hụt. Phần thiếu được bù bằng vay nợ.'],
   },
   {
     id: 'keo-vao-luoi-thue',
     title: 'Kéo vào lưới thuế',
     role: 'fiscal',
     scale: 'M',
-    question: 'Hạ ngưỡng miễn thuế của hộ kinh doanh: thu thêm được bao nhiêu, mất gì?',
-    intro: 'Từ 2026 hộ kinh doanh có doanh thu dưới 1 tỷ đồng mỗi năm được miễn thuế. Cậu giữ Bộ Tài chính. Thử hạ ngưỡng về 100 triệu.',
+    question: 'Hạ ngưỡng miễn thuế của hộ kinh doanh: thu thêm được bao nhiêu, mất gì, và tiền thu thêm đi đâu?',
+    intro: 'Từ 2026 hộ kinh doanh có doanh thu dưới 1 tỷ đồng mỗi năm được miễn thuế. Cậu giữ Bộ Tài chính. Thử hạ ngưỡng về 100 triệu, rồi chọn cách dùng tiền thu thêm: chia cho mọi hộ, mua thêm hàng, hay trả bớt nợ. Cuối ván có bảng so ba cách.',
     prereq: [],
     warmup: 36,
     months: 72,
@@ -293,7 +352,7 @@ export const SCENARIOS: ScenarioDef[] = [
           return { ok: d > 0, detail: `thu thuế hộ kinh doanh ${d >= 0 ? '+' : '−'}${(Math.abs(d) / 1e6).toFixed(0)} triệu đồng mỗi tháng so với thế giới đối chứng` };
         },
       },
-      lower('Thu nhập thực của người làm ở khu vực phi chính thức thấp hơn.', 'income.real.informal', 12, END),
+      lower('Dù tiền thuế được dùng cách nào, thu nhập thực của người làm ở khu vực phi chính thức vẫn thấp hơn.', 'income.real.informal', 24, END),
       {
         text: 'Nhưng khu vực phi chính thức không nhỏ đi về số người: không ai "lên" doanh nghiệp vì bị đánh thuế.',
         test(c) {
@@ -302,8 +361,25 @@ export const SCENARIOS: ScenarioDef[] = [
         },
       },
     ],
-    explanation: 'Thuế theo doanh thu đi vào giá bán của hộ kinh doanh và vào thu nhập của chủ hộ. Khu vực này nghèo đi. Nó không co lại về số người, vì người làm ở đó không có chỗ nào khác để đi, và hộ kinh doanh trong mô hình không chuyển lên doanh nghiệp được.',
-    simplifications: [...BASE_SIMPLE, 'Hộ kinh doanh khai một nửa doanh thu (giá trị tạm, chưa có số liệu).', 'Chưa có đường chuyển từ hộ kinh doanh lên doanh nghiệp.'],
+    options: revenueUseOptions(['gov.tax.hkd'], {
+      transfer: [lower('Chia lại cho mọi hộ thì tiêu dùng thực vẫn thấp hơn một chút: thuế đã nằm trong giá hàng của hộ kinh doanh.', 'consumption.real', 24, END)],
+      purchase: [lower('Chính phủ mua thêm hàng của doanh nghiệp thì tiêu dùng thực của hộ vẫn thấp hơn.', 'consumption.real', 24, END)],
+      debt: [
+        lower('Không chi phần thu thêm thì tiêu dùng thực thấp hơn.', 'consumption.real', 24, END),
+        higher('Và bất bình đẳng thu nhập cao hơn.', 'gini.income', 24, END, 'pt'),
+        lower('Đổi lại, nợ công thấp hơn.', 'gov.debt', 60, END),
+      ],
+    }),
+    compare: [
+      { indicator: 'income.real.informal', label: 'Thu nhập thực phi chính thức', kind: 'rel', from: 24, to: END },
+      { indicator: 'informal.share', label: 'Lao động phi chính thức', kind: 'pt', from: 24, to: END },
+      { indicator: 'gdp.real', label: 'GDP thực', kind: 'rel', from: 24, to: END },
+      { indicator: 'consumption.real', label: 'Tiêu dùng thực', kind: 'rel', from: 24, to: END },
+      { indicator: 'gini.income', label: 'Gini thu nhập', kind: 'pt', from: 24, to: END },
+      { indicator: 'gov.debt', label: 'Nợ công (năm cuối)', kind: 'rel', from: 60, to: END },
+    ],
+    explanation: 'Thuế theo doanh thu đi vào giá bán của hộ kinh doanh và vào thu nhập của chủ hộ. Khu vực này nghèo đi. Nó không co lại về số người, vì người làm ở đó không có chỗ nào khác để đi, và hộ kinh doanh trong mô hình không chuyển lên doanh nghiệp được. Tiền thuế đi đâu chỉ đổi mức độ: giữ lại trả nợ thì khu vực phi chính thức mất khoảng 3% thu nhập thực, chi lại ra thì mất khoảng 2%.',
+    simplifications: [...BASE_SIMPLE, 'Hộ kinh doanh khai một nửa doanh thu (giá trị tạm, chưa có số liệu).', 'Chưa có đường chuyển từ hộ kinh doanh lên doanh nghiệp.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán.'],
   },
   {
     id: 'can-ngan-sach',
@@ -328,7 +404,7 @@ export const SCENARIOS: ScenarioDef[] = [
       higher('Thất nghiệp năm đầu cao hơn.', 'unemployment', 0, 12, 'pt'),
     ],
     explanation: 'Chi của Chính phủ là thu nhập của doanh nghiệp và người lao động. Cắt chi thì cầu giảm, doanh nghiệp bớt người, thu thuế cũng giảm theo, nên bội chi giảm ít hơn số tiền cắt. Cắt từ từ thì kinh tế kịp điều chỉnh hơn.',
-    simplifications: [...BASE_SIMPLE, 'Chính phủ chỉ có ba khoản chi: lương công chức, mua hàng, trợ cấp.'],
+    simplifications: [...BASE_SIMPLE, 'Chính phủ chỉ có ba khoản chi: lương công chức, mua hàng, trợ cấp.', 'Giả định ngầm: tiền tiết kiệm được từ cắt chi dùng để vay ít đi, không giảm thuế và không chi vào việc khác.'],
   },
   {
     id: 'that-lung-buoc-bung',
@@ -353,7 +429,7 @@ export const SCENARIOS: ScenarioDef[] = [
       higher('Thất nghiệp cao hơn.', 'unemployment', 0, 24, 'pt'),
     ],
     explanation: 'Một nhà tiết kiệm thì nhà đó giàu lên. Mọi nhà cùng tiết kiệm thì doanh thu của doanh nghiệp giảm, người bị cho nghỉ, thu nhập giảm, và tổng tiền để dành không tăng như mong muốn. Đây là nghịch lý tiết kiệm.',
-    simplifications: [...BASE_SIMPLE, 'Tiền tiết kiệm không tự chuyển thành đầu tư qua lãi suất thấp hơn; lãi suất do NHNN đặt.'],
+    simplifications: [...BASE_SIMPLE, 'Tiền tiết kiệm không tự chuyển thành đầu tư qua lãi suất thấp hơn; lãi suất do NHNN đặt.', 'Giả định ngầm: Chính phủ và NHNN không làm gì để bù phần cầu mất đi.'],
   },
   {
     id: 'song-bang-luong',
@@ -478,7 +554,7 @@ export const SCENARIOS: ScenarioDef[] = [
       lower('Dừng in tiền và cắt chi làm lạm phát thấp hơn.', 'inflation.yoy', 24, END, 'pt'),
       higher('Nhưng lạm phát không tắt ngay: kỳ vọng và lương còn đuổi theo giá cũ, và thất nghiệp năm đầu cao hơn.', 'unemployment', 0, 12, 'pt'),
     ],
-    explanation: 'Khi ai cũng quen giá tăng, lương được xét theo lạm phát kỳ vọng, và giá lại tính theo lương. Vòng này tự chạy một thời gian kể cả sau khi máy in đã dừng.',
+    explanation: 'Khi ai cũng quen giá tăng, lương được xét theo lạm phát của năm vừa qua, người bán tính trước lạm phát kỳ vọng vào giá, và giá lại tính theo lương. Vòng này tự chạy một thời gian kể cả sau khi máy in đã dừng.',
     history: 'Lạm phát Việt Nam năm 1986 trên 700%. Cuộc tổng điều chỉnh giá - lương - tiền năm 1985 có đổi tiền. Lạm phát chỉ hạ sau 1989 khi dừng bù lỗ bằng phát hành và nâng lãi suất tiền gửi lên trên lạm phát.',
     simplifications: [...BASE_SIMPLE, 'Không có chạy sang vàng và đô la (GĐ5).', 'Không có hai giá, tem phiếu, kinh tế kế hoạch.'],
     untested: true,
