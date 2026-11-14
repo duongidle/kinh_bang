@@ -17,6 +17,9 @@ Web app mô phỏng nền kinh tế một quốc gia giả lập theo Việt Nam
 | [docs/design/gd0.md](docs/design/gd0.md) | Nền móng kỹ thuật: stack, kiến trúc engine, sổ cái, chuỗi nhân quả, giao thức engine-UI, cấu hình luật, kiểm định GĐ0 |
 | [docs/design/gd1.md](docs/design/gd1.md) | Lõi kinh tế: quy tắc hành vi từng loại tác nhân, thị trường, tiền, thuế, phi chính thức, kỳ vọng, kiểm định GĐ1, kịch bản |
 | [docs/design/de-xuat.md](docs/design/de-xuat.md) | Đề xuất sáng tạo và phản biện, kèm trạng thái duyệt từng mục |
+| [docs/design/sai-khac.md](docs/design/sai-khac.md) | Mọi sai khác so với thiết kế đã duyệt, phát hiện và việc còn mở |
+| [docs/design/chong-va-ngam.md](docs/design/chong-va-ngam.md) | Bảng kiểm chống vá ngầm rút từ GĐ1. Đọc trước khi sửa engine hoặc sửa một kiểm định |
+| [docs/design/phac-thao-gd3-gd5.md](docs/design/phac-thao-gd3-gd5.md) | Phác thảo GĐ3 và GĐ5 (chưa phải spec): cơ chế lõi, thứ tự xây, cạm bẫy, kiểm định then chốt, nguồn nên đọc |
 | [docs/progress.md](docs/progress.md) | Nhật ký tiến độ, giả định, quyết định nhỏ |
 | [research/abm-models.md](research/abm-models.md) | Research mô hình ABM, game, đặc thù Việt Nam |
 | [research/vn-params.md](research/vn-params.md) | Tham số luật Việt Nam, có mức xác minh A/B/C |
