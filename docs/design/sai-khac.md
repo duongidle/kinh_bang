@@ -180,7 +180,7 @@ Kiểm định kịch bản (10 seed): 13/15 qua hết. Hai kịch bản phải 
 
 Lương bám lạm phát **quá khứ** (S32). Hệ quả đo được ở 5 seed: nền kinh tế vẫn ổn định, lạm phát bình quân 0,1-1,0%, thất nghiệp 6,0-6,8%. K1.28 giờ sai dấu rõ hơn (1/5): tắt kỳ vọng không còn chạm tới lương, nên không làm lạm phát tắt nhanh hơn.
 
-### D8. K1.13: vì sao Gini của cải thấp ở 5000 hộ, và mô hình thiếu cơ chế gì (CHỜ DƯƠNG DUYỆT ĐỀ XUẤT)
+### D8. K1.13: vì sao Gini của cải thấp ở 5000 hộ, và mô hình thiếu cơ chế gì (Dương quyết 14/11/2026: tiêu chí mới, không làm B)
 
 Đo bằng `scripts/k113.ts`, năm thứ 30:
 
@@ -237,6 +237,8 @@ A đẩy Gini ở 5000 hộ lên khoảng 0,02-0,03. **Chưa tới 0,4.** Lý do
 - Một tiêu chí thay thế không cần con số tuyệt đối: **Gini của cải cao hơn Gini thu nhập**, là điều đúng ở gần như mọi nước. Mô hình hiện đạt ở 5000 hộ sau khi có A (0,33 so với 0,27-0,31) nhưng sát nút; trước A thì không đạt (0,28-0,29 so với 0,32-0,33).
 
 **Chờ Dương quyết**: (1) ngưỡng K1.13: giữ 0,4 và ghi "chưa đạt", hay đổi sang tiêu chí tương đối; (2) có làm B không (chủ tái đầu tư cổ tức, chọn người góp vốn theo của cải ròng).
+
+**Quyết định của Dương, tối 14/11/2026; làm ngày 15/11/2026.** Bỏ ngưỡng 0,4. Tiêu chí mới của K1.13: Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30) và lệch phải, mọi quy mô. Không làm B; B (chủ tái đầu tư cổ tức, chọn người góp vốn theo của cải ròng) và mua bán cổ phần thuộc GĐ3, sở hữu tập trung thuộc GĐ4 (phac-thao-gd3-gd5.md). Số đo nhanh 15/11/2026 (Gini của cải / Gini thu nhập, bình quân tháng 348-359; độ lệch tháng 359): 500 hộ seed 1: 0,524 / 0,359 (hiệu +0,165; lệch 3,40); seed 2: 0,543 / 0,320 (+0,222; 3,66); seed 3: 0,518 / 0,306 (+0,212; 3,65): đạt 3/3. 5000 hộ seed 1: 0,308 / 0,336 (-0,028; 2,83); seed 2: 0,279 / 0,328 (-0,048; 2,26); seed 3: 0,295 / 0,284 (+0,011; 2,30): đạt 1/3. Tức tiêu chí mới đạt ở 500 hộ nhưng chưa đạt chắc ở 5000 hộ (thiếu cơ chế tích tụ, như đã nói ở trên); mục K1.13 không còn trong danh sách đã biết nên nếu kiểm định đầy đủ hỏng thì hiện là hỏng thật, chờ Dương/Opus đọc.
 
 ### D9. Tỷ lệ chuyển thuế vào giá: đã đọc toàn văn, chọn bất đối xứng (Dương quyết 14/11/2026)
 
@@ -453,3 +455,4 @@ Dòng mới phải nói: cái gì đổi; số đo theo cách cũ và cách mớ
 | 15/11/2026 | tham số hành vi | `9f8023e7fe6c` | `firm.taxPassUp` 0,34 → 1: đơn giản hoá tạm, tăng thuế chuyển trọn vào giá; giảm thuế giữ 0,065. Thay bằng việc 8 (biên lãi hồi dần) ở GĐ1 update 1. Xem S36 | Dương, quyết định 15/11/2026 |
 | 15/11/2026 | gd1-lib.ts | `ad854ec4e50c` | Chỉ sửa chữ chú thích K1.24 theo S36, không đổi ngưỡng hay cách đo | Dương, quyết định 15/11/2026 (S36) |
 | 15/11/2026 | gd1-lib.ts | `326d881c8b72` | K1.24, K1.25, K1.26 khai rõ gov.revenueUse = keep (D14): giữ nguyên điều kiện đo như trước khi có S37; không đổi ngưỡng, cửa sổ, cách đo | Dương, quyết định D13 hướng 3 (14/11/2026) và kế hoạch 15/11/2026 |
+| 15/11/2026 | gd1-lib.ts | `2bc1d84b3f9b` | K1.13: bỏ ngưỡng Gini 0,4 (không có nguồn); tiêu chí mới Gini của cải ròng > Gini thu nhập sau thuế, bình quân 12 tháng cuối năm 30, và lệch phải; áp mọi quy mô; xoá K1.13 khỏi danh sách đã biết. Số đo theo cách cũ: 5000 hộ Gini của cải khoảng 0,33 (hỏng), 500 hộ vượt 0,4 nhờ nhiễu (D8). Số đo theo cách mới (đo nhanh, không phải kiểm định đầy đủ): 500 hộ đạt 3/3 seed (hiệu Gini của cải trừ thu nhập +0,165, +0,222, +0,212); 5000 hộ đạt 1/3 seed (-0,028, -0,048, +0,011) | Dương, quyết định đợt ba tối 14/11/2026 |

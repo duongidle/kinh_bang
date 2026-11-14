@@ -366,7 +366,7 @@ Mỗi quyết định có phương án của quy tắc tự động và lý do, 
 
 | Mã | Sự thật | Ngưỡng | Nguồn |
 |---|---|---|---|
-| K1.13 | Bất bình đẳng tự hình thành từ xuất phát điểm đồng đều | Gini của cải từ 0 lên > 0,4 sau 30 năm; phân phối lệch phải. **Chưa đạt ở 5000 hộ, thiếu cơ chế** (sai-khac.md D8). Không đổi quy mô để qua | [BAM], [Caiani] |
+| K1.13 | Bất bình đẳng tự hình thành từ xuất phát điểm đồng đều | Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30); phân phối của cải lệch phải; mọi quy mô (Dương quyết 14/11/2026, xem sai-khac.md D8) | [BAM], [Caiani] |
 | K1.14 | Quy mô doanh nghiệp lệch phải | Độ lệch > 1 | [Lengnick], [Caiani] |
 | K1.15 | Chia đều cổ tức (biến thể) làm Gini thấp hơn rõ | Hiệu chạy đôi < 0 | [TTK] |
 

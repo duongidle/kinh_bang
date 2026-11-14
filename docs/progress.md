@@ -20,7 +20,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 1 | Điều phối | Lập nhóm "GĐ1 update 1" (làm cùng GĐ3): việc 3, 5, 6, 8, 8b. GĐ1 là nền kinh tế không tăng trưởng; mục tiêu hiệu chỉnh tiền, tín dụng, tăng trưởng chuyển sang GĐ4. Ghi vào đây và lộ trình CLAUDE.md | 3, 5, 6, 8, 8b | Xong 15/11 |
 | 2 | Sonnet | Tạm thay việc 8: tăng thuế chuyển TRỌN vào giá (`firm.taxPassUp` = 1), giảm thuế giữ 0,065 (Benzarti). Ghi sai-khac.md là đơn giản hoá tạm, thay bằng việc 8 ở GĐ1 update 1 | thay 8 | Xong 15/11 (S36) |
 | 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Xong 15/11 (S37, D14) |
-| 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Chưa |
+| 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Xong 15/11 (đo nhanh: đạt 3/3 ở 500 hộ, 1/3 ở 5000 hộ; xem D8) |
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Chưa |
 | 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Chưa |
 | 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Đóng 15/11: hết khác dấu sau S36, S37 (số đo ở D13). Đo lại khi làm việc 8 |

@@ -40,8 +40,6 @@ export function apply(eng: Engine, w: World, x: Intervention): void {
 
 /** Mục chưa đạt đã được Dương ghi nhận (14/11/2026). */
 export const KNOWN_FAIL: Record<string, string> = {
-  'K1.13':
-    'Chưa đạt ở 5000 hộ: thiếu cơ chế. Ở 500 hộ Gini vượt 0,4 chủ yếu nhờ nhiễu của quy mô nhỏ (doanh nghiệp phá sản khoảng 17% mỗi năm, so với 6% ở 5000 hộ), không phải nhờ một cơ chế tích tụ. Mô hình thiếu: người giàu tiết kiệm phần lớn hơn của thu nhập, lợi tức vốn dồn tích, chênh lệch kỹ năng (GĐ2), đất và nhà, thừa kế (GĐ3). Chi tiết và đề xuất: sai-khac.md D8.',
   'K1.19':
     'Kênh lãi suất tới cầu còn yếu. Hộ không vay, nên lãi suất chỉ chạm tiêu dùng qua thay thế liên thời gian (exp.saveResponse = 0,35 theo Havránek 2015) và chạm đầu tư. Kênh vay tiêu dùng (thiết kế mục 18) để GĐ3, khi có nhà đất làm tài sản thế chấp. Không nâng tham số để qua mục này.',
   'K1.28': 'Đã biết (Dương, 14/11/2026). Lương giờ bám một nửa lạm phát 12 tháng qua, không bám lạm phát kỳ vọng, nên tắt kỳ vọng gần như không đổi độ dai của lạm phát.',
@@ -189,10 +187,10 @@ export function baselineChecks(seeds: number[], scale: ScaleId, months = MONTHS,
       }
     }
     push('K1.12', seed, best > 0 && bestLag >= 1, `lớn nhất ${f2(best)} ở trễ ${bestLag} quý`);
-    const g0 = eng.value(w, 'gini.wealth', 0);
-    const g30 = eng.value(w, 'gini.wealth', 359);
+    const gW = mean(eng.seriesOf(w, 'gini.wealth', 348, 360));
+    const gI = mean(eng.seriesOf(w, 'gini.income', 348, 360));
     const skewW = eng.value(w, 'wealth.skew', 359);
-    push('K1.13', seed, g30 > 0.4 && skewW > 0, `từ ${f2(g0)} lên ${f2(g30)}; độ lệch ${f2(skewW)}`);
+    push('K1.13', seed, gW > gI && skewW > 0, `của cải ${f2(gW)}, thu nhập ${f2(gI)}; độ lệch ${f2(skewW)}`);
     const sk = mean(S('firms.sizeSkew'));
     push('K1.14', seed, sk > 1, f2(sk));
     const infC = cyc(eng, w, 'informal.share', 'mean', false);
@@ -230,7 +228,7 @@ export function baselineChecks(seeds: number[], scale: ScaleId, months = MONTHS,
     ['K1.10', 'Đường Phillips và Beveridge dốc xuống', 'hai tương quan âm'],
     ['K1.11', 'Tín dụng cùng chiều chu kỳ', 'tương quan > 0'],
     ['K1.12', 'Lạm phát cùng chiều chu kỳ và trễ', 'tương quan chéo lớn nhất dương, ở trễ ≥ 1 quý'],
-    ['K1.13', 'Bất bình đẳng tự hình thành', 'Gini của cải ròng > 0,4 sau 30 năm; lệch phải'],
+    ['K1.13', 'Bất bình đẳng tự hình thành', 'Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30); lệch phải'],
     ['K1.14', 'Quy mô doanh nghiệp lệch phải', 'độ lệch > 1'],
     ['K1.27', 'Kinh tế xấu thì tỷ lệ phi chính thức tăng', 'tương quan với GDP đã lọc < 0'],
     ['K1.30', 'Không doanh nghiệp nào trả dưới lương tối thiểu vùng', 'tuyệt đối'],
