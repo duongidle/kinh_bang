@@ -8,22 +8,33 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 ### Tóm tắt một dòng
 
-Engine GĐ0 và GĐ1 xong. Đã làm theo sáu quyết định tối 14/11 của Dương. **Chưa chạy lại kiểm định đầy đủ sau các thay đổi đó.** K1.13 chờ Dương duyệt đề xuất cơ chế (sai-khac.md D8). GĐ1.5 chưa bắt đầu.
+Engine GĐ0 và GĐ1 xong. Đã làm theo hai đợt quyết định tối 14/11 của Dương. **Kiểm định đầy đủ phải chạy lại trên bản code hiện tại** (sau S34 và bất đối xứng thuế). Ba việc chờ Dương: ngưỡng K1.13 và đề xuất B; hướng sửa thất nghiệp và lạm phát (sai-khac.md D11). GĐ1.5 chưa bắt đầu.
 
-### Quyết định của Dương tối 14/11/2026 và trạng thái
+### Quyết định của Dương tối 14/11/2026, đợt một
 
 | # | Quyết định | Trạng thái |
 |---|---|---|
-| 1 | K1.12 kiểm ở 5000 hộ | Sửa trong bộ kiểm định (Sonnet đang làm) |
-| 1 | K1.13 không đổi quy mô; ghi "chưa đạt, thiếu cơ chế"; phân tích; đề xuất cơ chế rẻ | Phân tích xong: sai-khac.md D8. **Đề xuất A (người giàu tiết kiệm nhiều hơn) chờ duyệt** |
-| 1 | K1.31 sang GĐ2 | Ghi vào CLAUDE.md, gd1.md, bộ kiểm định |
-| 1 | K1.24 sửa cơ chế biên lãi co khi thuế tăng | Xong: `firm.taxPassThrough` = 0,31 (sai-khac S31). Thử 5 seed qua 5/5. Bằng chứng không thống nhất: D9 |
-| 1 | K1.28, K1.29, K1.19 "đã biết" | Ghi trong bộ kiểm định |
-| 2 | K0.2 chấp nhận như gd0 mục 12 | Ghi ở D7 |
-| 3 | Lương bám lạm phát quá khứ | Xong: quy tắc `firm.wageIndexBase` (S32) |
-| 4 | Phân rã "vì sao" cho lương thực, bội chi/GDP, nợ công/GDP | Engine xong, các phần cộng đúng. Test và UI: Sonnet đang làm |
-| 5 | Kịch bản thuế người giàu có ba lựa chọn, so song song; rà kịch bản khác | Nội dung xong (D10), `keo-vao-luoi-thue` cũng làm ba nhánh. Session, UI, kiểm định kịch bản: Sonnet đang làm |
-| 6 | S11 hoãn; hạn chế subagent cho việc nặng | S11 chưa có trong cây mã. Subagent chỉ nhận UI và test |
+| 1 | K1.12 kiểm ở 5000 hộ | Xong trong bộ kiểm định (ở 500 hộ ghi "tham khảo") |
+| 1 | K1.13 không đổi quy mô; phân tích; đề xuất cơ chế rẻ | Xong: sai-khac.md D8 |
+| 1 | K1.31 sang GĐ2; K1.28, K1.29, K1.19 "đã biết" | Xong |
+| 1 | K1.24 sửa cơ chế biên lãi co khi thuế tăng | Xong (S31) |
+| 2 | K0.2 chấp nhận | Xong (D7) |
+| 3 | Lương bám lạm phát quá khứ | Xong (S32) |
+| 4 | Phân rã "vì sao" cho lương thực, bội chi/GDP, nợ công/GDP | Xong, có test |
+| 5 | Kịch bản thuế người giàu ba nhánh; rà kịch bản khác | Xong (D10). Kiểm định kịch bản 10 seed qua hết trên bản code trước đợt hai |
+| 6 | S11 hoãn; hạn chế subagent | Đang theo |
+
+### Quyết định của Dương tối 14/11/2026, đợt hai
+
+| # | Quyết định | Trạng thái |
+|---|---|---|
+| 1 | Duyệt A; lấy độ dốc đúng từ Dynan, Skinner, Zeldes 2004; không chỉnh để Gini đạt | Xong (S34, η = 0,09). **Gini ở 5000 hộ lên 0,33, chưa tới 0,4** |
+| 1 | Báo nguồn của ngưỡng Gini 0,4 | **Không có nguồn**: số tự đặt lúc thiết kế. Chưa hạ ngưỡng, lý do ở D8. Chờ Dương |
+| 1 | B chỉ làm nếu duyệt sau khi có kết quả A | Chưa làm, chờ duyệt |
+| 2 | Đọc toàn văn bài IMF trước khi chọn tỷ lệ chuyển thuế; có bất đối xứng thì mô hình hoá | Xong (D9): tăng 0,34, giảm 0,065 theo Benzarti 2020. Bằng chứng về bất đối xứng trái nhau, đã ghi rõ |
+| 2 | Số đúng làm K1.24 hỏng thì sửa ngưỡng theo bằng chứng | Chưa biết: chờ kiểm định đầy đủ |
+| 3 | Sau kiểm định đầy đủ, phân tích nguyên nhân thiếu cầu bằng phân rã, báo trước khi sửa | Phân tích xong trên 5 seed (D11): thất nghiệp là do đơn vị nhỏ cắt rồi tuyển lại từng người, không phải thiếu cầu; lạm phát thấp vì tiền gần đứng yên. **Chưa sửa gì** |
+| 3 | Áp dụng P2: mục tiêu hiệu chỉnh thô cho GĐ1 | Xong: bảng mới ở gd1.md mục 14 |
 
 ### Trạng thái từng phần
 
@@ -39,27 +50,17 @@ Engine GĐ0 và GĐ1 xong. Đã làm theo sáu quyết định tối 14/11 của
 
 ### Việc chờ Dương quyết
 
-1. **K1.13, đề xuất A** (sai-khac.md D8): thêm "người giàu tiết kiệm phần lớn hơn của thu nhập" vào GĐ1. Rẻ, có nguồn (Dynan, Skinner, Zeldes 2004), nhưng phải hiệu chỉnh và kiểm định lại. Nếu chưa đủ thì tới B (chủ tái đầu tư cổ tức).
-2. **`firm.taxPassThrough`** (D9): giữ 0,31 hay chọn giá trị khác trong khoảng 0,3 đến 1. Hai bài của IMF trên cùng bộ số liệu cho 31% và khoảng 100%.
+1. **K1.13** (D8): giữ ngưỡng 0,4 và ghi "chưa đạt", hay đổi sang tiêu chí "Gini của cải cao hơn Gini thu nhập". Và có làm B không.
+2. **Thất nghiệp** (D11): sửa quy tắc cắt và tuyển người theo dải tồn kho của Lengnick 2013 (phải mở lại bài để lấy đúng quy tắc).
+3. **Lạm phát và cầu** (D11): đặt bội chi mặc định gần mức Việt Nam, hay chấp nhận tới khi có tăng năng suất; soi vì sao công suất máy dừng ở 70%.
+4. **Bất đối xứng thuế** (D9): tớ đã theo bài JPE. Nếu Dương muốn theo hai bài IMF (không bất đối xứng) thì đổi một tham số.
 
 ### Bước tiếp theo, theo thứ tự
 
-1. Nhận kết quả của Sonnet (session, UI, test, thư viện kiểm định). Commit.
-2. Chạy lại `npm run validate:gd1` và `npm run validate:scenarios` (giao Sonnet), đọc kết quả, cập nhật sai-khac.md D6.
-3. Sau khi Dương trả lời hai việc trên: làm, kiểm định lại.
+1. Chạy lại `npm run validate:scenarios` và `npm run validate:gd1` trên bản code hiện tại (Sonnet). Đọc kết quả, cập nhật D6 và bảng mục tiêu thô.
+2. `het-han-giam-thue`: viết lại lời giải thích theo số đo mới (giảm thuế lại thì giá không xuống mấy).
+3. Sau khi Dương trả lời: làm, kiểm định lại.
 4. Báo cáo GĐ0 và GĐ1. Viết `docs/design/gd1-5.md`, dừng chờ duyệt.
-
-### Các quyết định của Dương ngày 14/11/2026 (đã làm hết, chi tiết ở [design/sai-khac.md](design/sai-khac.md) mục B và D)
-
-1. Mọi cơ chế thêm phải là tham số có tên, có cơ sở. Chỉ để làm số đẹp thì dừng lại báo.
-2. `exp.saveResponse` = 0,35 (Havránek 2015). Không dùng giá trị 2.
-3. Vay tiêu dùng và giảm phát nợ để GĐ3 (đã ghi vào lộ trình trong CLAUDE.md).
-4. Giữ cách đo mới của K1.22 (3 năm đầu) và K1.26 (doanh số thực).
-5. Lãi suất cao kéo dài làm tăng lạm phát qua tiền lãi Chính phủ trả: giữ, ghi thành phát hiện, làm kịch bản 15 "Hai tay lái".
-6. Quy tắc lãi suất tự động của NHNN (S20) tắt theo mặc định, giữ làm chính sách tự động bật được.
-7. Lương bám 50% lạm phát kỳ vọng thay cho 100% (Rabanal và Sbrancia 2024, IMF WP/24/105). Chưa phân biệt chính thức và phi chính thức vì không tìm được ước lượng riêng; đã tách thành hai tham số.
-8. Mức thất nghiệp "bình thường" tự sinh từ mô hình: trung bình trượt 60 tháng (Ball và Mankiw 2002).
-9. Thêm nội dung học: vì sao lãi suất yếu và room mạnh ở GĐ1 (`src/content/notes.ts`).
 
 ### Việc còn mở cần Dương biết
 
@@ -95,7 +96,7 @@ Bản tin che bản đồ; nhãn chồng nhau; vòng đánh dấu tác nhân đa
 
 ### Công cụ soi
 
-`scripts/validate.ts <số seed> <base|exp|all> <S|M|L> [k=v]`, `scripts/scenarios.ts`, `scripts/pairdiag.ts` (hiệu chạy đôi theo năm), `scripts/k119.ts`, `scripts/k113.ts` (Gini theo quy mô), `scripts/optdiag.ts` (so các nhánh của kịch bản), `scripts/inflation.ts` (phân rã CPI và lương theo mã lý do), `scripts/diag.ts`, `scripts/debug*.ts`.
+`scripts/validate.ts <số seed> <base|exp|all> <S|M|L> [k=v]`, `scripts/scenarios.ts`, `scripts/pairdiag.ts` (hiệu chạy đôi theo năm), `scripts/k119.ts`, `scripts/k113.ts` (Gini theo quy mô), `scripts/optdiag.ts` (so các nhánh của kịch bản), `scripts/demand.ts` (phân rã thất nghiệp, cầu, tiền, giá), `scripts/inflation.ts` (phân rã CPI và lương theo mã lý do), `scripts/diag.ts`, `scripts/debug*.ts`.
 
 ## 14/11/2026 - Kiểm định GĐ1, sửa hai cơ chế thiếu
 
