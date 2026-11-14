@@ -387,6 +387,8 @@ Các lựa chọn đã trình (để đối chiếu):
 
 **Cập nhật 15/11/2026.** Dương quyết tạm thời cho tăng thuế chuyển trọn vào giá (S36). Việc 8 và 8b dời sang GĐ1 update 1. Test `session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó": XANH sau khi đổi (không đo lại số CPI cụ thể; phép đo trước đó với chuyển trọn là +3,2%); ngưỡng của test `control = shock` đưa về 0,01 như trước 14/11 và cũng qua.
 
+**Việc 10 đóng, 15/11/2026.** Sau S36 (tăng thuế chuyển trọn) và S37 (khai nơi tiền thuế đi), hiện tượng khác dấu giữa 500 và 5000 hộ không còn. Đo bằng `scripts/vatcpi.ts` (GTGT lên 20%, chênh CPI so với đối chứng sau 24 tháng): 500 hộ, 10 seed: chi lại +3,82% (10/10 dương), giữ lại +3,24% (10/10); 5000 hộ, 5 seed: chi lại +3,67% (5/5), giữ lại +3,07% (5/5). Hai quy mô cùng dấu và gần nhau. Ở bản giữ lại, CPI tháng 24 thấp hơn tháng 12 (cầu sụt 5-6% kéo lương và biên lãi), đúng hướng của phân rã cũ nhưng không đủ để đảo dấu. Câu hỏi "vì sao khác dấu khi chuyển một phần" sẽ quay lại khi làm việc 8 ở GĐ1 update 1: lúc đó đo lại ở cả hai quy mô.
+
 ### D14. Việc 9: tiền thuế thu thêm đi đâu (cơ chế S37, ngoài thiết kế, Dương đặt yêu cầu 14-15/11/2026)
 
 **Yêu cầu của Dương.** Mọi thí nghiệm và kịch bản có đổi thuế phải khai rõ tiền thu thêm đi đâu. Mặc định theo hành vi thực tế của Chính phủ Việt Nam: **tăng thuế thì chi lại theo cơ cấu chi hiện tại; giảm thuế thì vay bù, giữ nguyên chi**. Giữ lại không chi (chiều tăng) và cắt chi (chiều giảm) là biến thể so sánh. Hệ quả phải nhớ: hai chiều không đối xứng, nợ công trôi lên qua các lần giảm thuế.

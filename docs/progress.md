@@ -23,7 +23,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Chưa |
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Chưa |
 | 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Chưa |
-| 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Chưa |
+| 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Đóng 15/11: hết khác dấu sau S36, S37 (số đo ở D13). Đo lại khi làm việc 8 |
 | 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Chưa |
 | 5 | Điều phối | Chốt GĐ1 có điều kiện: mục còn hỏng ghi "đã biết" trong sai-khac.md kèm nơi sẽ sửa; mục S13 trong game liệt kê các lỗi này. Cập nhật CLAUDE.md để quy tắc kiểm định không chặn GĐ1.5. Viết báo cáo GĐ0 + GĐ1. Chạy chong-va-ngam.md, liệt kê thay đổi `tests/unit` và khẳng định kịch bản kèm lý do | 7 | Chưa |
 | 6 | Điều phối | Spec GĐ1.5 phạm vi tối thiểu chơi được: 3 vai, kịch bản, sandbox, phòng thí nghiệm, biểu đồ, chuỗi nhân quả, onboarding. Bản đồ isometric tĩnh đơn giản; phần "sống" để sau. Chờ Dương duyệt | | Chưa |
