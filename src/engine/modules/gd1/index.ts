@@ -23,11 +23,13 @@ const REASONS: ReasonDef[] = [
   { id: 'p_markup_down', label: 'người bán hạ biên lãi vì hàng ế', upstream: [ind('consumption', 1), ind('inventories', 1)] },
   { id: 'p_expect', label: 'người bán tính trước lạm phát kỳ vọng vào giá', upstream: [ind('inflation.expected', 1)] },
   { id: 'p_vat', label: 'thuế trong giá bán đổi (GTGT, thuế gián thu khác)', upstream: [law('vat.rate.standard'), law('vat.rate.agri'), law('tax.indirect.other')] },
+  { id: 'p_tax_absorb', label: 'người bán tự gánh một phần thuế mới bằng cách hạ biên lãi (thuế giảm thì giữ lại một phần)', upstream: [law('vat.rate.standard'), law('vat.rate.agri'), law('tax.indirect.other')] },
   { id: 'p_mix', label: 'người mua đổi nơi mua, người bán cũ và mới thay nhau', upstream: [] },
   // lương
   { id: 'w_shortage', label: 'không tuyển đủ người nên nâng lương', upstream: [ind('vacancies', 1), ind('unemployment', 1)] },
   { id: 'w_slack', label: 'nhiều người thất nghiệp nên hạ lương', upstream: [ind('unemployment', 1)] },
-  { id: 'w_index', label: 'đợt xét lương năm theo lạm phát kỳ vọng', upstream: [ind('inflation.expected', 1)] },
+  { id: 'w_index', label: 'đợt xét lương năm theo lạm phát 12 tháng qua', upstream: [ind('inflation.yoy', 1)] },
+  { id: 'w_index_exp', label: 'đợt xét lương năm theo lạm phát kỳ vọng', upstream: [ind('inflation.expected', 1)] },
   { id: 'w_tight', label: 'đợt xét lương năm tăng thêm vì ít người thất nghiệp', upstream: [ind('unemployment', 1)] },
   { id: 'w_slack_review', label: 'đợt xét lương năm tăng ít đi vì nhiều người thất nghiệp', upstream: [ind('unemployment', 1)] },
   { id: 'w_minwage', label: 'lương tối thiểu vùng buộc nâng lương', upstream: [law('minwage.zone.1'), law('minwage.zone.2'), law('minwage.zone.3'), law('minwage.zone.4')] },
@@ -98,8 +100,9 @@ const REASONS: ReasonDef[] = [
 const C = 'Caiani và cộng sự 2016';
 const RULES: RuleDef[] = [
   { id: 'firm.wage', label: 'Lương chào của doanh nghiệp', source: `${C} 3.5; tự thiết kế phần lương cứng chiều xuống`, teaches: 'Vì sao suy thoái sinh thất nghiệp', variants: [{ id: 'base', label: 'Lương cứng chiều xuống' }, { id: 'flex', label: 'Lương giảm được khi thất nghiệp cao' }] },
+  { id: 'firm.wageIndexBase', label: 'Đợt xét lương năm bám lạm phát nào', source: 'Rabanal và Sbrancia 2024, IMF WP/24/105: lương bám lạm phát CPI năm trước. Thiết kế mục 10 ghi lạm phát kỳ vọng; Dương quyết 14/11/2026 theo bằng chứng (docs/design/sai-khac.md D5)', teaches: 'Lương nhìn về sau hay nhìn về trước làm lạm phát dai dẳng khác nhau thế nào', variants: [{ id: 'base', label: 'Lạm phát 12 tháng qua' }, { id: 'expected', label: 'Lạm phát kỳ vọng' }] },
   { id: 'hh.segments', label: 'Hàng của hộ kinh doanh và hàng của doanh nghiệp', source: 'Tự thiết kế; cơ sở: La Porta và Shleifer 2014, Böhme và Thiele 2012 (docs/design/sai-khac.md S1)', teaches: 'Vì sao khu vực phi chính thức tồn tại dai dẳng', variants: [{ id: 'base', label: 'Hai loại hàng không thay thế hoàn toàn' }, { id: 'homogeneous', label: 'Một loại hàng, ai rẻ hơn thì thắng' }] },
-  { id: 'firm.price', label: 'Giá bán = chi phí đơn vị × (1 + biên lãi)', source: `${C} 3.6-3.7. Thứ tự phân rã: lương, vốn, biên lãi, kỳ vọng, thuế`, variants: [{ id: 'base', label: 'Gốc' }] },
+  { id: 'firm.price', label: 'Giá bán = chi phí đơn vị × (1 + biên lãi)', source: `${C} 3.6-3.7. Thứ tự phân rã: lương, vốn, biên lãi, phần thuế người bán tự gánh, kỳ vọng, thuế`, variants: [{ id: 'base', label: 'Gốc' }] },
   { id: 'firm.dividend', label: 'Chia cổ tức', source: `${C}`, teaches: 'Sở hữu đóng góp bao nhiêu vào bất bình đẳng', variants: [{ id: 'base', label: 'Theo cổ phần' }, { id: 'equal', label: 'Chia đều cho mọi hộ' }] },
   { id: 'firm.bankruptcy', label: 'Phá sản', source: `${C} 3.3`, teaches: 'Ràng buộc ngân sách mềm', variants: [{ id: 'base', label: 'Có phá sản' }, { id: 'bailout', label: 'Nhà nước cứu mọi doanh nghiệp' }] },
   { id: 'exp.inflation', label: 'Lạm phát kỳ vọng', source: 'Tự thiết kế, hướng theo De Grauwe 2011', teaches: 'Kỳ vọng làm lạm phát dai dẳng tới đâu', variants: [{ id: 'base', label: 'Tin một phần vào mục tiêu' }, { id: 'off', label: 'Tắt' }, { id: 'anchored', label: 'Neo tuyệt đối vào mục tiêu' }] },

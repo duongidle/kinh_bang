@@ -5,6 +5,7 @@ import { accumulate, recordDecision } from '../../causal/causal';
 import type { Engine } from '../../core/engine';
 import { addRow, f64, i32, u8 } from '../../core/table';
 import { GOV_REF, type World } from '../../core/world';
+import { yoyInflation } from './gov';
 import { tx } from '../../ledger/kinds';
 import { MED_CASH, MED_DEP, repayPrincipal, transfer, writeOffLoan } from '../../ledger/ledger';
 import {
@@ -146,6 +147,11 @@ export function planFirms(w: World, eng: Engine): void {
   const piE = s.trust * target + (1 - s.trust) * averageAdaptive(w);
   const useExpect = eng.variant(w, 'exp.inflation') !== 'off';
   const piExp = useExpect ? (eng.variant(w, 'exp.inflation') === 'anchored' ? target : piE) : 0;
+  // Đợt xét lương năm bám lạm phát 12 tháng QUA (Rabanal và Sbrancia 2024: lương bám lạm phát CPI năm trước).
+  // Biến thể `expected` quay về thiết kế mục 10: bám lạm phát kỳ vọng.
+  const wagePast = eng.variant(w, 'firm.wageIndexBase') !== 'expected';
+  const piWage = wagePast ? yoyInflation(s) : piExp;
+  const taxPass = eng.param(w, 'firm.taxPassThrough');
 
   for (let i = 0; i < f.n; i++) {
     if (!f.alive[i]) continue;
@@ -184,10 +190,10 @@ export function planFirms(w: World, eng: Engine): void {
     }
     if (!f.solo[i] && i % 12 === month && f.born[i] < w.meta.tick - 6) {
       // đợt xét lương năm: theo lạm phát kỳ vọng, cộng trừ theo độ căng của thị trường lao động (Caiani 3.15: ngưỡng thất nghiệp υ)
-      const up = w1 * (f.formal[i] ? wageIndex : hkdIndex) * Math.max(0, piExp);
+      const up = w1 * (f.formal[i] ? wageIndex : hkdIndex) * Math.max(0, piWage);
       const slack = w1 * phillips * (uRef - s.unemp);
       const adj = Math.max(-up, slack); // lương danh nghĩa không giảm trong đợt xét năm
-      if (up !== 0) parts.push({ reason: 'w_index', amount: up });
+      if (up !== 0) parts.push({ reason: wagePast ? 'w_index' : 'w_index_exp', amount: up });
       if (adj !== 0) parts.push({ reason: adj > 0 ? 'w_tight' : 'w_slack_review', amount: adj });
       w1 += up + adj;
     }
@@ -223,9 +229,17 @@ export function planFirms(w: World, eng: Engine): void {
     const step = foldedStep(w, eng, STREAM.markup, i);
     if (w.meta.tick > 0) mu1 = tight ? mu0 * (1 + step) : mu0 * (1 - step);
     mu1 = Math.max(0, Math.min(3, mu1));
+    // Thuế trong giá đổi: người bán chỉ chuyển một phần `firm.taxPassThrough` vào giá ngay, phần còn lại ăn vào biên lãi.
+    // Sau đó biên lãi lại đi theo sức mua như thường (bán chạy thì nâng dần lên).
+    const vatWas = f.price[i] > 0 && f.priceG[i] > 0 ? f.priceG[i] / f.price[i] - 1 : vat;
+    let muT = mu1;
+    if (w.meta.tick > 0 && taxPass !== 1 && Math.abs(vat - vatWas) > 5e-4) {
+      // ngưỡng 0,05 điểm: giá gồm thuế làm tròn tới đồng nên thuế suy ngược từ giá lệch cỡ 0,001 điểm
+      muT = Math.max(0, Math.min(3, (1 + mu1) * Math.pow((1 + vat) / (1 + vatWas), taxPass - 1) - 1));
+    }
     const ucPrevWage = f.ucWage[i];
     const ucPrevCap = f.ucCap[i];
-    const priceNet = (1 + mu1) * (ucWage + ucCap) * expectFactor;
+    const priceNet = (1 + muT) * (ucWage + ucCap) * expectFactor;
     const pG = Math.max(1, Math.round(priceNet * (1 + vat)));
     if (w.meta.tick > 0 && pG !== p0 && p0 > 0) {
       // Chia mức đổi giá theo lý do: đổi lần lượt từng đầu vào theo thứ tự cố định
@@ -235,7 +249,8 @@ export function planFirms(w: World, eng: Engine): void {
       const a = (1 + mu0) * (ucWage + ucPrevCap);
       const b = (1 + mu0) * (ucWage + ucCap);
       const c = (1 + mu1) * (ucWage + ucCap);
-      const d = c * expectFactor;
+      const c2 = (1 + muT) * (ucWage + ucCap);
+      const d = c2 * expectFactor;
       const scale0 = base0 > 0 ? f.price[i] / base0 : 1; // phần kỳ vọng đã nằm trong giá cũ
       const g0 = 1 + vatPrev;
       recordDecision(
@@ -249,13 +264,14 @@ export function planFirms(w: World, eng: Engine): void {
           { reason: 'p_wage', amount: (a - base0) * scale0 * g0 },
           { reason: 'p_capital', amount: (b - a) * scale0 * g0 },
           { reason: tight ? 'p_markup_up' : 'p_markup_down', amount: (c - b) * scale0 * g0 },
-          { reason: 'p_expect', amount: (d - c * scale0) * g0 },
+          { reason: 'p_tax_absorb', amount: (c2 - c) * scale0 * g0 },
+          { reason: 'p_expect', amount: (d - c2 * scale0) * g0 },
           { reason: 'p_vat', amount: d * (vat - vatPrev) },
         ],
         f.sales[i],
       );
     }
-    f.markup[i] = mu1;
+    f.markup[i] = muT;
     f.ucWage[i] = ucWage;
     f.ucCap[i] = ucCap;
     f.uc[i] = ucWage + ucCap;

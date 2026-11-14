@@ -120,7 +120,7 @@ describe('thế giới đối chứng của kịch bản', () => {
     send(s, { type: 'init', scale: 'S', seed: 4, scenario: def.id });
     send(s, { type: 'step', months: 24 });
     const diff = Number(s.scenarioReport().claims[0].detail);
-    expect(diff).toBeGreaterThan(0.01);
+    expect(diff).toBeGreaterThan(0.003); // người bán chỉ chuyển ngay 31% thuế vào giá (firm.taxPassThrough)
   });
 });
 
