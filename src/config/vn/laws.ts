@@ -17,7 +17,7 @@ export const VN_LAWS: LawParam[] = [
     min: 0,
     max: 0.3,
     step: 0.01,
-    note: 'Luật ghi 10%. Đang giảm còn 8% tới hết 31/12/2026 theo Nghị quyết 204/2025/QH15.',
+    note: 'Luật ghi 10%. Nghị quyết 204/2025/QH15 giảm còn 8% tới hết 31/12/2026; từ 01/01/2027 tự về 10% nếu không ban hành mức khác.',
     versions: [
       {
         value: 0.1,

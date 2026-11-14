@@ -47,6 +47,18 @@ export const NOTES: Note[] = [
     ],
   },
   {
+    id: 'doi-luat-khong-thay-gi',
+    title: 'Đổi một luật mà không thấy gì xảy ra?',
+    near: ['pit.', 'minwage.', 'hkd.threshold'],
+    body: [
+      'Một luật chỉ có tác dụng khi nó chạm tới ai đó. Vài luật ở mức hiện hành không chạm ai trong mô hình này.',
+      'Thuế thu nhập cá nhân: mức giảm trừ cho bản thân là 15,5 triệu đồng mỗi tháng, cao hơn lương của gần như mọi hộ trong mô hình (khoảng 6 triệu). Đổi thuế suất các bậc thì không ai nộp thêm. Hạ mức giảm trừ mới thấy tác dụng. Lý do: lao động ở giai đoạn này như nhau, chưa có người lương cao.',
+      'Lương tối thiểu vùng: sàn hiện hành thấp hơn nhiều so với lương doanh nghiệp đang trả. Nâng vài phần trăm không buộc ai tăng lương. Phải nâng lên sát lương bình quân mới ràng buộc.',
+      'Ngưỡng miễn thuế của hộ kinh doanh: ở mức 1 tỷ đồng mỗi năm, hầu hết hộ kinh doanh trong mô hình được miễn. Hạ xuống vài trăm triệu mới có hộ phải nộp.',
+      'Muốn biết chắc một quyết định có tác dụng hay không, bấm "Nếu không làm vậy thì sao?" ở dòng sự kiện. Hai đường trùng nhau nghĩa là luật đó không chạm ai.',
+    ],
+  },
+  {
     id: 'phan-ra-va-doi-chung',
     title: 'Hai loại câu trả lời "vì sao"',
     body: [

@@ -7,6 +7,7 @@ import type { World } from '../engine/core/world';
 
 const pct = (x: number, d = 1) => `${x >= 0 ? '+' : '−'}${Math.abs(x * 100).toFixed(d).replace('.', ',')}%`;
 const pts = (x: number, d = 1) => `${x >= 0 ? '+' : '−'}${Math.abs(x * 100).toFixed(d).replace('.', ',')} điểm`;
+const vn = (x: number, d = 1) => x.toFixed(d).replace('.', ',');
 const lvl = (x: number, d = 1) => `${(x * 100).toFixed(d).replace('.', ',')}%`;
 
 /** Trung bình của chỉ số trong các tháng [a, b) tính từ lúc người chơi nhận quyền. */
@@ -54,6 +55,7 @@ const below = (id: string, label: string, ind: string, max: number, months = 12,
   label,
   test(c) {
     const v = avg(c, c.w, ind, Math.max(0, c.t1 - c.t0 - months), END);
+    if (!Number.isFinite(v)) return { ok: false, value: 'chưa có số liệu' };
     return { ok: v <= max, value: fmt(v) };
   },
 });
@@ -62,6 +64,7 @@ const above = (id: string, label: string, ind: string, min: number, months = 12,
   label,
   test(c) {
     const v = avg(c, c.w, ind, Math.max(0, c.t1 - c.t0 - months), END);
+    if (!Number.isFinite(v)) return { ok: false, value: 'chưa có số liệu' };
     return { ok: v >= min, value: fmt(v) };
   },
 });
@@ -100,7 +103,7 @@ export const SCENARIOS: ScenarioDef[] = [
             }
           const m = c.eng.seriesOf(c.w, 'money.m2', c.t0, c.t1);
           const net = m[m.length - 1] - (c.t0 > 0 ? c.eng.value(c.w, 'money.m2', c.t0 - 1) : m[0]);
-          return { ok: made > 0 && killed > 0, detail: `tiền sinh ra ${(made / 1e9).toFixed(1)} tỷ, tiền mất đi ${(killed / 1e9).toFixed(1)} tỷ, thay đổi ròng ${(net / 1e9).toFixed(1)} tỷ đồng` };
+          return { ok: made > 0 && killed > 0, detail: `tiền sinh ra ${vn(made / 1e9, 1)} tỷ, tiền mất đi ${vn(killed / 1e9, 1)} tỷ, thay đổi ròng ${vn(net / 1e9, 1)} tỷ đồng` };
         },
       },
       {
@@ -165,7 +168,7 @@ export const SCENARIOS: ScenarioDef[] = [
         test(c) {
           const a = c.eng.value(c.base, 'gini.wealth', 0);
           const b = last(c, c.base, 'gini.wealth');
-          return { ok: b > a + 0.2, detail: `Gini của cải ở thế giới gốc đi từ ${a.toFixed(2)} lên ${b.toFixed(2)}` };
+          return { ok: b > a + 0.2, detail: `Gini của cải ở thế giới gốc đi từ ${vn(a, 2)} lên ${vn(b, 2)}` };
         },
       },
       lower('Chia đều cổ tức cho mọi hộ làm Gini thu nhập thấp hơn: sở hữu là một nguồn chênh lệch.', 'gini.income', 24, END, 'pt'),
@@ -562,6 +565,7 @@ for (const s of SCENARIOS)
       const a = start(c, ind.id);
       const b = avg(c, c.w, ind.id, Math.max(0, c.t1 - c.t0 - 12), END);
       const d = ind.abs ? b - a : b / a - 1;
+      if (!Number.isFinite(d)) return { ok: false, value: 'chưa có số liệu' };
       return { ok: ind.dir * (d - ind.th) >= 0, value: (ind.fmt ?? (ind.abs ? pts : pct))(d) };
     };
   }
