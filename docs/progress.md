@@ -4,26 +4,94 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 ## Đang ở đâu
 
-Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
+Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập nhật lúc 11:40 ngày 14/11/2026.
 
-- **Giai đoạn**: GĐ1, engine xong, đang ở bước **kiểm định thống kê** (cuối mốc M1-M5).
-- **Xong**:
-  - GĐ0 phần lõi: engine, sổ cái, luật theo ngày, chuỗi nhân quả, nền đồ chơi. Test K0.1, K0.3-K0.9, K0.11, K0.12 qua.
-  - GĐ1 engine: `src/engine/modules/gd1/`, tham số ở `src/config/model/gd1.ts`. Test nhanh `tests/unit` 38 test qua.
-  - Hiệu chỉnh thô: 5 seed × 40 năm ở 500 hộ, thất nghiệp 4,5-5,8%, lạm phát 3-7%, phi chính thức 60-64%, thu ngân sách 15-17% GDP, Gini của cải 0,45-0,51.
-  - Mọi sai khác so với thiết kế ghi ở [design/sai-khac.md](design/sai-khac.md) (S1-S30). Quy tắc của Dương ngày 14/11: cơ chế thêm phải là tham số có tên và có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
-  - Bộ kiểm định: `tests/validation/gd1-lib.ts` (K1.1-K1.32), `tests/validation/gd1.test.ts` sinh `docs/validation/gd1.md`. Chạy thử nhanh: `npx tsx scripts/validate.ts 5 [base|exp|all] [S|M|L]`.
-  - Chạy thử 5 seed ngày 14/11: mọi mục lần chạy gốc qua; mọi thí nghiệm chạy đôi qua sau khi sửa cách đo K1.22 và K1.26 (xem dưới).
-- **Quyết định của Dương 14/11/2026** (đã làm theo): `exp.saveResponse` về 0,35 theo Havránek 2015, K1.19 ghi "chưa đạt (đã biết)"; vay tiêu dùng và giảm phát nợ để GĐ3; giữ cách đo mới của K1.22 và K1.26; giữ hiện tượng lãi suất cao làm tăng lạm phát qua tiền lãi, làm kịch bản 15; chưa chỉnh lạm phát.
-- **Quyết định lạm phát của Dương 14/11/2026** (đã làm): S20 mặc định tắt; S7 thành bám 50% (Rabanal và Sbrancia 2024); mức thất nghiệp bình thường của S25 tự sinh từ mô hình (Ball và Mankiw 2002). Kết quả 20 seed: K1.5, K1.10 qua; **K1.12 12/20 không qua**, nguyên nhân ở sai-khac.md D5 (giá phản ứng trong cùng quý, không vá). Lạm phát bình quân giờ 0-1,8%.
-- Nội dung học mới: `src/content/notes.ts` (mô hình bỏ qua gì; vì sao lãi suất yếu và room mạnh; vì sao lạm phát gần 0).
-- Kịch bản: 15 cái ở `src/content/scenarios.ts`, kiểm định bằng `npx tsx scripts/scenarios.ts <số seed> [mã]` hoặc `npm run validate:scenarios`. Lần chạy 5 seed trước khi đổi S7/S25: còn hỏng ở thue-nguoi-giau, het-han-giam-thue, song-bang-luong, chu-xuong (đối chứng theo cú sốc chưa chạy), luong-toi-thieu, hai-tay-lai. **Phải sửa lời giải thích hoặc cách đo, rồi chạy lại.**
-- **Đang dở**: phần GĐ0 còn lại và GĐ1 mốc M6.
-  - Xong: giao thức `src/protocol/index.ts`; kiểu kịch bản `src/engine/scenario/types.ts`; vai người chơi trong engine `src/engine/modules/gd1/player.ts` (ghi đè sau quy tắc tự động, có mã lý do riêng); hộ và doanh nghiệp có tên `names.ts`.
-  - Xong: `src/engine/session/session.ts` (xử lý lệnh, khung bản đồ, mẫu giao dịch, truy vấn, thế giới đối chứng bằng cách phát lại nhật ký lệnh từ mốc lưu, bản tin, kịch bản); `src/worker/worker.ts`; test `tests/unit/session.test.ts` (K0.2, K0.10, cỡ tin tick).
-  - Kế tiếp: UI (chưa có dòng nào: thiếu `index.html`, `src/ui`).
-- **Bước tiếp theo sau đó**: 15 kịch bản và kiểm định kịch bản; UI ba vai; GĐ1.5 (viết `docs/design/gd1-5.md` trước).
-- Công cụ soi: `scripts/pairdiag.ts` (hiệu chạy đôi theo năm), `scripts/k119.ts`, `scripts/inflation.ts` (phân rã CPI và lương), `scripts/validate.ts <số seed> <base|exp|all> <S|M|L> [k=v]`.
+### Tóm tắt một dòng
+
+Engine GĐ0 và GĐ1 xong. Kiểm định GĐ1 còn hai mục không qua đã biết nguyên nhân (K1.19, K1.12). Lớp giao thức, phiên làm việc và Worker xong. **UI đang viết dở, chưa chạy thử lần nào.** Kịch bản có bản đầu, còn 6 cái chưa qua kiểm định. GĐ1.5 chưa bắt đầu.
+
+### Trạng thái từng phần
+
+| Phần | Trạng thái | Ghi chú |
+|---|---|---|
+| GĐ0 lõi (engine, sổ cái, luật theo ngày, chuỗi nhân quả, lưu tải, tách nhánh) | Xong | K0.1, K0.3-K0.9, K0.11, K0.12 qua |
+| GĐ0 giao thức, phiên làm việc, Worker | Xong, đã commit | `src/protocol`, `src/engine/session/session.ts`, `src/worker/worker.ts`. K0.2 và K0.10 qua bằng test trong Node; K0.2 chưa đo trong Worker thật của trình duyệt |
+| GĐ0 UI, PWA | **Đang viết, chưa commit, chưa chạy thử** | K0.13 (50 khung/giây), K0.14 (offline) chưa đo |
+| GĐ1 engine (M1-M5) | Xong | 44 test nhanh qua |
+| GĐ1 kiểm định thống kê | **Chưa qua hết** | Xem mục dưới |
+| GĐ1 vai người chơi trong engine | Xong | `modules/gd1/player.ts`: hộ (chi tiêu, lương thấp nhất chịu nhận, nghỉ việc, ra tự làm), doanh nghiệp (giá, lương, số người, mua máy). Chưa có: đổi ngân hàng, bỏ vốn lập doanh nghiệp, xin vay, chia cổ tức, tỷ lệ tiền mặt |
+| GĐ1 kịch bản | **Bản đầu, 6/15 chưa qua kiểm định** | Xem mục dưới |
+| GĐ1 M6 UI và các tính năng S | **Đang viết** | Xem mục dưới |
+| GĐ1 figure anatomy (S11, bể thuỷ lực) | Chưa làm | |
+| GĐ1.5 | Chưa bắt đầu | Phải viết `docs/design/gd1-5.md` rồi chờ Dương duyệt |
+
+### Kiểm định GĐ1
+
+Đang chạy nền: `npm run validate:gd1` (20 seed) rồi `npx tsx scripts/scenarios.ts 10`. Kết quả ghi vào scratchpad của phiên, chưa đọc. **File `docs/validation/gd1.md` hiện có là của lần chạy cũ (còn dùng `exp.saveResponse` = 2), đừng tin; lượt đang chạy sẽ ghi đè.**
+
+Kết quả đã biết ở 20 seed, 500 hộ, lần chạy gốc (`npx tsx scripts/validate.ts 20 base M`), sau các quyết định ngày 14/11:
+- Qua: K1.1-K1.11, K1.13, K1.14, K1.27, K1.30, K1.32.
+- **K1.12 không qua (12/20)**: lạm phát cùng chiều chu kỳ rõ (tương quan 0,50-0,79) nhưng đỉnh rơi vào cùng quý, không trễ. Nguyên nhân ở sai-khac.md D5. Không vá.
+- **K1.19 chưa đạt (đã biết)**: kênh lãi suất tới cầu yếu; vay tiêu dùng để GĐ3.
+- Thí nghiệm chạy đôi (K1.15-K1.31) **chưa chạy lại** sau khi đổi S7, S20, S25. Lượt chạy nền sẽ cho biết.
+- Số liệu nền hiện tại: thất nghiệp 5,3-7,4%, lạm phát 0-1,8% mỗi năm (mục tiêu NHNN 4,5%), phi chính thức 55-63%, Gini của cải 0,34-0,62.
+
+### Các quyết định của Dương ngày 14/11/2026 (đã làm hết, chi tiết ở [design/sai-khac.md](design/sai-khac.md) mục B và D)
+
+1. Mọi cơ chế thêm phải là tham số có tên, có cơ sở. Chỉ để làm số đẹp thì dừng lại báo.
+2. `exp.saveResponse` = 0,35 (Havránek 2015). Không dùng giá trị 2.
+3. Vay tiêu dùng và giảm phát nợ để GĐ3 (đã ghi vào lộ trình trong CLAUDE.md).
+4. Giữ cách đo mới của K1.22 (3 năm đầu) và K1.26 (doanh số thực).
+5. Lãi suất cao kéo dài làm tăng lạm phát qua tiền lãi Chính phủ trả: giữ, ghi thành phát hiện, làm kịch bản 15 "Hai tay lái".
+6. Quy tắc lãi suất tự động của NHNN (S20) tắt theo mặc định, giữ làm chính sách tự động bật được.
+7. Lương bám 50% lạm phát kỳ vọng thay cho 100% (Rabanal và Sbrancia 2024, IMF WP/24/105). Chưa phân biệt chính thức và phi chính thức vì không tìm được ước lượng riêng; đã tách thành hai tham số.
+8. Mức thất nghiệp "bình thường" tự sinh từ mô hình: trung bình trượt 60 tháng (Ball và Mankiw 2002).
+9. Thêm nội dung học: vì sao lãi suất yếu và room mạnh ở GĐ1 (`src/content/notes.ts`).
+
+### Việc còn mở cần Dương biết
+
+- Lạm phát nền 0-1,8% là thấp so với Việt Nam (3-4%). Lý do: mô hình không có gì đẩy giá lên đều (không tăng năng suất, dân số; ngân sách gần cân; lương bám một nửa). Chưa làm gì thêm.
+- Bằng chứng nói lương bám lạm phát **quá khứ**; mô hình vẫn dùng lạm phát **kỳ vọng** theo thiết kế mục 10.
+- 0,5 lấy từ Uruguay (thương lượng lương tập trung), nhiều khả năng là cận trên cho Việt Nam.
+
+### Kịch bản (`src/content/scenarios.ts`, 15 cái)
+
+Mỗi kịch bản có lời giải mẫu; mỗi khẳng định trong lời giải thích là một phép đo so với thế giới đối chứng và phải đúng ở ít nhất 80% số seed. Chạy: `npx tsx scripts/scenarios.ts <số seed> [mã]`, hoặc `npm run validate:scenarios` (sinh `docs/validation/scenarios.md`).
+
+Lần chạy 5 seed (trước khi đổi S7, S25):
+- Qua hết: mot-khoan-vay, may-in-tien, vach-xuat-phat, room-hay-lai-suat, keo-vao-luoi-thue, can-ngan-sach, that-lung-buoc-bung, tin-dung-nong, gia-luong-tien.
+- **Chưa qua, phải sửa**:
+  - `thue-nguoi-giau`: Gini thu nhập không giảm khi nâng thuế cổ tức (0/5). Phải sửa lời giải thích theo điều mô hình nói, hoặc tìm vì sao.
+  - `het-han-giam-thue`: hiệu bằng 0 (0/5). Nghi do kịch bản không bắt đầu đúng năm 2026 nên thuế không tự về 10%; chưa soi.
+  - `song-bang-luong`, `chu-xuong`: hiệu bằng 0 (0/5). Đối chứng "bỏ cú sốc" đang không bỏ được cú sốc; lỗi ở `Session.replay` hoặc cách ghi cú sốc vào nhật ký. Chưa soi.
+  - `luong-toi-thieu`: 3/5.
+  - `hai-tay-lai`: khẳng định "tiêu dùng thực cao hơn sau vài năm" 2/5.
+- Định dạng số đo của `keo-vao-luoi-thue` sai đơn vị (in đồng thành "điểm").
+
+### UI (`index.html`, `src/ui/`, chưa commit)
+
+Đã viết, **chưa biên dịch trọn bộ, chưa mở trong trình duyệt**:
+- `client.ts` (cầu nối Worker), `store.ts` (Zustand, vòng chạy theo tốc độ, lịch sử chuỗi, lời đoán), `format.ts`.
+- `iso/layout.ts`, `iso/IsoMap.tsx`: bản đồ isometric Canvas 2D, lớp tĩnh vẽ lại mỗi tháng, hạt dòng tiền phát lại từ mẫu giao dịch thật, bấm vào tác nhân để soi.
+- `Chart.tsx` (uPlot, sparkline), `App.tsx` (màn hình đầu, thanh trên, dải chỉ số, bản tin, hộp đoán trước), `RolePanel.tsx` (bảng Bộ Tài chính và NHNN, bảng hộ và doanh nghiệp, quan sát, lời đoán, dòng sự kiện có nút "Nếu không làm vậy thì sao?").
+
+Chưa viết:
+- `Drawer.tsx`: chuỗi nhân quả, bảng cân đối chữ T (S4), bảng nguồn tiền (S3), Phòng thí nghiệm, "mô hình bỏ qua gì" (S13), so sánh với thế giới đối chứng (S1), báo cáo kịch bản, biểu đồ và xuất CSV (S14), danh sách tác nhân, lưu tải IndexedDB và file.
+- `app.css`.
+- Đăng ký PWA trong `main.tsx`.
+
+### Bước tiếp theo, theo thứ tự
+
+1. Viết `Drawer.tsx` và `app.css`; `npm run build`; mở bằng `npm run dev` và sửa cho chạy được. Commit.
+2. Đọc kết quả kiểm định nền; ghi lại `docs/validation/gd1.md`; cập nhật mục "Kiểm định GĐ1" ở trên.
+3. Sửa 6 kịch bản chưa qua; chạy `npm run validate:scenarios`.
+4. Đo K0.13 và K0.14 trong trình duyệt; thử K0.2 với Worker thật.
+5. Figure bể thuỷ lực (S11).
+6. Báo cáo GĐ0 và GĐ1 cho Dương. Viết `docs/design/gd1-5.md`, dừng chờ duyệt.
+
+### Công cụ soi
+
+`scripts/validate.ts <số seed> <base|exp|all> <S|M|L> [k=v]`, `scripts/scenarios.ts`, `scripts/pairdiag.ts` (hiệu chạy đôi theo năm), `scripts/k119.ts`, `scripts/inflation.ts` (phân rã CPI và lương theo mã lý do), `scripts/diag.ts`, `scripts/debug*.ts`.
 
 ## 14/11/2026 - Kiểm định GĐ1, sửa hai cơ chế thiếu
 
