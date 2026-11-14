@@ -14,12 +14,11 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 `tests/unit/session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó" hỏng ở dòng đòi CPI cao hơn đối chứng 24 tháng sau khi tăng GTGT. Số đo và phân rã: sai-khac.md D13. **Dương đã quyết (đêm 14/11/2026): không đổi cửa sổ đo, giữ assertion 24 tháng, sửa cơ chế.** Việc phải làm là việc 8 và 9 dưới đây. Test này phải tự xanh lại nhờ cơ chế đúng; nếu làm xong 8 và 9 mà nó vẫn đỏ thì báo Dương, không sửa test. Các test khác (60 cái) qua.
 
-### KIỂM ĐỊNH GĐ1 ĐẦY ĐỦ: đang chạy lúc Fable dừng
+### KIỂM ĐỊNH GĐ1 ĐẦY ĐỦ: CHƯA CÓ KẾT QUẢ, phải chạy lại
 
-Lượt `npm run validate:gd1` bắt đầu 23:43 ngày 14/11 trên code của commit `6490ec6` (20 seed ở 500 hộ, 5 seed ở 5000 hộ). Lúc Fable dừng nó chưa xong. Các commit sau `6490ec6` chỉ đổi `tests/unit`, `scripts`, `docs`, không đổi `src` hay `tests/validation`, nên kết quả vẫn là của engine ở `6490ec6` dù dòng "Bản code" trong báo cáo có thể ghi mã commit muộn hơn (dòng đó lấy mã lúc chạy xong: lỗi nhỏ, sửa cho lấy lúc bắt đầu). Opus:
-- Nếu `docs/validation/gd1.md` có dòng "Bản code" thì lượt chạy đã xong: đọc, commit, làm phần còn lại của việc 0.
-- Nếu file vẫn là bản trưa 14/11 (không có dòng "Bản code") thì lượt chạy đã chết: chạy lại.
-- Kiểm định kịch bản đã xong trên `6490ec6`: mọi khẳng định qua (`docs/validation/scenarios.md`).
+Lượt `npm run validate:gd1` bắt đầu 23:43 ngày 14/11 trên commit `6490ec6` đã **chết giữa chừng** (tiến trình biến mất sau hơn 30 phút, không ghi báo cáo, không in lỗi; nhiều khả năng bị dừng cùng phiên làm việc). `docs/validation/gd1.md` vẫn là bản trưa 14/11, cũ hơn S31, S32, S34 và bất đối xứng thuế. Opus chạy lại (việc 0) trước mọi việc khác, không chạy song song với thứ gì nặng, và không sửa `src` hay `tests/validation` trong lúc chạy. Sửa luôn lỗi nhỏ: dòng "Bản code" trong hai file `tests/validation/*.test.ts` lấy mã commit lúc chạy xong, phải lấy lúc bắt đầu.
+
+Kiểm định kịch bản thì đã xong trên `6490ec6`: mọi khẳng định qua (`docs/validation/scenarios.md`).
 
 ### VIỆC CHO OPUS, đợt bốn: quyết định D13 của Dương, đêm 14/11/2026 (chưa làm)
 
