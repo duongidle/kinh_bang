@@ -139,7 +139,7 @@ export class Session {
       if (n) this.log.push({ tick: this.t0, origin: 'setup', cmd: { type: 'possess', sector: def.possess.sector, id: n.id } });
       this.applyDue();
     }
-    this.snapshot(true);
+    this.snapshot(); // không ép: nếu đã có mốc chụp trước cú sốc của tháng này thì giữ mốc đó
     this.sentEvents = this.w.events.length;
     return [this.readyMsg(), this.tickMsg(true)];
   }
@@ -150,7 +150,7 @@ export class Session {
     let first = true;
     this.log.forEach((e, i) => {
       if (e.tick > t || this.applied.has(i)) return;
-      if (first && t > 0) this.snapshot();
+      if (first) this.snapshot();
       first = false;
       this.apply(this.w, e, i);
       this.applied.add(i);

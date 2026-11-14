@@ -239,7 +239,7 @@ export const SCENARIOS: ScenarioDef[] = [
     role: 'fiscal',
     scale: 'M',
     question: 'GTGT về lại 10% từ 01/01/2027: giá và ngân sách đổi thế nào?',
-    intro: 'Bắt đầu tháng 1/2026 với GTGT 8%. Theo luật, từ 01/01/2027 thuế tự về 10%. Cậu giữ Bộ Tài chính: để nguyên, hay gia hạn mức 8%?',
+    intro: 'Đang là giữa năm 2026, GTGT 8%. Theo luật, từ 01/01/2027 thuế tự về 10%. Cậu giữ Bộ Tài chính. Khi thuế đã về 10%, cậu để nguyên hay ban hành lại mức 8%?',
     prereq: [],
     warmup: 6,
     months: 42,
@@ -248,7 +248,7 @@ export const SCENARIOS: ScenarioDef[] = [
       { indicator: 'price.formal.taxed', question: 'Nếu gia hạn 8% thay vì để về 10%, giá hàng chịu thuế sẽ' },
       { indicator: 'gov.tax.vat', question: 'Thu GTGT sẽ' },
     ],
-    demo: [{ at: 0, laws: { 'vat.rate.standard': 0.08 } }],
+    demo: [{ at: 6, laws: { 'vat.rate.standard': 0.08 } }], // tháng 1/2027, ngay khi thuế vừa về 10%
     claims: [
       lower('Gia hạn 8% giữ giá hàng chịu thuế thấp hơn so với để thuế về 10%.', 'price.formal.taxed', 12, END),
       lower('Đổi lại, thu GTGT thấp hơn.', 'gov.tax.vat', 12, END),
@@ -276,7 +276,13 @@ export const SCENARIOS: ScenarioDef[] = [
     ],
     demo: [{ at: 0, laws: { 'hkd.threshold': 100e6 } }],
     claims: [
-      higher('Hạ ngưỡng thì thu được thuế từ hộ kinh doanh.', 'gov.tax.hkd', 12, END, 'pt'),
+      {
+        text: 'Hạ ngưỡng thì thu được thuế từ hộ kinh doanh.',
+        test(c) {
+          const d = dif(c, 'gov.tax.hkd', 12, END);
+          return { ok: d > 0, detail: `thu thuế hộ kinh doanh ${d >= 0 ? '+' : '−'}${(Math.abs(d) / 1e6).toFixed(0)} triệu đồng mỗi tháng so với thế giới đối chứng` };
+        },
+      },
       lower('Thu nhập thực của người làm ở khu vực phi chính thức thấp hơn.', 'income.real.informal', 12, END),
       {
         text: 'Nhưng khu vực phi chính thức không nhỏ đi về số người: không ai "lên" doanh nghiệp vì bị đánh thuế.',
