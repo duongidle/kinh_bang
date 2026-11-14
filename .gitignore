@@ -4,3 +4,4 @@ dist
 *.local
 coverage
 research/sources/*.pdf
+cozy_japanese_startup_office.json
