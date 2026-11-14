@@ -10,15 +10,22 @@ Web app mô phỏng nền kinh tế một quốc gia giả lập theo Việt Nam
 - Mọi sai khác so với thiết kế và các phát hiện còn mở: [docs/design/sai-khac.md](docs/design/sai-khac.md). Cơ chế thêm phải là tham số có tên, có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
 - Việc đang làm, giả định đã chọn, việc kế tiếp: [docs/progress.md](docs/progress.md). Đọc file đó và `git log` trước khi làm bất cứ gì.
 
-## Ai làm gì (chuyển giao từ 16/11/2026)
+## Ai làm gì
 
-Quyền dùng Fable của Dương hết ngày 16/11/2026. Từ ngày đó, hoặc sớm hơn nếu phiên đang chạy không phải Fable:
+Dương quyết ngày 15/11/2026. **Phân việc chỉ đổi khi Dương yêu cầu.** Cuối mỗi giai đoạn, nếu thấy phân việc không còn hợp lý thì đề xuất với Dương, không tự sửa.
 
-- **Opus điều phối.** Opus đọc progress.md, quyết thứ tự việc, viết spec và đề xuất, chẩn đoán kiểm định hỏng, đọc nguồn, viết báo cáo cho Dương. Opus không tự code phần lớn.
-- **Sonnet code.** Mọi việc viết code (engine, giao diện, test) Opus giao cho Sonnet bằng subagent, với lời giao việc tự đủ: file nào, lệnh nào, "xong" nghĩa là gì, các quy tắc bắt buộc dưới đây. Opus đọc diff trước khi commit, nhất là diff của `tests/`.
-- **Opus chạy [chong-va-ngam.md](docs/design/chong-va-ngam.md) trước khi báo xong mỗi giai đoạn** (và mỗi mốc lớn M1, M2...). Cụ thể: `npm test` qua, trong đó có `tests/unit/chot-chan.test.ts`; đi hết bảng "Cần người soát" và ghi kết quả từng dòng vào báo cáo giai đoạn; phần "chưa kiểm" đứng trước phần "đã đạt". Thiếu bước này thì chưa được báo xong.
-- **Dừng lại báo Dương** khi gặp một trong bảy trường hợp ở chong-va-ngam.md mục "Khi nào phải dừng lại báo Dương". Sonnet gặp thì báo Opus, Opus báo Dương. Không ai tự quyết thay.
-- Kiểm định thống kê đầy đủ do Opus cho chạy và đọc; không sửa engine trong lúc nó chạy.
+- **Người điều phối** là model của phiên chính (từ 16/11/2026: Opus). Giữ phần cần phán đoán: thiết kế, viết spec và đề xuất, đọc và đánh giá kết quả kiểm định, chẩn đoán kiểm định hỏng, đọc nguồn, soát chống vá ngầm, viết báo cáo cho Dương. Không tự code phần lớn.
+- **Sonnet code.** Mọi việc viết code (engine, giao diện, test) và việc cho chạy kiểm định, người điều phối giao cho subagent chạy model Sonnet.
+- **Mỗi lần giao việc cho Sonnet phải ghi rõ:** việc gì, trạng thái hiện tại, file cần đọc, tiêu chí xong. Không giả định Sonnet biết gì ngoài lời giao. Kèm nguyên văn luật này:
+
+  > Bạn làm phần code theo đặc tả. Gặp quyết định không có sẵn trong đặc tả, progress.md hoặc sai-khac.md, hoặc test hỏng mà nguyên nhân không rõ ràng: DỪNG và báo lại, không tự chọn cách sửa, không sửa test hay ngưỡng kiểm định. Xong mỗi bước: chạy test nhanh, commit, báo lại thay đổi.
+
+- **Review code của Sonnet trước khi nhận**: đọc diff, nhất là diff của `tests/` và `src/content/scenarios.ts`.
+- **Đầu mỗi phiên: chạy `git status`.** Nếu có thay đổi chưa commit từ lượt bị ngắt thì review trước; không chắc đúng thì bỏ và làm lại bước đó.
+- **Xong mỗi bước nhỏ: commit và cập nhật progress.md ngay**, để hết quota lúc nào phiên sau cũng làm tiếp được.
+- **Người điều phối chạy [chong-va-ngam.md](docs/design/chong-va-ngam.md) trước khi báo xong mỗi giai đoạn** (và mỗi mốc lớn M1, M2...). Cụ thể: `npm test` qua, trong đó có `tests/unit/chot-chan.test.ts`; đi hết bảng "Cần người soát" và ghi kết quả từng dòng vào báo cáo giai đoạn; phần "chưa kiểm" đứng trước phần "đã đạt"; liệt kê mọi thay đổi trong `tests/unit` và khẳng định kịch bản kèm lý do. Thiếu bước này thì chưa được báo xong.
+- **Dừng lại báo Dương** khi gặp một trong bảy trường hợp ở chong-va-ngam.md mục "Khi nào phải dừng lại báo Dương". Sonnet gặp thì báo người điều phối, người điều phối báo Dương. Không ai tự quyết thay.
+- Kiểm định thống kê đầy đủ: Sonnet cho chạy (ghi log ra file, chạy từng phần), người điều phối đọc và đánh giá. Không sửa engine trong lúc nó chạy.
 
 ## Tài liệu
 
