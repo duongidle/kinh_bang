@@ -8,33 +8,30 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 ### Tóm tắt một dòng
 
-Engine GĐ0 và GĐ1 xong. Kiểm định GĐ1 còn hai mục không qua đã biết nguyên nhân (K1.19, K1.12). Lớp giao thức, phiên làm việc và Worker xong. **UI đang viết dở, chưa chạy thử lần nào.** Kịch bản có bản đầu, còn 6 cái chưa qua kiểm định. GĐ1.5 chưa bắt đầu.
+Engine GĐ0 và GĐ1 xong. UI bản đầu chạy được và đã thử gần hết trong Chrome. **GĐ1 chưa qua kiểm định: 7 mục không qua**, chưa vá, chờ Dương quyết. K0.2 (trùng mã băm giữa Chrome và Node) không đạt theo đúng chữ. GĐ1.5 chưa bắt đầu.
 
-### Trạng thái từng phần
+### Trạng thái từng phần (cập nhật 13:10 ngày 14/11/2026)
 
 | Phần | Trạng thái | Ghi chú |
 |---|---|---|
-| GĐ0 lõi (engine, sổ cái, luật theo ngày, chuỗi nhân quả, lưu tải, tách nhánh) | Xong | K0.1, K0.3-K0.9, K0.11, K0.12 qua |
-| GĐ0 giao thức, phiên làm việc, Worker | Xong, đã commit | `src/protocol`, `src/engine/session/session.ts`, `src/worker/worker.ts`. K0.2 và K0.10 qua bằng test trong Node; K0.2 chưa đo trong Worker thật của trình duyệt |
-| GĐ0 UI, PWA | **Đang viết, chưa commit, chưa chạy thử** | K0.13 (50 khung/giây), K0.14 (offline) chưa đo |
-| GĐ1 engine (M1-M5) | Xong | 44 test nhanh qua |
-| GĐ1 kiểm định thống kê | **Chưa qua hết** | Xem mục dưới |
-| GĐ1 vai người chơi trong engine | Xong | `modules/gd1/player.ts`: hộ (chi tiêu, lương thấp nhất chịu nhận, nghỉ việc, ra tự làm), doanh nghiệp (giá, lương, số người, mua máy). Chưa có: đổi ngân hàng, bỏ vốn lập doanh nghiệp, xin vay, chia cổ tức, tỷ lệ tiền mặt |
-| GĐ1 kịch bản | **Bản đầu, 6/15 chưa qua kiểm định** | Xem mục dưới |
-| GĐ1 M6 UI và các tính năng S | **Đang viết** | Xem mục dưới |
-| GĐ1 figure anatomy (S11, bể thuỷ lực) | Chưa làm | |
-| GĐ1.5 | Chưa bắt đầu | Phải viết `docs/design/gd1-5.md` rồi chờ Dương duyệt |
+| GĐ0 lõi | Xong | K0.1, K0.3-K0.9, K0.11, K0.12 qua |
+| GĐ0 giao thức, phiên làm việc, Worker | Xong | 45 test nhanh qua |
+| GĐ0 UI, PWA | Xong bản đầu, đã thử trong Chrome | K0.13 đạt: 119,6 khung/giây ở 5000 hộ, ×1 (ngưỡng 50). K0.14 đạt: tắt server, nạp lại, app lên từ cache và mở được ván đã lưu |
+| **K0.2** | **Không đạt theo đúng chữ** | Trạng thái kinh tế trùng từng bit; mã băm toàn cục lệch từ tháng 11 vì `Math.log`, `Math.cos` khác nhau 1 chữ số cuối giữa hai bản V8. sai-khac.md D7. Chờ Dương quyết |
+| GĐ1 engine (M1-M5) | Xong | |
+| **GĐ1 kiểm định thống kê** | **Chưa qua: K1.12, K1.19, K1.24, K1.28, K1.29, K1.31, K1.13 (ở 5000 hộ)** | Số đo và nguyên nhân: sai-khac.md D6; báo cáo đầy đủ: [validation/gd1.md](validation/gd1.md) |
+| GĐ1 vai người chơi trong engine | Xong phần chính | Chưa có: đổi ngân hàng, bỏ vốn lập doanh nghiệp, xin vay, chia cổ tức, tỷ lệ tiền mặt |
+| GĐ1 kịch bản (15 cái) | 13/15 qua hết ở 10 seed; đã sửa lời giải thích của 3 cái, **đang chạy lại** | |
+| GĐ1 M6 UI và tính năng S1-S4, S7, S8, S10, S13, S14 | Có đủ, đã thử trong Chrome | Mới thử 3/15 kịch bản trên giao diện |
+| GĐ1 figure bể thuỷ lực (S11) | **Đang làm** (Sonnet) | |
+| GĐ1.5 | Chưa bắt đầu | Phải viết `docs/design/gd1-5.md` rồi chờ duyệt; và GĐ1 phải qua kiểm định trước |
 
-### Kiểm định GĐ1
+### Việc chờ Dương quyết
 
-Đang chạy nền: `npm run validate:gd1` (20 seed) rồi `npx tsx scripts/scenarios.ts 10`. Kết quả ghi vào scratchpad của phiên, chưa đọc. **File `docs/validation/gd1.md` hiện có là của lần chạy cũ (còn dùng `exp.saveResponse` = 2), đừng tin; lượt đang chạy sẽ ghi đè.**
-
-Kết quả đã biết ở 20 seed, 500 hộ, lần chạy gốc (`npx tsx scripts/validate.ts 20 base M`), sau các quyết định ngày 14/11:
-- Qua: K1.1-K1.11, K1.13, K1.14, K1.27, K1.30, K1.32.
-- **K1.12 không qua (12/20)**: lạm phát cùng chiều chu kỳ rõ (tương quan 0,50-0,79) nhưng đỉnh rơi vào cùng quý, không trễ. Nguyên nhân ở sai-khac.md D5. Không vá.
-- **K1.19 chưa đạt (đã biết)**: kênh lãi suất tới cầu yếu; vay tiêu dùng để GĐ3.
-- Thí nghiệm chạy đôi (K1.15-K1.31) **chưa chạy lại** sau khi đổi S7, S20, S25. Lượt chạy nền sẽ cho biết.
-- Số liệu nền hiện tại: thất nghiệp 5,3-7,4%, lạm phát 0-1,8% mỗi năm (mục tiêu NHNN 4,5%), phi chính thức 55-63%, Gini của cải 0,34-0,62.
+1. Bảy mục kiểm định GĐ1 không qua (sai-khac.md D6): mục nào chấp nhận là "đã biết", mục nào phải sửa cơ chế.
+2. K0.2 (D7): tự cài `ln`, `exp`, `pow`, `cos` trong lõi, hay chấp nhận như gd0 mục 12.
+3. Lương bám lạm phát kỳ vọng (thiết kế) hay lạm phát quá khứ (bằng chứng) (D5).
+4. Ba chỉ số trên dải chưa có phân rã theo lý do: lương thực, bội chi/GDP, nợ công/GDP.
 
 ### Các quyết định của Dương ngày 14/11/2026 (đã làm hết, chi tiết ở [design/sai-khac.md](design/sai-khac.md) mục B và D)
 
@@ -56,17 +53,14 @@ Kết quả đã biết ở 20 seed, 500 hộ, lần chạy gốc (`npx tsx scri
 
 ### Kịch bản (`src/content/scenarios.ts`, 15 cái)
 
-Mỗi kịch bản có lời giải mẫu; mỗi khẳng định trong lời giải thích là một phép đo so với thế giới đối chứng và phải đúng ở ít nhất 80% số seed. Chạy: `npx tsx scripts/scenarios.ts <số seed> [mã]`, hoặc `npm run validate:scenarios` (sinh `docs/validation/scenarios.md`).
+Chạy: `npx tsx scripts/scenarios.ts <số seed> [mã]`, `npm run validate:scenarios` (sinh `docs/validation/scenarios.md`), soi theo năm: `npx tsx scripts/scendiag.ts <mã> [seed] <chỉ số:rel|pt> ...`.
 
-Lần chạy 5 seed (trước khi đổi S7, S25):
-- Qua hết: mot-khoan-vay, may-in-tien, vach-xuat-phat, room-hay-lai-suat, keo-vao-luoi-thue, can-ngan-sach, that-lung-buoc-bung, tin-dung-nong, gia-luong-tien.
-- **Chưa qua, phải sửa**:
-  - `thue-nguoi-giau`: Gini thu nhập không giảm khi nâng thuế cổ tức (0/5). Phải sửa lời giải thích theo điều mô hình nói, hoặc tìm vì sao.
-  - `het-han-giam-thue`: hiệu bằng 0 (0/5). Nghi do kịch bản không bắt đầu đúng năm 2026 nên thuế không tự về 10%; chưa soi.
-  - `song-bang-luong`, `chu-xuong`: hiệu bằng 0 (0/5). Đối chứng "bỏ cú sốc" đang không bỏ được cú sốc; lỗi ở `Session.replay` hoặc cách ghi cú sốc vào nhật ký. Chưa soi.
-  - `luong-toi-thieu`: 3/5.
-  - `hai-tay-lai`: khẳng định "tiêu dùng thực cao hơn sau vài năm" 2/5.
-- Định dạng số đo của `keo-vao-luoi-thue` sai đơn vị (in đồng thành "điểm").
+Kết quả 10 seed ngày 14/11: 13 kịch bản qua hết. Đã sửa theo điều mô hình nói, đang chạy lại:
+- `thue-nguoi-giau`: nâng thuế cổ tức và TNDN không làm Gini thu nhập giảm (thuế thu thêm không được chi ra, thất nghiệp tăng). Lời giải thích viết lại thành phát hiện này.
+- `hai-tay-lai`: bỏ khẳng định tiêu dùng thực cao hơn (6/10).
+- `het-han-giam-thue`: bỏ câu "người bán giữ lại một phần thuế" (mô hình chuyển gần trọn thuế vào giá, xem K1.24).
+
+Lời giải mẫu không đạt mục tiêu ở phần lớn seed (chỉ tham khảo): vach-xuat-phat 0/10, thue-nguoi-giau 3/10, luong-toi-thieu 3/10, chu-xuong 4/10. Cần xem lại mục tiêu có đạt được không.
 
 ### UI (`index.html`, `src/ui/`, đã commit e16d20c)
 
@@ -80,19 +74,20 @@ Lần chạy 5 seed (trước khi đổi S7, S25):
 
 Việc liên quan test và code giao diện giao cho Sonnet (subagent). Phiên chính giữ: thiết kế engine, quyết định kinh tế, chẩn đoán, báo cáo.
 
-### Đang chạy (hai subagent Sonnet, giao lúc 12:00)
+### Đang chạy (subagent Sonnet, giao lúc 13:05)
 
-1. **Kiểm định**: chạy `npm run validate:gd1` và `npx tsx scripts/scenarios.ts 10`, lập bảng kết quả, sửa lỗi của bộ chạy test (không được đổi kinh tế, tham số, ngưỡng, lời khẳng định).
-2. **UI**: thử mọi phần của UI trong trình duyệt theo danh sách, sửa lỗi trong `src/ui`, đo K0.13 (khung/giây ở 5000 hộ), K0.14 (offline), K0.2 (mã băm trong Worker thật so với Node).
-
-Vừa sửa trước khi giao: mốc lưu trong `Session` bị chụp đè sau cú sốc nên đối chứng "bỏ cú sốc" cho hiệu bằng 0 (kịch bản `song-bang-luong`, `chu-xuong`); lời giải mẫu của `het-han-giam-thue` ban hành 8% khi thuế đang 8% nên không có tác dụng, đã dời sang tháng 1/2027.
+1. Chạy lại `npm run validate:scenarios` sau khi sửa ba lời giải thích.
+2. Figure bể thuỷ lực (S11) theo skill anatomy: `src/ui/Machine.tsx`, mở từ nút "Cỗ máy dòng tiền".
 
 ### Bước tiếp theo, theo thứ tự
 
-1. Nhận báo cáo của hai subagent; ghi kết quả kiểm định vào đây; quyết từng mục không qua (sửa lời giải thích kịch bản theo điều mô hình nói, hoặc bỏ kịch bản).
-2. Figure bể thuỷ lực (S11): giao Sonnet, theo skill anatomy.
-3. Báo cáo GĐ0 và GĐ1 cho Dương.
-4. Viết `docs/design/gd1-5.md`, dừng chờ duyệt. GĐ1.5 chỉ bắt đầu khi GĐ1 qua kiểm định (hiện còn K1.12 không qua, K1.19 chưa đạt).
+1. Nhận hai báo cáo trên.
+2. Làm theo quyết định của Dương cho bốn việc đang chờ.
+3. Báo cáo GĐ0 và GĐ1. Viết `docs/design/gd1-5.md`, dừng chờ duyệt.
+
+### Việc UI để dành GĐ1.5 (từ lượt thử trong Chrome)
+
+Bản tin che bản đồ; nhãn chồng nhau; vòng đánh dấu tác nhân đang điều khiển quá nhỏ; ở 5000 hộ không bấm được từng hộ; biểu đồ không có tooltip; màn hình đầu không phân nhóm kịch bản; nút xoá ván không hỏi lại; CSV dùng mã chỉ số làm tiêu đề cột; PWA chưa có biểu tượng; file lưu 17 MB ở 500 hộ; bản đồ không vẽ lại khi đổi sáng tối giữa chừng.
 
 ### Công cụ soi
 
