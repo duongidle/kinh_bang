@@ -4,7 +4,24 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 ## Đang ở đâu
 
-Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập nhật 15/11/2026. Bước 3a (việc 9, S37, D14) xong: quy tắc `gov.revenueUse`, chỉ số `gov.respend`, khai báo ở K1.24-26, hai kịch bản thuế, vatcpi. Bước kế: 3b.
+Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
+
+### Trạng thái lúc này (chiều 15/11/2026, sau commit `0441f84`)
+
+- **Xong và đã commit:** bước 0, 1, 2, 3a, 3b, 3c, 3e, 7 của bảng kế hoạch dưới. `npm test` xanh 69/69 ở `0441f84`.
+- **Đang chạy dở:** bước 3d (dải tồn kho Lengnick, S38), Sonnet đang làm, CHƯA commit. Lời giao: đo `scripts/demand.ts 5 M` trước khi sửa; thêm cột `fireAt`, tham số `firm.invBandLow` 0,25 và `firm.invBandHigh` 1, quy tắc `firm.staffing` (dải mặc định, `track` là bản cũ, phải trùng từng bit với code cũ); test `tests/unit/staffing.test.ts`; dòng mục F; S38 ở sai-khac.md; đo lại M 5 seed và L 2 seed, ghi bảng trước/sau vào D11. Bản nháp logic: đoạn "Bản nháp Fable đã soạn" ở việc 2 bên dưới. **Phiên sau nếu thấy thay đổi chưa commit của 3d: review theo lời giao này; không chắc đúng thì `git checkout` bỏ và giao lại.**
+- **Chưa làm:** bước 4 (kiểm định đầy đủ), 5 (chốt GĐ1 có điều kiện, báo cáo GĐ0 + GĐ1), 6 (spec GĐ1.5).
+
+**Những thứ phải đưa vào báo cáo cho Dương (chưa báo đủ):**
+1. **K1.24 nhiều khả năng hỏng lại** ở khoảng một nửa số seed: nó đòi tỷ lệ chuyển thuế sau 2 năm dưới 1, mà S36 cho chuyển trọn (quanh 1). Chưa đổi ngưỡng; chờ số đo bước 4. Đổi ngưỡng cần Dương duyệt.
+2. **K1.13 tiêu chí mới hỏng ở 5000 hộ** theo đo nhanh 3 seed (Gini của cải 0,28-0,31 so với Gini thu nhập 0,28-0,34; đạt 1/3); ở 500 hộ đạt 3/3 (0,52-0,54 so với 0,31-0,36). K1.13 đã ra khỏi danh sách "đã biết", nên bước 4 sẽ hiện nó là hỏng thật nếu đúng vậy. Bước 5 phải ghi lại là "đã biết, thiếu cơ chế tích tụ, sửa ở GĐ3/GĐ4" và báo Dương.
+3. **Cơ chế S37 (`gov.revenueUse`) là thiết kế của người điều phối, Dương chưa soát chi tiết** (sai-khac.md D14): cách định nghĩa "thu thêm" (tỷ lệ thu thuế/GDP 12 tháng so với mốc trước khi đổi luật), chỉ kích hoạt khi người chơi hay thí nghiệm đổi luật thuế (thay đổi theo lịch như GTGT về 10% tháng 1/2027 không kích hoạt), bốn đơn giản hoá.
+4. **K1.24, K1.25, K1.26 khai `keep`** (giữ lại không chi) để giữ nguyên cách đo đã duyệt. Đổi sang "chi lại" là đổi cách đo: Dương quyết.
+5. **S37 chưa có mã lý do riêng trong chuỗi nhân quả.** Chi của Chính phủ không có bản ghi quyết định; phần chi lại hiện nằm chung trong `d_wage_public`, `d_purchase`, `d_transfer`. Mới có một sự kiện lúc kích hoạt và chỉ số `gov.respend`. Gợi ý rẻ của Sonnet: thêm `gov.respend` vào upstream của ba mã đó. Chưa làm, chờ quyết.
+6. **Phần dịch vụ của dải tồn kho (S38) là tự thiết kế**: dịch vụ không có tồn kho nên dùng phần sức làm bỏ không của tháng trước, co dải theo `firm.nuServices / firm.nu`. Dương đã duyệt quy tắc Lengnick nhưng chưa soát riêng phần này.
+7. Số đo việc 10 (đã đóng): sau S36 và S37, tăng GTGT lên 20% làm CPI tháng 24 cao hơn đối chứng ở cả hai quy mô: 500 hộ +3,82% (chi lại) và +3,24% (giữ lại), 10/10 seed; 5000 hộ +3,67% và +3,07%, 5/5 seed. Chi lại làm GDP thực năm thứ hai giảm 2,9-4,3% thay vì 5,5-7,4%.
+
+**Kiểm định đầy đủ (bước 4): chưa có kết quả nào trên code hiện tại.** `docs/validation/gd1.md` là bản trưa 14/11, `scenarios.md` là bản đêm 14/11 trên `6490ec6`; cả hai cũ hơn S36, S37, K1.13 mới, S38. Khi chạy: sửa trước lỗi nhỏ ở `stamp()` trong hai file `tests/validation/*.test.ts` (lấy mã commit lúc bắt đầu, không phải lúc xong); ghi log ra file; chạy từng phần (kịch bản trước, rồi GĐ1 ở 500 hộ, rồi 5000 hộ) để chết giữa chừng vẫn giữ được phần đã xong; không sửa `src` hay `tests/validation` trong lúc chạy.
 
 ### Tóm tắt một dòng
 
