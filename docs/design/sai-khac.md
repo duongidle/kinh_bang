@@ -335,6 +335,47 @@ Khi một nơi bán mới mở tính giá lần đầu, bản ghi quyết địn
 
 Hệ quả: câu ở D5 mục 1 "trong 7,5 điểm lạm phát, chi phí lương +5,9" bị thổi lên khoảng 1 điểm vì lỗi này. Kết luận của D5 (lương bám 100% là nguồn chính) vẫn đứng: phần lương vẫn là lớn nhất.
 
+### D13. Tăng GTGT mà sau hai năm mức giá không cao hơn (CHỜ DƯƠNG, chưa sửa test hay cơ chế)
+
+Test `tests/unit/session.test.ts` "bỏ một chính sách" đòi CPI của ván tăng GTGT lên 20% cao hơn thế giới đối chứng sau 24 tháng. Ở 50 hộ, seed 3, nó hỏng (108,3 so với 109,9). Fable đã nới assertion; Dương yêu cầu hoàn lại và kiểm ở quy mô lớn. **Assertion đã hoàn lại, test đang đỏ có chủ ý**, chờ Dương quyết.
+
+Đo bằng `scripts/vatcpi.ts` (tăng GTGT lên 20% ở tháng 12, chạy đôi với thế giới không tăng):
+
+| CPI so với đối chứng | 50 hộ, 20 seed | 500 hộ, 10 seed | 5000 hộ, 3 seed |
+|---|---|---|---|
+| Sau 1 tháng | +0,90% (20/20 dương) | +0,92% (10/10) | +0,92% (3/3) |
+| Sau 12 tháng | +0,79% (20/20) | +1,05% (10/10) | +0,93% (3/3) |
+| Sau 24 tháng | −0,10% (10/20 dương; từ −2,2 tới +1,6) | +0,36% (9/10; từ −0,2 tới +0,9) | **−0,23% (0/3 dương; từ −0,31 tới −0,09)** |
+
+Kết luận về quy mô: **không phải nhiễu của 50 hộ.** Trong năm đầu giá cao hơn ở mọi seed, mọi quy mô. Tới tháng 24 khoảng cách khép lại; ở 5000 hộ nó đổi dấu ở cả 3 seed với biên độ hẹp. Mới có 3 seed ở 5000 hộ.
+
+Phân rã chênh lệch CPI trong 24 tháng (điểm phần trăm, từ bản ghi quyết định giá):
+
+| Lý do | 500 hộ | 5000 hộ |
+|---|---|---|
+| Thuế trong giá tăng (`p_vat`) | +2,60 | +2,61 |
+| Người bán tự gánh bằng biên lãi (`p_tax_absorb`) | −1,68 | −1,69 |
+| Chi phí lương mỗi sản phẩm (`p_wage`) | −0,35 | −0,85 |
+| Chi phí máy và lãi vay (`p_capital`) | −0,33 | −0,43 |
+| Ít lần nâng biên lãi vì bán chạy (`p_markup_up`) | −0,16 | −0,18 |
+| Đổi nơi mua (`p_mix`) | +0,28 | +0,31 |
+| Cộng | +0,36 | −0,23 |
+
+Cách đọc: thuế tự nó đẩy giá lên 0,92 điểm (2,60 trừ phần người bán gánh 1,68). Sau đó cầu yếu đi kéo giá xuống khoảng 0,6 tới 1,2 điểm. Cầu yếu vì hai thứ cùng lúc: thuế lấy tiền của hộ, và **tiền thuế thu thêm không được chi ra** (cùng giả định ngầm ở D10). Năm thứ hai, so với đối chứng: GDP thực −4,2% (500 hộ) và −6,1% (5000 hộ); tiêu dùng thực −2,9% và −3,8%; thất nghiệp +0,5 và +0,6 điểm; giá hàng của hộ kinh doanh (không chịu GTGT) −0,3% và −0,8%.
+
+Hai kiểm tra thêm ở 500 hộ, 10 seed:
+
+- **Bất đối xứng thuế không liên quan.** Đặt `firm.taxPassDown` = `firm.taxPassUp` = 0,34: kết quả trùng từng chữ số với mặc định. Trong thí nghiệm này không có lần giảm thuế nào.
+- **Chuyển trọn thuế vào giá** (hai tham số = 1, bản cũ): CPI +3,2% sau 24 tháng, 10/10 seed dương. Vậy assertion hỏng là hệ quả của S31 (chuyển một phần) cộng với việc tiền thuế không được chi; mỗi thứ riêng thì không đủ.
+
+Điều tớ chưa kiểm: nếu tiền thuế được chi ra thì giá sau 24 tháng thế nào; và vì sao ở 500 hộ dấu khác 5000 hộ (500 hộ có ít doanh nghiệp, lương ít giảm hơn: `p_wage` −0,35 so với −0,85).
+
+Các lựa chọn cho Dương (chưa làm cái nào):
+
+1. Giữ assertion, đo ở 12 tháng thay cho 24 tháng: đúng 100% số seed ở mọi quy mô, và là điều test muốn nói ("tăng thuế thì giá cao hơn"). Đây là đổi cửa sổ đo.
+2. Giữ assertion 24 tháng và coi kết quả là dấu hiệu cơ chế sai: cầu sụt 4-6% GDP sau một lần tăng thuế mà Chính phủ ngồi im là quá mạnh, hoặc 0,34 chuyển ngay rồi không đuổi kịp về lâu dài là quá ít (bằng chứng dài hạn ở D9 nói gần trọn).
+3. Cho thế giới thử nghiệm chi lại tiền thuế, rồi mới so giá.
+
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
 Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. **Dương quyết 14/11/2026: chấp nhận như gd0 mục 12, không tự cài hàm toán.** K0.2 ghi là đạt theo nghĩa: trạng thái kinh tế trùng từng bit; mã băm toàn cục có thể lệch giữa hai bản V8 khác nhau ở chữ số cuối của hàm toán.

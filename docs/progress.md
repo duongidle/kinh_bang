@@ -10,6 +10,10 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 **Fable dừng code từ tối 14/11/2026** (quyền dùng hết ngày 16/11). Người làm tiếp là Opus. Engine GĐ0 và GĐ1 xong; bốn quyết định đợt ba dưới đây CHƯA làm; kiểm định đầy đủ CHƯA chạy lại trên bản code hiện tại. Hai tài liệu để lại cho các giai đoạn sau: [design/phac-thao-gd3-gd5.md](design/phac-thao-gd3-gd5.md) và [design/chong-va-ngam.md](design/chong-va-ngam.md). Đọc chong-va-ngam.md trước khi sửa engine.
 
+### `npm test` ĐANG ĐỎ CÓ CHỦ Ý (một test)
+
+`tests/unit/session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó" hỏng ở dòng đòi CPI cao hơn đối chứng 24 tháng sau khi tăng GTGT. Dương yêu cầu hoàn lại assertion gốc và không nới. Hiện tượng đã đo ở ba quy mô: sai-khac.md D13. **Không sửa test, không sửa cơ chế cho tới khi Dương chọn một trong ba hướng ở D13.** Các test khác (60 cái) qua. Trong lúc chờ, coi "npm test qua" nghĩa là chỉ còn đúng một test này đỏ.
+
 ### VIỆC CHO OPUS: quyết định đợt ba của Dương, tối 14/11/2026 (chưa làm)
 
 Làm theo thứ tự. Mỗi việc: code, `npm test`, commit, cập nhật mục này. Phân vai theo CLAUDE.md mục "Ai làm gì": Opus điều phối và chẩn đoán, Sonnet code, Opus chạy chong-va-ngam.md trước khi báo xong.
@@ -33,7 +37,29 @@ Lưu ý về chốt chặn (thêm tối 14/11): đổi giá trị tham số tron
 
 **4. Bất đối xứng thuế: giữ theo Benzarti.** Thêm bản đối xứng thành biến thể Phòng thí nghiệm: quy tắc mới trong sổ quy tắc (ví dụ `firm.taxPass`: `base` bất đối xứng, `symmetric` dùng `firm.taxPassUp` cho cả hai chiều), có `teaches`. Thêm một test nhanh. Cập nhật sai-khac.md S31.
 
-Sau bốn việc: chạy lại kiểm định đầy đủ, cập nhật sai-khac.md D6, viết báo cáo GĐ0 và GĐ1, rồi mới viết `docs/design/gd1-5.md` và dừng chờ duyệt.
+**5. Phân tích độ nhạy** (Dương thêm tối 14/11/2026). Tìm khoảng 10 tham số ảnh hưởng mạnh nhất tới các chỉ số chính (thất nghiệp, lạm phát, GDP thực, tín dụng, tỷ lệ phi chính thức, Gini, bội chi). Cách làm gợi ý: với từng tham số hành vi, chạy đôi ở nửa và gấp đôi giá trị (hoặc ±20% với tham số là tỷ lệ), 5 seed, 500 hộ, 20 năm; xếp theo mức đổi của chỉ số so với độ lệch giữa các seed. Viết script `scripts/sensitivity.ts`, kết quả ghi vào một mục mới trong sai-khac.md. Rồi:
+   - Ưu tiên tìm nguồn cho 10 tham số đó, nhất là nhóm `tu-thiet-ke` (55 cái) và `tri-nho` (12 cái).
+   - Với những cái đang mang nhãn `nguon` trong 10 cái đó: **soát lại là đã đọc toàn văn**, con số trích đúng, phép quy đổi đúng. Nhãn `nguon` hiện nay Fable gán theo chữ trong ô nguồn, CHƯA soát từng cái. Cái nào chưa đọc toàn văn thì hạ xuống `tri-nho` cho tới khi đọc (trần 12 trong `chot-chan.test.ts` khi đó phải nâng: đây là ngoại lệ duy nhất, ghi rõ trong mục F và báo Dương).
+   - Không đổi giá trị tham số trong việc này. Nguồn nói khác giá trị đang dùng thì báo Dương.
+
+**6. Lấp phần GDP danh nghĩa chưa gán lý do** (Dương thêm). Phân rã của `gdp.nominal` còn 11% mức đổi rơi vào "yếu tố khác" (đo ở 50 hộ, 48 tháng, hai lần đổi luật; trần trong `chot-chan.test.ts` đang để 0,15). Tìm phần thiếu (gợi ý: GDP tính cả lương công chức và thay đổi tồn kho; so từng số hạng của `gdpNominal()` trong `gov.ts` với bốn phần của `flowContrib` trong `indicators.ts`, và xem tháng đầu sau khi `s.prev` trống). Sửa xong hạ trần về mặc định. **Phải xong trước khi sang GĐ1.5.** Nếu còn sức thì làm tiếp `credit.denied` (5,5%), `gov.revenue` (2,9%), `gov.debtGdp` (1,7%).
+
+**7. Quy ước báo cáo mốc** (Dương thêm). Mỗi khi báo xong một mốc, báo cáo phải có một mục liệt kê **mọi thay đổi trong `tests/unit` và mọi thay đổi khẳng định kịch bản** (`claims`, `goals`, ngưỡng trong `src/content/scenarios.ts`) kể từ mốc trước, từng cái kèm lý do, để Dương soát. Lấy bằng `git diff <commit mốc trước>..HEAD -- tests/unit src/content/scenarios.ts`. Hai chỗ này không có dấu vân tay tự động (chong-va-ngam.md, bảng "Cần người soát"), nên đây là chốt chặn bằng người. Danh sách cho mốc hiện tại (tính từ commit `746b1cb`, trưa 14/11) ở mục "Thay đổi test và khẳng định từ trưa 14/11" bên dưới.
+
+Sau bảy việc: chạy lại kiểm định đầy đủ, cập nhật sai-khac.md D6, viết báo cáo GĐ0 và GĐ1 (có mục của việc 7 và kết quả đi hết bảng "Cần người soát"), rồi mới viết `docs/design/gd1-5.md` và dừng chờ duyệt.
+
+### Thay đổi test và khẳng định từ trưa 14/11 (cho việc 7)
+
+`tests/unit`:
+- `session.test.ts`, "control = shock": ngưỡng chênh CPI sau khi tăng GTGT hạ từ 1% xuống 0,3%. Lý do: người bán giờ chỉ chuyển ngay một phần thuế vào giá (S31). Test này kiểm thế giới đối chứng khác ván thật, không kiểm mức chuyển thuế.
+- `session.test.ts`, "bỏ một chính sách": **đã hoàn lại assertion gốc theo yêu cầu của Dương; test đang đỏ, xem D13.** Trước đó Fable đã đổi "CPI ván thật cao hơn đối chứng" thành "khác đối chứng". Lý do: ở 50 hộ, sau 24 tháng tăng GTGT lên 20%, CPI ván thật THẤP hơn đối chứng (108,3 so với 109,9) vì cầu yếu đi. Ý chính của test (thế giới đối chứng trùng ván chưa có chính sách) không đổi. **Đây là chỗ Dương nên soát kỹ nhất**: một lần tăng thuế làm mức giá thấp hơn sau hai năm là kết quả lạ, mới thấy ở một seed, 50 hộ.
+- `scenario-options.test.ts` (mới): phân rã ba chỉ số Chính phủ, chuyển thuế vào giá, lương bám lạm phát, so sánh nhánh.
+- `chot-chan.test.ts` (mới): chốt chặn.
+
+Khẳng định kịch bản:
+- `thue-nguoi-giau`: làm lại thành ba nhánh; khẳng định cũ "đầu tư thấp hơn", "thất nghiệp cao hơn", "Gini không thấp hơn" chuyển vào nhánh trả nợ; thêm khẳng định cho hai nhánh kia (D10). Hai khẳng định Gini của nhánh trợ cấp và đầu tư công có lề hẹp: ngưỡng 0,03, số đo lớn nhất 0,024 và 0,019.
+- `keo-vao-luoi-thue`: thêm ba nhánh; khẳng định "thu nhập thực phi chính thức thấp hơn" đổi cửa sổ từ tháng 12 sang tháng 24.
+- `het-han-giam-thue`, `gia-luong-tien`, `can-ngan-sach`, `that-lung-buoc-bung`: chỉ đổi lời giải thích và mục đơn giản hoá, không đổi khẳng định.
 
 ### Quyết định của Dương tối 14/11/2026, đợt một
 

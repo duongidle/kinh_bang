@@ -91,9 +91,7 @@ describe('thế giới đối chứng', () => {
     const control = cf.control.subarray(k * cf.n, (k + 1) * cf.n);
     const actual = cf.actual.subarray(k * cf.n, (k + 1) * cf.n);
     expect(Array.from(control)).toEqual(Array.from(eng.seriesOf(w, 'cpi', cf.from, 36)));
-    // ván thật phải khác thế giới đối chứng. Không đòi giá cao hơn: người bán chỉ chuyển một phần thuế vào giá,
-    // và sau hai năm cầu yếu đi có thể kéo mức giá xuống dưới đối chứng.
-    expect(actual[cf.n - 1]).not.toBe(control[cf.n - 1]);
+    expect(actual[cf.n - 1]).toBeGreaterThan(control[cf.n - 1]);
   });
 });
 
