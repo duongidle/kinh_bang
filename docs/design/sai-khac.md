@@ -84,8 +84,10 @@ Xếp theo mức ảnh hưởng. Cột "Về thiết kế" là giá trị đưa 
 | S8b | **Lãi tiền gửi cao hơn lạm phát kỳ vọng thì hộ hoãn mua**, mức phản ứng lấy theo tài liệu | `exp.saveResponse` = 0,35 | 0 | Thay cho giá trị 1 (S8) và 2 (S28) | Havránek 2015, JEEA 13(6): độ co giãn thay thế liên thời gian sau khi chỉnh thiên lệch công bố là 0,3-0,4 ở ước lượng vi mô, xấp xỉ 0 ở vĩ mô, trên 0,8 là trái bằng chứng. Đã đọc tóm tắt 14/11/2026. Quy đổi sang tham số của mô hình là gần đúng |
 | S29 | **Hệ số của quy tắc lãi suất tự động thành tham số** | `cb.taylorPi` = 1,5; `cb.taylorSpeed` = 0,3 | | Trước là số viết cứng trong code. Giá trị không đổi | Taylor 1993 |
 | S30 | **Chi phí lãi vay trong giá tính theo số lãi thực trả tháng trước** | chi tiết triển khai | | Trước đó nhân cả dư nợ với lãi suất của khoản vay mới nhất, nên một lần tăng lãi suất đẩy giá lên ngay cả với nợ cũ lãi cố định, ngược chiều với K1.19 | Khoản vay giữ lãi suất lúc ký (thiết kế mục 7) |
-| S31 | **Người bán chỉ chuyển ngay một phần thay đổi thuế vào giá**, phần còn lại ăn vào biên lãi; sau đó biên lãi lại đi theo sức mua như thường. Áp cho mọi thuế nằm trong giá (GTGT, gián thu khác, thuế doanh thu của hộ kinh doanh), cả chiều tăng lẫn giảm | `firm.taxPassThrough` = 0,31; mã lý do `p_tax_absorb` | 1 | Dương quyết 14/11/2026 sau khi K1.24 hỏng: mô hình cũ chuyển trọn thuế vào giá vì biên lãi không co | IMF WP/21/61 (14 nước khu vực đồng euro, 1999-2013, 846 lần đổi GTGT): bình quân 31%, phần lớn ngay trong tháng đổi thuế. Đã đọc bản trích 14/11/2026. Xem D9 về độ chắc của con số này |
+| S31 | **Người bán chỉ chuyển ngay một phần thay đổi thuế vào giá**, phần còn lại ăn vào biên lãi; sau đó biên lãi lại đi theo sức mua như thường. Áp cho mọi thuế nằm trong giá. **Bất đối xứng**: tăng thuế chuyển 34%, giảm thuế chuyển 6,5% | `firm.taxPassUp` = 0,34; `firm.taxPassDown` = 0,065; mã lý do `p_tax_absorb` | 1 và 1 | Dương quyết 14/11/2026 (hai đợt): biên lãi phải co khi thuế tăng; đọc toàn văn rồi mới chọn số; có bằng chứng bất đối xứng thì mô hình hoá | Benzarti, Carloni, Harju, Kosonen 2020 (JPE; bản NBER WP 23849, Bảng 1). Chi tiết và các nguồn trái chiều: D9 |
 | S32 | **Đợt xét lương năm bám lạm phát 12 tháng qua**, thay cho lạm phát kỳ vọng | quy tắc `firm.wageIndexBase` (biến thể `expected` về thiết kế mục 10); mã lý do `w_index`, `w_index_exp` | biến thể `expected` | Dương quyết 14/11/2026 theo bằng chứng | Rabanal và Sbrancia 2024 (đã dẫn ở D5): lương bám lạm phát CPI năm trước |
+| S34 | **Hộ thu nhập cao hơn mặt bằng thì tiêu phần nhỏ hơn của thu nhập** (đề xuất A, Dương duyệt 14/11/2026): α1 của hộ = α1 × (thu nhập kỳ vọng của hộ / bình quân)^(−η) | `hh.saveIncomeEta` = 0,09 | 0 | K1.13: mọi hộ tiêu cùng tỷ lệ nên tiền không dồn lại được (D8) | Dynan, Skinner, Zeldes 2004 (JPE 112(2); bản NBER WP 7906, đã đọc toàn văn). Cách quy đổi ở D8 |
+| S35 | **Lần tính giá đầu tiên của nơi bán mới ghi lý do riêng** | mã lý do `p_new` | | Sửa lỗi phân rã, không đổi kinh tế. Trước đó cả mức giá của nơi mới mở bị ghi vào `p_wage` rồi trừ lại ở "yếu tố khác". Xem D11 | |
 | S33 | **Số hộ để chọn nhóm sáng lập thành tham số** | `firm.founderPool` = 60 | | Trước là số viết cứng. Giá trị không đổi. Tìm ra khi soi K1.13 (D8) | TTK |
 
 Chi tiết triển khai, không đổi cơ chế: doanh nghiệp chỉ đăng tuyển số người trả nổi lương; giữ lại lương tháng này cộng một tháng đệm trước khi mua máy; hộ gặp nơi hết hàng thì sang nơi quen kế tiếp trong cùng lượt; thanh lý máy của doanh nghiệp phá sản cho tối đa ba nơi mua; doanh nghiệp hết người hết tiền quá 6 tháng thì giải thể; cơ cấu ngành lúc đầu tính từ cầu để tháng đầu không ngành nào thừa hay thiếu hàng.
@@ -207,18 +209,52 @@ Các cơ chế còn thiếu, xếp theo giai đoạn:
 | E. Sở hữu tập trung: doanh nghiệp lớn, độc quyền | Lợi nhuận dồn về ít chủ | GĐ4 | |
 | F. Mua bán cổ phần | Người giàu mua lại phần của người cần tiền | GĐ3 (thị trường tài sản) | |
 
-**Đề xuất của tớ, chờ duyệt**: làm A trong GĐ1, vì rẻ, có nguồn, và đánh thẳng vào lực san bằng ở điểm 3. B làm sau A nếu A chưa đủ. Chưa làm gì cho tới khi Dương duyệt. Rủi ro của A: nó đổi tổng cầu (nhóm trên tiêu ít đi), nên phải hiệu chỉnh thô và chạy lại toàn bộ kiểm định.
+**Dương duyệt A tối 14/11/2026** (không chỉnh độ dốc để Gini đạt ngưỡng; B chỉ làm nếu duyệt sau khi có kết quả A). Đã làm: S34.
 
-### D9. Tỷ lệ chuyển thuế vào giá: bằng chứng không thống nhất (Dương nên biết)
+Độ dốc lấy từ bài báo (đã đọc toàn văn bản NBER WP 7906):
 
-`firm.taxPassThrough` = 0,31 lấy từ IMF WP/21/61. Nhưng các nguồn lệch nhau nhiều:
+- Bảng 4 và 5, dùng thu nhập lâu dài (ước lượng qua tiêu dùng, thu nhập 10 năm trước hoặc vài năm sau): tỷ lệ tiết kiệm tăng 1,25 đến 2,75 điểm phần trăm cho mỗi 10.000 đô la thu nhập (giá 1989). Thu nhập trung vị của nhóm 40-49 tuổi khoảng 36.000-45.000 đô la (Bảng 2).
+- Bảng 5, PSID, tiết kiệm chủ động cộng lương hưu, theo năm nhóm thu nhập: 9,0% / 12,1% / 16,9% / 19,3% / 20,5%. SCF (thay đổi của cải): 1,8% / 8,0% / 9,0% / 15,2% / 23,4%; 5% giàu nhất 43,6%; 1% giàu nhất 50,2%.
+- Quy đổi: 2 điểm × 4 (thu nhập trung vị tính bằng chục nghìn đô) = khoảng 8 điểm tỷ lệ tiết kiệm cho mỗi đơn vị log thu nhập. Chia cho tỷ lệ tiêu dùng 0,85 được độ co giãn **η = 0,09** (khoảng 0,06 đến 0,13). Phép quy đổi là của tớ, không có trong bài.
+- Giới hạn: số liệu Mỹ thập niên 1980. Trong mô hình hộ không có vòng đời, nên "tiết kiệm nhiều hơn" thành "giữ nhiều tiền hơn so với thu nhập", không phải tích luỹ suốt đời.
 
-- Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, 17 nước khu vực đồng euro, cùng bộ số liệu gốc): khoảng **100%** cho thay đổi thuế suất phổ thông, khoảng 30% cho thuế suất ưu đãi, gần 0 cho việc chuyển nhóm hàng. Tớ mới đọc tóm tắt.
-- IMF WP/21/61: **31%** bình quân mọi lần đổi thuế, sau khi thêm hiệu ứng cố định tương tác. Đã đọc bản trích. Chưa xác minh được tên tác giả và bài này giải thích thế nào về chênh lệch với bài 2015.
-- Benzarti, Carloni, Harju và Kosonen 2020 (JPE 128(12)): giá phản ứng với tăng thuế mạnh gấp đôi so với giảm thuế. Mới đọc bài tóm tắt của tác giả, chưa có con số mức.
-- Không có ước lượng cho Việt Nam (đã tìm đợt giảm GTGT 10% xuống 8%, chỉ có bài bình luận).
+**Kết quả A** (`scripts/k113.ts`, năm thứ 30):
 
-Thuế GTGT trong mô hình là thuế suất phổ thông. Theo bài 2015 thì mô hình cũ (chuyển trọn) không sai. Tớ chọn 0,31 vì đó là con số duy nhất tớ đọc trực tiếp, và vì quyết định là "biên lãi co khi thuế tăng". Khoảng hợp lý theo tài liệu là 0,3 đến 1. Đo ở 5 seed: sau 2 năm tỷ lệ chuyển trong mô hình là 0,27-0,43. Mô hình chưa có bất đối xứng tăng và giảm.
+| | 5000 hộ, η = 0 | 5000 hộ, η = 0,09 | 500 hộ, η = 0,09 |
+|---|---|---|---|
+| Gini của cải ròng | 0,30-0,31 | **0,33** (2 seed) | 0,47-0,50 |
+| Gini tiền mặt và tiền gửi | 0,16 | 0,17-0,18 | 0,20-0,24 |
+| Phần của 10% giàu nhất | 24% | 25-26% | 42-46% |
+| Số hộ còn giữ cổ phần | 72-73% | 65-67% | 36-44% |
+
+A đẩy Gini ở 5000 hộ lên khoảng 0,02-0,03. **Chưa tới 0,4.** Lý do: với η = 0,09, một hộ có thu nhập gấp ba mặt bằng chỉ giữ tiền nhiều hơn khoảng 7% so với thu nhập của nó. Lực san bằng chính còn nguyên: hộ nào cũng tiêu 8,3% số tiền đang giữ mỗi tháng. Tớ không chỉnh η.
+
+**Nguồn của ngưỡng 0,4: không có.** gd1.md ghi [BAM], [Caiani] cho K1.13, nhưng đó là nguồn cho ý "bất bình đẳng tự hình thành". Tớ đã tìm trong bản PDF Caiani 2016 và trong research/: không có con số Gini nào. Ngưỡng 0,4 là số tớ tự đặt lúc viết thiết kế. Vậy điều kiện "ngưỡng dựa trên số liệu có cả đất và nhà" không áp dụng được, và tớ chưa hạ ngưỡng. Hai điều Dương nên biết trước khi quyết:
+
+- Bỏ đất và nhà ra thường làm bất bình đẳng của cải **cao hơn**, không thấp hơn: nhà là tài sản của nhóm giữa, còn cổ phần và vốn kinh doanh tập trung ở nhóm trên (theo trí nhớ, chưa có nguồn đã đọc). Nên "GĐ1 chưa có đất" không phải lý do để hạ ngưỡng.
+- Một tiêu chí thay thế không cần con số tuyệt đối: **Gini của cải cao hơn Gini thu nhập**, là điều đúng ở gần như mọi nước. Mô hình hiện đạt ở 5000 hộ sau khi có A (0,33 so với 0,27-0,31) nhưng sát nút; trước A thì không đạt (0,28-0,29 so với 0,32-0,33).
+
+**Chờ Dương quyết**: (1) ngưỡng K1.13: giữ 0,4 và ghi "chưa đạt", hay đổi sang tiêu chí tương đối; (2) có làm B không (chủ tái đầu tư cổ tức, chọn người góp vốn theo của cải ròng).
+
+### D9. Tỷ lệ chuyển thuế vào giá: đã đọc toàn văn, chọn bất đối xứng (Dương quyết 14/11/2026)
+
+Ba nguồn, hai bài đầu đã đọc toàn văn bằng bản PDF:
+
+| Nguồn | Mẫu | Trong tháng đổi thuế | Cả kỳ | Tăng so với giảm |
+|---|---|---|---|---|
+| Benedek, De Mooij, Keen, Wingender 2015, IMF WP/15/214 | 17 nước khu vực đồng euro, 1999-2013, 1231 lần đổi | Thuế suất phổ thông 0,30; ưu đãi 0,36; chuyển nhóm 0,10 (Bảng 3). Gộp 0,15 | Phổ thông **1,39** (sai số 0,36) trong 12 tháng trước tới 12 tháng sau, trong đó 0,71 là TRƯỚC ngày đổi thuế; ưu đãi 0,30; gộp 0,32 | Bảng 4: trong tháng 0,16 và 0,14; cả kỳ 0,40 và 0,24; **không khác nhau có ý nghĩa** (p = 0,33) |
+| IMF WP/21/61 (bản trích, chưa xác minh tác giả) | 14 nước khu vực đồng euro, 846 lần đổi | 0,26 | 0,31 | "Ít bằng chứng" về bất đối xứng |
+| Benzarti, Carloni, Harju, Kosonen 2020, JPE 128(12) (bản NBER WP 23849) | Mọi lần đổi GTGT ở châu Âu 1996-2015; và tiệm cắt tóc Phần Lan (giảm 14 điểm năm 2007, tăng lại 2012) | Bảng 1: tăng **0,34** (0,064); giảm **0,065** (0,030) | Phần Lan: giá phản ứng với tăng mạnh gấp đôi giảm; chênh lệch còn nguyên nhiều năm sau | **Có, rõ.** Biên lãi và lợi nhuận tăng sau khi giảm thuế và ở lại mức cao hơn. Sau khi giảm thuế 60% tiệm giữ nguyên giá; sau khi tăng, khoảng một nửa chuyển trọn |
+
+Điều tớ rút ra:
+
+1. **Phần chuyển ngay khi TĂNG thuế: ba nguồn gặp nhau ở 0,26-0,34.** Chọn 0,34.
+2. **Về lâu dài với thuế suất phổ thông thì gần trọn** (Benedek: 1,39, không bác được mức 1). Mô hình không đặt con số dài hạn: sau cú đổi thuế biên lãi đi theo sức mua. Đo 5 seed với bản đối xứng 0,31: sau 2 năm tỷ lệ chuyển 0,27-0,43, tức thấp hơn bằng chứng dài hạn. Mô hình cũng chưa có việc tăng giá đón trước ngày đổi thuế (0,71 trong Benedek). Đây là chỗ lệch còn lại.
+3. **Bất đối xứng: bằng chứng trái nhau.** Hai bài của IMF trên khu vực đồng euro không thấy khác biệt có ý nghĩa; bài JPE thấy rõ. Tớ theo bài JPE vì nó thiết kế riêng để đo điều này (có nhóm đối chứng, có cú tăng và cú giảm cùng độ lớn trên cùng một ngành) và đã qua bình duyệt. Ước lượng điểm của Benedek cũng cùng chiều (0,40 so với 0,24). `firm.taxPassDown` = 0,065. Nếu Dương muốn theo hai bài IMF thì đặt `firm.taxPassDown` = `firm.taxPassUp`.
+4. **Ngưỡng K1.24 không cần sửa.** Ngưỡng là "tỷ lệ chuyển sau 2 năm nằm giữa 0 và 1". Bằng chứng dài hạn cho thuế suất phổ thông là quanh 1 (khoảng tin cậy rộng, từ 0,7 tới 2,1). Mô hình cho 0,27-0,43. Nếu kiểm định đầy đủ cho thấy K1.24 hỏng thì tớ sẽ báo, chưa tự sửa ngưỡng.
+5. Không có ước lượng cho Việt Nam.
+
+Hệ quả cho kịch bản `het-han-giam-thue`: thuế về 10% rồi giảm lại 8% thì giá không xuống lại bao nhiêu. Phải chạy lại kiểm định kịch bản và viết lại lời giải thích theo số đo.
 
 ### D10. Kịch bản có giả định ngầm về tiền thuế (Dương quyết 14/11/2026)
 
@@ -249,6 +285,55 @@ Rà 14 kịch bản còn lại:
 | `mot-khoan-vay`, `vach-xuat-phat`, `room-hay-lai-suat`, `chu-xuong`, `luong-toi-thieu` | Không có giả định tài khoá ngầm | Không cần sửa |
 
 Cùng loại giả định trong bộ kiểm định: K1.26 (nộp thuế đủ) và K1.24 (tăng GTGT) đều giữ tiền thu thêm lại. Ghi chú của K1.26 đã nói điều này.
+
+### D11. Vì sao thất nghiệp 6-7% và lạm phát gần 0 (PHÂN TÍCH, CHƯA SỬA, chờ Dương)
+
+Dương ghi nhận 14/11/2026: hai con số này lệch xa Việt Nam (lạm phát vài phần trăm, thất nghiệp khoảng 2%). Đo bằng `scripts/demand.ts` (5 seed, 500 hộ, năm 11-40), dùng chính phân rã của mô hình.
+
+**Thất nghiệp 6,3% không phải do thiếu cầu. Nó là người đang ở giữa hai việc.**
+
+| Số đo | Giá trị |
+|---|---|
+| Người mất việc mỗi tháng | 7,0% số hộ |
+| Thời gian thất nghiệp bình quân | 0,9 tháng |
+| Chỗ trống đang tuyển | 8,1% số hộ, NHIỀU HƠN số người thất nghiệp |
+| Mất việc vì "bán chậm nên cắt người" | 48 điểm mỗi năm (4% số hộ mỗi tháng) |
+| Mất việc vì người tự làm bỏ nghề đi tìm việc | 20 điểm mỗi năm |
+| Mất việc vì luân chuyển tự nhiên (`firm.turnover`) | 11 điểm mỗi năm |
+
+Soi từng lần cắt người (seed 1, 120 tháng, 3024 lượt): gần như tất cả là đơn vị 2-5 người cắt đúng **một** người vì số người cần tụt một bậc (3 xuống 2, 4 xuống 3), rồi vài tháng sau lại tuyển. Hộ kinh doanh chiếm hơn một nửa. Nguyên nhân cơ chế:
+
+1. Số người cần là số nguyên: `ceil(sản lượng mong muốn / năng suất)`. Với đơn vị 3 người, một người là một phần ba sản lượng. Doanh số tháng dao động vài phần trăm là đủ làm con số này nhảy một bậc.
+2. Không có gì cản việc cắt và tuyển lại: không chi phí sa thải, không thời hạn báo trước, không giữ người chờ đơn hàng. Caiani cũng cắt ngay, nhưng doanh nghiệp của Caiani có hàng trăm người nên một người không đáng kể. Mô hình của ta thu nhỏ doanh nghiệp xuống 5 người mà giữ nguyên quy tắc.
+3. Người bị cắt tìm được việc sau chưa đầy một tháng, nhưng mỗi tháng có 7% số hộ đi qua trạng thái này, nên lúc nào cũng có khoảng 6% đang thất nghiệp.
+
+Hướng sửa có nguồn, CHƯA LÀM: Lengnick 2013 (mục 2.3, theo trí nhớ, phải mở lại) cho doanh nghiệp chỉ cắt người khi tồn kho vượt một ngưỡng trên, tuyển khi dưới ngưỡng dưới, mỗi tháng cắt tối đa một người và có hiệu lực sau một tháng. Đó là một dải chết quanh số người cần, thay cho việc bám sát từng tháng. Tớ đoán thất nghiệp sẽ về 2-3%, chưa đo.
+
+**Lạm phát 0,6-0,9% vì không có gì làm tổng chi tiêu danh nghĩa tăng.**
+
+| Số đo (bình quân năm 11-40) | Giá trị | Việt Nam (theo trí nhớ, mức C) |
+|---|---|---|
+| Tăng tiền của công chúng | 0,3-0,6% mỗi năm | khoảng 10-14% |
+| Tăng dư nợ tín dụng | −1,2 đến −1,9% mỗi năm | khoảng 12-15% |
+| Bội chi ngân sách | 0,6% GDP | khoảng 3-4% GDP |
+| Đầu tư máy móc | 9% GDP | khoảng 30% GDP (gồm cả nhà ở và đầu tư công) |
+| Tăng trưởng GDP thực | −0,3% mỗi năm | khoảng 6-7% |
+| Sử dụng công suất máy | 70% (mức bình thường của doanh nghiệp là 80%) | |
+
+Tiền mới chỉ vào nền kinh tế qua hai cửa: ngân hàng cho vay và ngân sách bội chi. Tín dụng đang co nhẹ vì máy dư (công suất 70%) nên doanh nghiệp không vay mua máy. Ngân sách gần cân. Không có tăng năng suất, không tăng dân số. Tổng tiền gần đứng yên thì mức giá gần đứng yên. Phần giá vẫn nhích lên mỗi năm: biên lãi ròng +0,27 điểm, lương +0,2, chi phí vốn +0,18, đổi nơi mua +0,15, nơi bán mới +0,12.
+
+Vậy có hai vấn đề tách nhau:
+
+- **Thất nghiệp**: vấn đề của quy tắc cắt và tuyển người ở đơn vị nhỏ. Không liên quan tổng cầu.
+- **Lạm phát thấp, GDP thực giảm nhẹ, máy dư**: thiếu nguồn tăng chi tiêu danh nghĩa. Các hướng, CHƯA LÀM: (a) đặt bội chi mặc định gần mức Việt Nam (3-4% GDP) thay cho mức đang tự ra 0,6%; (b) tăng năng suất và dân số (đang để giai đoạn sau, lộ trình ghi "không tăng năng suất ở GĐ1"); (c) xem lại vì sao công suất dừng ở 70% thay vì 80%: có thể hàm đầu tư hoặc khâu gia nhập đang tạo máy dư.
+
+Tớ nghiêng về sửa thất nghiệp trước (có nguồn, tách bạch), rồi đo lại, rồi mới bàn (a) và (c). Chờ Dương.
+
+### D12. Sửa một lỗi phân rã giá (S35) và hệ quả cho D5
+
+Khi một nơi bán mới mở tính giá lần đầu, bản ghi quyết định ghi cả mức giá vào `p_wage` rồi trừ lại ở "yếu tố khác". Tổng vẫn đúng nên test không bắt được. Ở 5 seed: `p_wage` +1,32 điểm và "yếu tố khác" −1,41 điểm mỗi năm; sau khi sửa `p_wage` còn +0,20 và không còn phần "khác". Kinh tế không đổi, chỉ nhãn đổi.
+
+Hệ quả: câu ở D5 mục 1 "trong 7,5 điểm lạm phát, chi phí lương +5,9" bị thổi lên khoảng 1 điểm vì lỗi này. Kết luận của D5 (lương bám 100% là nguồn chính) vẫn đứng: phần lương vẫn là lớn nhất.
 
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 

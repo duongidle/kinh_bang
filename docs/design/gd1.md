@@ -408,6 +408,20 @@ Mỗi quyết định có phương án của quy tắc tự động và lý do, 
 
 **Mục tiêu hiệu chỉnh thô** (không chặn giai đoạn, chỉ báo cáo): lao động phi chính thức 55-70%; tiền mặt / tổng phương tiện thanh toán 7-13%; thu ngân sách / GDP 14-20%; thất nghiệp 2-6%.
 
+**Mục tiêu hiệu chỉnh thô, bản 14/11/2026** (Dương yêu cầu áp dụng P2 sau khi thấy lạm phát 0,1-1% và thất nghiệp 6-7%). Vẫn không chặn giai đoạn, nhưng mỗi lần chạy kiểm định đầy đủ phải báo từng dòng đạt hay lệch, và lệch thì phải có phân tích nguyên nhân. Số Việt Nam ở cột giữa ghi theo trí nhớ (mức C) trừ khi có chú thích; GĐ9 tra lại.
+
+| Chỉ số | Việt Nam | Mục tiêu thô GĐ1 | Mô hình hiện tại (5 seed, 500 hộ) |
+|---|---|---|---|
+| Thất nghiệp | khoảng 2% | **1,5-4%** (thu hẹp từ 2-6%) | 6,3%: LỆCH (sai-khac.md D11) |
+| Lạm phát bình quân năm | 3-4% | **2-5%** | 0,6-0,9%: LỆCH (D11) |
+| Lao động phi chính thức | 63-64% (research 4.1, mức B) | 55-70% | 55-60%: đạt |
+| Tiền mặt / tổng phương tiện thanh toán | khoảng 10% | 7-13% | 14%: lệch nhẹ |
+| Thu ngân sách / GDP | 17,8% năm 2024 (sai-khac S3) | 14-20% | 15,3%: đạt |
+| Bội chi / GDP | 3-4% | 2-4% | 0,6%: LỆCH |
+| Nợ công / GDP | 35-37% | 30-45% | 44%: đạt |
+
+Chưa đặt mục tiêu, chỉ báo cáo, vì GĐ1 thiếu cơ chế: tăng trưởng GDP thực (không có tăng năng suất và dân số), đầu tư / GDP (không có nhà ở và đầu tư công), tăng trưởng tín dụng (hộ không vay), Gini của cải (xem K1.13).
+
 Ghi chú trung thực: K1.15, K1.18, K1.20, K1.22, K1.26, K1.28, K1.29 kiểm cơ chế tự thiết kế, không có bài báo nào để so. Chúng kiểm mô hình làm đúng điều thiết kế nói, không kiểm thiết kế đúng với thực tế.
 
 ## 15. Tớ đã kiểm lại gì trong research
