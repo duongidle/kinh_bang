@@ -230,6 +230,7 @@ export const SCENARIOS: ScenarioDef[] = [
     prereq: ['vach-xuat-phat'],
     warmup: 180,
     months: 120,
+    setup: { variants: { 'gov.revenueUse': 'keep' } },
     goals: [below('gini', 'Gini thu nhập bình quân 3 năm cuối thấp hơn lúc bắt đầu', 'gini.income', 0, 36)],
     predict: [
       { indicator: 'gini.income', question: 'Nâng thuế cổ tức lên 30% mà không chi phần thu thêm thì Gini thu nhập sẽ' },
@@ -264,7 +265,7 @@ export const SCENARIOS: ScenarioDef[] = [
       { indicator: 'gov.debtGdp', label: 'Nợ công/GDP (2 năm cuối)', kind: 'pt', from: 96, to: END },
     ],
     explanation: 'Thuế cổ tức và thuế TNDN lấy bớt thu nhập của nhóm có vốn. Phần còn lại của câu chuyện là tiền đó đi đâu. Nếu Chính phủ giữ lại để trả nợ, tiền rời khỏi vòng chi tiêu: doanh nghiệp bán ít đi, đầu tư ít đi, bớt người, và người mất việc làm bất bình đẳng thu nhập tăng. Nợ công tính bằng đồng có giảm, nhưng GDP cũng nhỏ đi nên tỷ lệ nợ trên GDP không giảm rõ. Nếu Chính phủ chi lại số tiền đó, bằng trợ cấp hay mua hàng, cú hãm gần như biến mất. Còn bất bình đẳng thu nhập thì chỉ giảm nhẹ và không chắc: trong mô hình, phần lớn chênh lệch thu nhập đến từ có việc hay mất việc, không phải từ cổ tức.',
-    simplifications: [...BASE_SIMPLE, 'Người giàu không chuyển tài sản ra nước ngoài, không né thuế.', 'Biểu thuế TNCN gần như không chạm ai vì lương chưa phân tán (GĐ2).', '"Đầu tư công" ở GĐ1 chỉ là Chính phủ mua thêm hàng. Nó chưa tạo ra đường sá hay tài sản công làm tăng năng suất.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán. Năm đầu ở cả ba cách tiền đều chưa được chi.'],
+    simplifications: [...BASE_SIMPLE, 'Người giàu không chuyển tài sản ra nước ngoài, không né thuế.', 'Biểu thuế TNCN gần như không chạm ai vì lương chưa phân tán (GĐ2).', '"Đầu tư công" ở GĐ1 chỉ là Chính phủ mua thêm hàng. Nó chưa tạo ra đường sá hay tài sản công làm tăng năng suất.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán. Năm đầu ở cả ba cách tiền đều chưa được chi.', 'Quy tắc tự động chi lại tiền thuế thu thêm (gov.revenueUse) được đặt về "keep" ở cả ba cách: ba cách tự khai nơi tiền đi bằng bước riêng ở tháng 12, để quy tắc tự động bật thì chi hai lần (sai-khac.md D14).'],
   },
   {
     id: 'room-hay-lai-suat',
@@ -325,7 +326,7 @@ export const SCENARIOS: ScenarioDef[] = [
     ],
     explanation: 'Thuế GTGT nằm trong giá bán. Khi thuế đổi, người bán không chuyển hết vào giá ngay: trong mô hình khoảng một phần ba đi vào giá, phần còn lại ăn vào biên lãi, rồi biên lãi lại đi theo sức mua. Thuế thấp hơn thì giá thấp hơn, nhưng ít hơn mức giảm thuế. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn, và phần thu hụt đó Chính phủ phải vay để bù.',
     history: 'Việt Nam giảm GTGT từ 10% xuống 8% cho phần lớn hàng hoá từ 2022 và gia hạn nhiều lần, tới hết 2026.',
-    simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.', 'Tỷ lệ chuyển thuế vào giá lấy từ số liệu châu Âu (IMF WP/21/61: bình quân 31%); chưa có ước lượng cho Việt Nam.', 'Mô hình chưa có bất đối xứng: ngoài đời giá tăng theo thuế mạnh hơn là giảm theo thuế (Benzarti và cộng sự 2020).', 'Giả định ngầm: Chính phủ không cắt chi khi thu hụt. Phần thiếu được bù bằng vay nợ.'],
+    simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.', 'Tỷ lệ chuyển thuế vào giá lấy từ số liệu châu Âu (IMF WP/21/61: bình quân 31%); chưa có ước lượng cho Việt Nam.', 'Mô hình chưa có bất đối xứng: ngoài đời giá tăng theo thuế mạnh hơn là giảm theo thuế (Benzarti và cộng sự 2020).', 'Giả định ngầm: Chính phủ không cắt chi khi thu hụt. Phần thiếu được bù bằng vay nợ.', 'Gia hạn 8% là giảm thuế so với luật hiện hành (về 10%): theo quy tắc gov.revenueUse mặc định, Chính phủ vay bù và giữ nguyên chi, không cắt chi (sai-khac.md D14).'],
   },
   {
     id: 'keo-vao-luoi-thue',
@@ -337,7 +338,7 @@ export const SCENARIOS: ScenarioDef[] = [
     prereq: [],
     warmup: 36,
     months: 72,
-    setup: { params: { 'gov.indexation': 0 } },
+    setup: { params: { 'gov.indexation': 0 }, variants: { 'gov.revenueUse': 'keep' } },
     goals: [above('rev', 'Thu thuế hộ kinh doanh năm cuối cao hơn lúc bắt đầu', 'gov.tax.hkd', 1, 12, (x) => `${(x / 1e6).toFixed(0)} triệu/tháng`)],
     predict: [
       { indicator: 'gov.tax.hkd', question: 'Hạ ngưỡng về 100 triệu thì thu thuế hộ kinh doanh sẽ' },
@@ -379,7 +380,7 @@ export const SCENARIOS: ScenarioDef[] = [
       { indicator: 'gov.debt', label: 'Nợ công (năm cuối)', kind: 'rel', from: 60, to: END },
     ],
     explanation: 'Thuế theo doanh thu đi vào giá bán của hộ kinh doanh và vào thu nhập của chủ hộ. Khu vực này nghèo đi. Nó không co lại về số người, vì người làm ở đó không có chỗ nào khác để đi, và hộ kinh doanh trong mô hình không chuyển lên doanh nghiệp được. Tiền thuế đi đâu chỉ đổi mức độ: giữ lại trả nợ thì khu vực phi chính thức mất khoảng 3% thu nhập thực, chi lại ra thì mất khoảng 2%.',
-    simplifications: [...BASE_SIMPLE, 'Hộ kinh doanh khai một nửa doanh thu (giá trị tạm, chưa có số liệu).', 'Chưa có đường chuyển từ hộ kinh doanh lên doanh nghiệp.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán.'],
+    simplifications: [...BASE_SIMPLE, 'Hộ kinh doanh khai một nửa doanh thu (giá trị tạm, chưa có số liệu).', 'Chưa có đường chuyển từ hộ kinh doanh lên doanh nghiệp.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán.', 'Quy tắc tự động chi lại tiền thuế thu thêm (gov.revenueUse) được đặt về "keep" ở cả ba cách: ba cách tự khai nơi tiền đi bằng bước riêng ở tháng 12, để quy tắc tự động bật thì chi hai lần (sai-khac.md D14).'],
   },
   {
     id: 'can-ngan-sach',

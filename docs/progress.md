@@ -4,7 +4,7 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 ## Đang ở đâu
 
-Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập nhật 15/11/2026.
+Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập nhật 15/11/2026. Bước 3a (việc 9, S37, D14) xong: quy tắc `gov.revenueUse`, chỉ số `gov.respend`, khai báo ở K1.24-26, hai kịch bản thuế, vatcpi. Bước kế: 3b.
 
 ### Tóm tắt một dòng
 
@@ -19,7 +19,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 0 | Điều phối | Ghi phân việc vào CLAUDE.md, ghi bảng này | | Xong 15/11 |
 | 1 | Điều phối | Lập nhóm "GĐ1 update 1" (làm cùng GĐ3): việc 3, 5, 6, 8, 8b. GĐ1 là nền kinh tế không tăng trưởng; mục tiêu hiệu chỉnh tiền, tín dụng, tăng trưởng chuyển sang GĐ4. Ghi vào đây và lộ trình CLAUDE.md | 3, 5, 6, 8, 8b | Xong 15/11 |
 | 2 | Sonnet | Tạm thay việc 8: tăng thuế chuyển TRỌN vào giá (`firm.taxPassUp` = 1), giảm thuế giữ 0,065 (Benzarti). Ghi sai-khac.md là đơn giản hoá tạm, thay bằng việc 8 ở GĐ1 update 1 | thay 8 | Xong 15/11 (S36) |
-| 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Chưa |
+| 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Xong 15/11 (S37, D14) |
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Chưa |
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Chưa |
 | 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Chưa |
@@ -121,11 +121,13 @@ Sau bảy việc: chạy lại kiểm định đầy đủ, cập nhật sai-kha
 - `session.test.ts`, "control = shock" (15/11, S36): ngưỡng chênh CPI đưa về 0,01 như gốc trước 14/11 (đã hạ xuống 0,003 vì chuyển một phần); test qua với 0,01. Chú thích dòng sửa theo.
 - `scenario-options.test.ts` (mới): phân rã ba chỉ số Chính phủ, chuyển thuế vào giá, lương bám lạm phát, so sánh nhánh.
 - `chot-chan.test.ts` (mới): chốt chặn.
+- `revenue-use.test.ts` (mới, 15/11, S37): bốn test của `gov.revenueUse`: không đổi thuế thì `gov.respend` = 0; tăng GTGT 15% thì `base` chi nhiều hơn `keep`; hạ GTGT 5% thì `base` chi bằng `keep`, `balanced` chi thấp hơn (đo 12 tháng đầu, vì xa hơn một vụ cứu ngân hàng ở một nhánh có thể đảo thứ tự); GTGT 8% về 10% theo lịch không kích hoạt.
 
 Khẳng định kịch bản:
 - `thue-nguoi-giau`: làm lại thành ba nhánh; khẳng định cũ "đầu tư thấp hơn", "thất nghiệp cao hơn", "Gini không thấp hơn" chuyển vào nhánh trả nợ; thêm khẳng định cho hai nhánh kia (D10). Hai khẳng định Gini của nhánh trợ cấp và đầu tư công có lề hẹp: ngưỡng 0,03, số đo lớn nhất 0,024 và 0,019.
 - `keo-vao-luoi-thue`: thêm ba nhánh; khẳng định "thu nhập thực phi chính thức thấp hơn" đổi cửa sổ từ tháng 12 sang tháng 24.
 - `het-han-giam-thue`, `gia-luong-tien`, `can-ngan-sach`, `that-lung-buoc-bung`: chỉ đổi lời giải thích và mục đơn giản hoá, không đổi khẳng định.
+- 15/11 (S37, D14): `simplifications` của `thue-nguoi-giau`, `keo-vao-luoi-thue`, `het-han-giam-thue` thêm một câu khai nơi tiền thuế đi; hai kịch bản đầu thêm `setup.variants` đặt `gov.revenueUse = keep` cho mọi nhánh. Không đổi `claims`, `goals`.
 
 ### Quyết định của Dương tối 14/11/2026, đợt một
 

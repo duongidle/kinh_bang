@@ -403,7 +403,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
     'Tăng GTGT: giá hàng chịu thuế tăng nhưng ít hơn mức thuế; tiêu dùng thực giảm; thu ngân sách tăng',
     'tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1',
     (seed) => {
-      const p = pair(seed, { laws: { 'vat.rate.standard': 0.15 } }, 24, { laws: { 'vat.rate.standard': 0.1 }, params: { 'cb.autopilot': 0 } }, scale);
+      const p = pair(seed, { laws: { 'vat.rate.standard': 0.15 } }, 24, { laws: { 'vat.rate.standard': 0.1 }, params: { 'cb.autopilot': 0 }, variants: { 'gov.revenueUse': 'keep' } }, scale);
       // giá hàng chịu thuế so với hàng cùng loại không chịu GTGT (của hộ kinh doanh), bình quân năm thứ hai
       const rel = (w: World) => mean(p.eng.seriesOf(w, 'price.formal.taxed', p.t0 + 12, p.t0 + 24)) / mean(p.eng.seriesOf(w, 'price.informal.taxed', p.t0 + 12, p.t0 + 24));
       const ex = p.eng.law(p.base, 'tax.indirect.other');
@@ -413,27 +413,27 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
       const rev = diff(p, 'gov.tax.vat', 6, 24, true);
       return { ok: pass > 0 && pass < 1 && c < 0 && rev > 0, m: Math.min(pass, 1 - pass), value: `chuyển vào giá ${f2(pass)}; tiêu dùng thực ${pc(c)}; thu GTGT ${pc(rev)}` };
     },
-    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36).',
+    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.',
   );
   each(
     'K1.25',
     'Thuế TNCN luỹ tiến làm Gini lương sau thuế thấp hơn trước thuế',
     'hiệu > 0',
     (seed) => {
-      const p = pair(seed, { laws: { 'pit.deduction.self': 4_000_000, 'pit.deduction.dependent': 0 } }, 24, { params: { 'gov.indexation': 0 } }, scale);
+      const p = pair(seed, { laws: { 'pit.deduction.self': 4_000_000, 'pit.deduction.dependent': 0 } }, 24, { params: { 'gov.indexation': 0 }, variants: { 'gov.revenueUse': 'keep' } }, scale);
       const g = mean(p.eng.seriesOf(p.alt, 'gini.incomeGross', p.t0 + 1, p.t0 + 24));
       const n = mean(p.eng.seriesOf(p.alt, 'gini.wageNet', p.t0 + 1, p.t0 + 24));
       const g0 = mean(p.eng.seriesOf(p.base, 'gini.incomeGross', p.t0 + 1, p.t0 + 24)) - mean(p.eng.seriesOf(p.base, 'gini.wageNet', p.t0 + 1, p.t0 + 24));
       return { ok: g - n > 0, value: `giảm trừ 4 triệu: Gini giảm ${(g - n).toFixed(4)}; theo luật hiện hành: ${g0.toFixed(4)}` };
     },
-    'Với mức giảm trừ 15,5 triệu của luật hiện hành, gần như không ai trong mô hình phải nộp TNCN từ lương (lương chưa phân tán, GĐ2 mới có kỹ năng), nên hiệu bằng 0. Thí nghiệm hạ mức giảm trừ xuống 4 triệu để kiểm tính chất của biểu thuế.',
+    'Với mức giảm trừ 15,5 triệu của luật hiện hành, gần như không ai trong mô hình phải nộp TNCN từ lương (lương chưa phân tán, GĐ2 mới có kỹ năng), nên hiệu bằng 0. Thí nghiệm hạ mức giảm trừ xuống 4 triệu để kiểm tính chất của biểu thuế. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.',
   );
   each(
     'K1.26',
     'Bật "nộp thuế đủ" làm thu ngân sách tăng và doanh số thực của khu vực phi chính thức co lại',
     'hiệu chạy đôi (10 năm)',
     (seed) => {
-      const p = pair(seed, { variants: { 'tax.compliance': 'full' } }, 120, { laws: { 'hkd.threshold': 100e6 }, params: { 'gov.indexation': 0 } }, scale);
+      const p = pair(seed, { variants: { 'tax.compliance': 'full' } }, 120, { laws: { 'hkd.threshold': 100e6 }, params: { 'gov.indexation': 0 }, variants: { 'gov.revenueUse': 'keep' } }, scale);
       const rev = diff(p, 'gov.revenueGdp', 12, 120);
       const share = diff(p, 'informal.consShare', 12, 120);
       const lab = diff(p, 'informal.share', 12, 120);
@@ -447,7 +447,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
         return x;
       };
       const ds = sales(p.alt) / sales(p.base) - 1;
-      const p0 = pair(seed, { variants: { 'tax.compliance': 'full' } }, 24, {}, scale);
+      const p0 = pair(seed, { variants: { 'tax.compliance': 'full' } }, 24, { variants: { 'gov.revenueUse': 'keep' } }, scale);
       const rev0 = diff(p0, 'gov.revenueGdp', 6, 24);
       return {
         ok: rev > 0 && ds < 0,
@@ -455,7 +455,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
         value: `ngưỡng 100 triệu: thu/GDP ${(rev * 100).toFixed(2)} điểm, doanh số thực của hộ kinh doanh ${pc(ds)}, thu nhập thực của người làm phi chính thức ${pc(inc)}, phần chi tiêu mua ở hộ kinh doanh ${(share * 100).toFixed(2)} điểm, lao động phi chính thức ${(lab * 100).toFixed(2)} điểm; ngưỡng 1 tỷ hiện hành: thu/GDP ${(rev0 * 100).toFixed(2)} điểm`,
       };
     },
-    'Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. "Co lại" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người.',
+    'Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. "Co lại" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.',
   );
   each(
     'K1.28',

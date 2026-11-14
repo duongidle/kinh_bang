@@ -79,6 +79,7 @@ GĐ1 đã mắc gần đủ các kiểu. Mỗi mục dưới đây có ca thật
 - [ ] Mỗi khẳng định được viết **sau khi** đo, theo đúng điều mô hình nói. Khẳng định hỏng thì sửa câu chữ theo số đo, không sửa mô hình cho khớp câu chữ.
 - [ ] Khẳng định qua với lề hẹp (ví dụ ngưỡng 0,03 trong khi số đo lớn nhất là 0,024) phải được đánh dấu là yếu.
 - [ ] Ghi vào "mô hình bỏ qua gì" mọi thứ mà nếu có thì kết luận có thể đảo.
+- [ ] Thí nghiệm, kiểm định hay kịch bản có đổi thuế đã khai rõ tiền thu thêm (hay hụt thu) đi đâu chưa (`gov.revenueUse`: base, keep, balanced; bảng ở sai-khac.md D14)? Chưa khai thì không nhận.
 
 ### G. Công cụ chẩn đoán cũng sai được
 
@@ -136,6 +137,7 @@ Nợ mà chốt chặn E đang ghi nhận (trần đang phải để cao): `gdp.
 | D: hiệu ứng nhỏ hơn nhiễu | Cần đọc số đo từng seed | Opus, khi viết khẳng định kịch bản |
 | F: khẳng định kịch bản và giả định ngầm | `src/content/scenarios.ts` không có dấu vân tay vì chữ đổi thường xuyên | Opus hỏi "tiền đi đâu, tiền từ đâu" cho từng kịch bản thuế, chi tiêu |
 | G: công cụ chẩn đoán sai | Mỗi script một kiểu | Opus đo bằng hai cách trước khi tin một phát hiện bất ngờ |
+| F: thí nghiệm, kiểm định, kịch bản có đổi thuế đã khai `gov.revenueUse` chưa | Máy không biết một thí nghiệm có đổi thuế hay không, hay đã chọn đúng cách dùng tiền | Opus đối chiếu với bảng "Khai báo ở từng nơi" của sai-khac.md D14 mỗi khi thêm thí nghiệm hoặc kịch bản có đổi thuế |
 | I: báo cáo nêu phần chưa kiểm trước phần đã đạt | Là cách viết | Opus; Dương |
 
 ## Khi nào phải dừng lại báo Dương
