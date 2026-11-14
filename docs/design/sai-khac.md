@@ -386,6 +386,36 @@ Các lựa chọn đã trình (để đối chiếu):
 
 **Cập nhật 15/11/2026.** Dương quyết tạm thời cho tăng thuế chuyển trọn vào giá (S36). Việc 8 và 8b dời sang GĐ1 update 1. Test `session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó": XANH sau khi đổi (không đo lại số CPI cụ thể; phép đo trước đó với chuyển trọn là +3,2%); ngưỡng của test `control = shock` đưa về 0,01 như trước 14/11 và cũng qua.
 
+### D14. Việc 9: tiền thuế thu thêm đi đâu (cơ chế S37, ngoài thiết kế, Dương đặt yêu cầu 14-15/11/2026)
+
+**Yêu cầu của Dương.** Mọi thí nghiệm và kịch bản có đổi thuế phải khai rõ tiền thu thêm đi đâu. Mặc định theo hành vi thực tế của Chính phủ Việt Nam: **tăng thuế thì chi lại theo cơ cấu chi hiện tại; giảm thuế thì vay bù, giữ nguyên chi**. Giữ lại không chi (chiều tăng) và cắt chi (chiều giảm) là biến thể so sánh. Hệ quả phải nhớ: hai chiều không đối xứng, nợ công trôi lên qua các lần giảm thuế.
+
+**Thiết kế cơ chế là của người điều phối (Fable, 15/11/2026), Dương chưa soát chi tiết.** Quy tắc `gov.revenueUse` trong sổ quy tắc:
+
+- **Kích hoạt.** Khi người chơi hoặc một thí nghiệm đổi một luật thuế (`vat.*`, `pit.*`, `cit.*`, `hkd.threshold`, `tax.indirect.other`) hoặc đổi biến thể `tax.compliance`, sau tháng đầu của ván. Không kích hoạt bởi: điều kiện ban đầu, việc tự chỉnh ngưỡng theo lạm phát, và thay đổi đã nằm sẵn trong luật hiện hành (GTGT tự về 10% từ 01/01/2027). Lý do: dự toán ngân sách đã tính theo luật hiện hành; "thu thêm" là so với luật hiện hành.
+- **Mốc.** Lúc kích hoạt lần đầu, ghi tỷ lệ thu thuế / GDP danh nghĩa của 12 tháng trước đó (ít hơn nếu ván chưa đủ 12 tháng; dưới 3 tháng thì không kích hoạt). Thu thuế gồm GTGT, TNCN, TNDN, thuế hộ kinh doanh, thuế gián thu khác; không gồm phí và đất. Mốc giữ nguyên tới hết ván.
+- **Mỗi tháng sau đó.** Thu thêm = (tỷ lệ thu thuế / GDP của 12 tháng gần nhất − mốc) × GDP tháng (làm trơn). Dùng cửa sổ 12 tháng vì thuế TNDN quyết toán theo năm, và vì ngân sách ngoài đời lập theo năm. Hệ quả: phần chi lại vào dần trong 12 tháng đầu, đủ từ năm thứ hai.
+- **Chi lại.** Một hệ số chung nhân vào lương công chức, ngân sách mua hàng và trợ cấp, sao cho tổng chi tăng đúng bằng phần thu thêm. Cùng một hệ số nên cơ cấu chi giữ nguyên. Không đổi giá trị luật nào; lãi trái phiếu không đổi.
+- **Biến thể.** `base`: thu thêm thì chi lại, hụt thu thì vay bù (hệ số không xuống dưới 1). `keep`: không bao giờ chỉnh chi (bản "về thiết kế": tăng thuế thì tiền nằm lại Kho bạc, giảm thuế thì vay bù). `balanced`: thu thêm thì chi lại, hụt thu thì cắt chi.
+- **Ngoài đời ai làm việc này.** Chính phủ và Quốc hội: thu vượt dự toán được phân bổ chi ở năm sau; các đợt giảm GTGT 2022-2026 được bù bằng bội chi, không kèm cắt chi tương ứng. Hai câu này ghi theo trí nhớ (mức C), chưa có văn bản dẫn; GĐ9 tra lại.
+
+**Đơn giản hoá phải nói thật.**
+1. Sau khi kích hoạt, MỌI thay đổi của tỷ lệ thu thuế / GDP so với mốc đều được chi lại, kể cả thay đổi không do luật thuế (chu kỳ, lao động chuyển khu vực). Mô hình không tách được hai thứ nếu không có thế giới đối chứng.
+2. Nếu kích hoạt trong năm 2026 thì lần GTGT tự về 10% tháng 1/2027 cũng bị tính là thu thêm.
+3. "Chi lại theo cơ cấu" nâng lương công chức chứ không tuyển thêm người.
+4. Chi lại trễ dần trong một năm; trong năm đầu phần chưa chi làm bội chi nhỏ lại.
+
+**Khai báo ở từng nơi** (bảng này phải khớp với code):
+
+| Nơi | Dùng gì | Vì sao |
+|---|---|---|
+| K1.24, K1.25, K1.26 trong bộ kiểm định | `keep` | Giữ nguyên cách đo đã duyệt: đo riêng tác động của thuế. Đổi sang chi lại là đổi cách đo, cần Dương duyệt |
+| `tests/unit/session.test.ts`, hai test tăng GTGT | mặc định `base` (chi lại) | Hướng 3 trong quyết định D13 của Dương |
+| `tests/unit/scenario-options.test.ts`, test chuyển thuế | mặc định; chỉ đo 1 tháng nên không ảnh hưởng | |
+| Kịch bản `thue-nguoi-giau`, `keo-vao-luoi-thue` | `keep` cho cả ba nhánh | Ba nhánh tự khai nơi tiền đi (trợ cấp, mua hàng, trả nợ) bằng bước riêng ở tháng 12; để cơ chế tự động bật thì chi hai lần |
+| Kịch bản `het-han-giam-thue` | mặc định `base` | Gia hạn 8% là giảm thuế so với luật hiện hành: vay bù, giữ chi. Nhánh đối chứng (để thuế về 10%) không kích hoạt |
+| `scripts/vatcpi.ts` | in cả `base` và `keep` | Công cụ chẩn đoán của D13 |
+
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
 Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. **Dương quyết 14/11/2026: chấp nhận như gd0 mục 12, không tự cài hàm toán.** K0.2 ghi là đạt theo nghĩa: trạng thái kinh tế trùng từng bit; mã băm toàn cục có thể lệch giữa hai bản V8 khác nhau ở chữ số cuối của hàm toán.
