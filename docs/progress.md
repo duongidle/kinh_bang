@@ -8,7 +8,30 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 ### Tóm tắt một dòng
 
-Engine GĐ0 và GĐ1 xong. Đã làm theo hai đợt quyết định tối 14/11 của Dương. **Kiểm định đầy đủ phải chạy lại trên bản code hiện tại** (sau S34 và bất đối xứng thuế). Ba việc chờ Dương: ngưỡng K1.13 và đề xuất B; hướng sửa thất nghiệp và lạm phát (sai-khac.md D11). GĐ1.5 chưa bắt đầu.
+**Fable dừng code từ tối 14/11/2026** (quyền dùng hết ngày 16/11). Người làm tiếp là Opus. Engine GĐ0 và GĐ1 xong; bốn quyết định đợt ba dưới đây CHƯA làm; kiểm định đầy đủ CHƯA chạy lại trên bản code hiện tại. Hai tài liệu để lại cho các giai đoạn sau: [design/phac-thao-gd3-gd5.md](design/phac-thao-gd3-gd5.md) và [design/chong-va-ngam.md](design/chong-va-ngam.md). Đọc chong-va-ngam.md trước khi sửa engine.
+
+### VIỆC CHO OPUS: quyết định đợt ba của Dương, tối 14/11/2026 (chưa làm)
+
+Làm theo thứ tự. Mỗi việc: code, `npm test`, commit, cập nhật mục này. Phần UI và test giao Sonnet.
+
+**0. Chạy lại kiểm định đầy đủ trên bản code hiện tại, trước khi sửa gì.** `npm run validate:scenarios` rồi `npm run validate:gd1`. Bản `docs/validation/gd1.md` đang có là của trưa 14/11, cũ hơn S31, S32, S34. Bản `docs/validation/scenarios.md` là của bản code trước S34 và trước bất đối xứng thuế. Lượt chạy tối 14/11 bị dừng giữa chừng, không có kết quả. Việc phải xem sau khi chạy:
+   - K1.24: nếu hỏng vì tỷ lệ chuyển sau 2 năm, sửa NGƯỠNG theo bằng chứng ở sai-khac.md D9 (Dương đã cho phép), không sửa tham số.
+   - `het-han-giam-thue`: với bất đối xứng, khẳng định "gia hạn 8% giữ giá thấp hơn" có thể hỏng hoặc gần 0. Viết lại lời giải thích theo số đo: giảm thuế lại thì giá không xuống mấy.
+   - Điền cột "mô hình hiện tại" của bảng mục tiêu hiệu chỉnh thô (gd1.md mục 14) bằng số 20 seed.
+
+**1. K1.13: bỏ ngưỡng 0,4** (không có nguồn). Tiêu chí mới: Gini của cải ròng năm 30 > Gini thu nhập năm 30 (bình quân 12 tháng cuối của năm 30 cho đỡ nhiễu), và phân phối lệch phải. Áp ở mọi quy mô. Sửa `tests/validation/gd1-lib.ts` (dòng K1.13 và mục K1.13 trong `KNOWN_FAIL`: xoá nếu qua), gd1.md dòng K1.13, sai-khac.md D8. **Không làm B.** Ghi B (chủ tái đầu tư cổ tức, chọn người góp vốn theo của cải ròng) và mua bán cổ phần vào việc GĐ3; sở hữu tập trung vào GĐ4. Đã ghi sẵn trong phac-thao-gd3-gd5.md.
+
+**2. Thất nghiệp: quy tắc dải tồn kho của Lengnick 2013** (Dương duyệt). Chẩn đoán ở sai-khac.md D11. Việc phải làm:
+   - Mở lại bài: Lengnick 2013, "Agent-based macroeconomics: A baseline model", JEBO 86. Đường dẫn ở research/abm-models.md. Lấy ĐÚNG quy tắc và tham số (Fable chỉ nhớ: tồn kho dưới ngưỡng dưới thì mở một chỗ tuyển; trên ngưỡng trên thì cho một người nghỉ, có hiệu lực sau một tháng; mỗi tháng tối đa một người; hai ngưỡng là hai bội số của cầu tháng). KHÔNG code theo trí nhớ này.
+   - Làm thành quy tắc có biến thể trong sổ quy tắc (`firm.staffing`: `band` mặc định, `track` là bản cũ bám sát từng tháng), tham số có nguồn. Ngành dịch vụ không có tồn kho: phải quyết dùng gì thay (ví dụ phần công suất bỏ không); đó là tự thiết kế, ghi rõ.
+   - Đo lại bằng `scripts/demand.ts 5 M`: người mất việc mỗi tháng, thời gian thất nghiệp, chỗ trống, thất nghiệp. **Báo Dương số đo trước khi làm tiếp.** Không chỉnh hai ngưỡng để thất nghiệp ra 2%.
+   - Rủi ro: K1.9 (Okun), K1.10 (Phillips, Beveridge), K1.27, và mọi kịch bản có khẳng định về thất nghiệp sẽ đổi. Chạy lại kiểm định đầy đủ sau việc này.
+
+**3. Lạm phát: KHÔNG đặt bội chi theo Việt Nam khi GDP còn đi ngang.** Việc phải làm là viết ĐỀ XUẤT, chưa code: một xu hướng tăng năng suất đơn giản, có nguồn, ngay trong GĐ1. Ghi vào sai-khac.md một mục mới "CHỜ DƯƠNG DUYỆT". Gợi ý để Opus kiểm, không phải quyết định: `firm.aL` tăng đều g mỗi năm cho mọi đơn vị (Caiani 2016 không có tăng năng suất; Dosi và cộng sự 2010 "Schumpeter meeting Keynes" có nhưng là nội sinh qua R&D, thuộc GĐ4; bản ngoại sinh đơn giản phải tìm nguồn, ví dụ số liệu tăng năng suất lao động Việt Nam của Cục Thống kê). Phải nói rõ hệ quả: lương thực phải tăng theo năng suất thì cầu mới theo kịp (cần một số hạng năng suất trong đợt xét lương, có nguồn), lộ trình đang ghi "năng suất tăng: GĐ4", và mọi mục tiêu hiệu chỉnh thô đổi nghĩa. Hiệu chỉnh tiền và tín dụng CHỈ làm sau khi đã có tăng trưởng.
+
+**4. Bất đối xứng thuế: giữ theo Benzarti.** Thêm bản đối xứng thành biến thể Phòng thí nghiệm: quy tắc mới trong sổ quy tắc (ví dụ `firm.taxPass`: `base` bất đối xứng, `symmetric` dùng `firm.taxPassUp` cho cả hai chiều), có `teaches`. Thêm một test nhanh. Cập nhật sai-khac.md S31.
+
+Sau bốn việc: chạy lại kiểm định đầy đủ, cập nhật sai-khac.md D6, viết báo cáo GĐ0 và GĐ1, rồi mới viết `docs/design/gd1-5.md` và dừng chờ duyệt.
 
 ### Quyết định của Dương tối 14/11/2026, đợt một
 
@@ -50,17 +73,7 @@ Engine GĐ0 và GĐ1 xong. Đã làm theo hai đợt quyết định tối 14/11
 
 ### Việc chờ Dương quyết
 
-1. **K1.13** (D8): giữ ngưỡng 0,4 và ghi "chưa đạt", hay đổi sang tiêu chí "Gini của cải cao hơn Gini thu nhập". Và có làm B không.
-2. **Thất nghiệp** (D11): sửa quy tắc cắt và tuyển người theo dải tồn kho của Lengnick 2013 (phải mở lại bài để lấy đúng quy tắc).
-3. **Lạm phát và cầu** (D11): đặt bội chi mặc định gần mức Việt Nam, hay chấp nhận tới khi có tăng năng suất; soi vì sao công suất máy dừng ở 70%.
-4. **Bất đối xứng thuế** (D9): tớ đã theo bài JPE. Nếu Dương muốn theo hai bài IMF (không bất đối xứng) thì đổi một tham số.
-
-### Bước tiếp theo, theo thứ tự
-
-1. Chạy lại `npm run validate:scenarios` và `npm run validate:gd1` trên bản code hiện tại (Sonnet). Đọc kết quả, cập nhật D6 và bảng mục tiêu thô.
-2. `het-han-giam-thue`: viết lại lời giải thích theo số đo mới (giảm thuế lại thì giá không xuống mấy).
-3. Sau khi Dương trả lời: làm, kiểm định lại.
-4. Báo cáo GĐ0 và GĐ1. Viết `docs/design/gd1-5.md`, dừng chờ duyệt.
+Không còn việc nào treo từ phía Dương. Hai việc sẽ cần Dương sau: số đo sau khi sửa thất nghiệp (việc 2), và đề xuất tăng năng suất (việc 3).
 
 ### Các quyết định của Dương sáng và trưa 14/11/2026 (đã làm hết, chi tiết ở [design/sai-khac.md](design/sai-khac.md) mục B và D)
 
