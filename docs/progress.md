@@ -17,7 +17,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | Bước | Ai | Nội dung | Việc cũ | Trạng thái |
 |---|---|---|---|---|
 | 0 | Điều phối | Ghi phân việc vào CLAUDE.md, ghi bảng này | | Xong 15/11 |
-| 1 | Điều phối | Lập nhóm "GĐ1 update 1" (làm cùng GĐ3): việc 3, 5, 6, 8, 8b. GĐ1 là nền kinh tế không tăng trưởng; mục tiêu hiệu chỉnh tiền, tín dụng, tăng trưởng chuyển sang GĐ4. Ghi vào đây và lộ trình CLAUDE.md | 3, 5, 6, 8, 8b | Chưa |
+| 1 | Điều phối | Lập nhóm "GĐ1 update 1" (làm cùng GĐ3): việc 3, 5, 6, 8, 8b. GĐ1 là nền kinh tế không tăng trưởng; mục tiêu hiệu chỉnh tiền, tín dụng, tăng trưởng chuyển sang GĐ4. Ghi vào đây và lộ trình CLAUDE.md | 3, 5, 6, 8, 8b | Xong 15/11 |
 | 2 | Sonnet | Tạm thay việc 8: tăng thuế chuyển TRỌN vào giá (`firm.taxPassUp` = 1), giảm thuế giữ 0,065 (Benzarti). Ghi sai-khac.md là đơn giản hoá tạm, thay bằng việc 8 ở GĐ1 update 1 | thay 8 | Chưa |
 | 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Chưa |
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Chưa |
@@ -28,6 +28,15 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 5 | Điều phối | Chốt GĐ1 có điều kiện: mục còn hỏng ghi "đã biết" trong sai-khac.md kèm nơi sẽ sửa; mục S13 trong game liệt kê các lỗi này. Cập nhật CLAUDE.md để quy tắc kiểm định không chặn GĐ1.5. Viết báo cáo GĐ0 + GĐ1. Chạy chong-va-ngam.md, liệt kê thay đổi `tests/unit` và khẳng định kịch bản kèm lý do | 7 | Chưa |
 | 6 | Điều phối | Spec GĐ1.5 phạm vi tối thiểu chơi được: 3 vai, kịch bản, sandbox, phòng thí nghiệm, biểu đồ, chuỗi nhân quả, onboarding. Bản đồ isometric tĩnh đơn giản; phần "sống" để sau. Chờ Dương duyệt | | Chưa |
 | 7 | Sonnet | Thêm `cozy_japanese_startup_office.json` vào `.gitignore` | | Chưa |
+
+**Nhóm "GĐ1 update 1"** (làm cùng GĐ3, không làm bây giờ). Đặc tả từng việc nằm ở các mục "VIỆC CHO OPUS" bên dưới, giữ nguyên số:
+- Việc 8: biên lãi hồi dần sau khi đổi thuế. Trước đó dùng đơn giản hoá tạm của bước 2.
+- Việc 8b: tăng giá đón trước ngày thuế có hiệu lực.
+- Việc 5: phân tích độ nhạy, soát nguồn 10 tham số mạnh nhất.
+- Việc 6: lấp 11% GDP danh nghĩa chưa gán lý do. Dòng "phải xong trước khi sang GĐ1.5" trong đặc tả cũ KHÔNG còn hiệu lực; trần 0,15 trong `chot-chan.test.ts` giữ nguyên cho tới lúc đó, và báo cáo GĐ1 phải nêu khoản này.
+- Việc 3: đề xuất tăng năng suất (có thể thuộc GĐ4).
+
+**GĐ1 là nền kinh tế không tăng trưởng.** Các mục tiêu hiệu chỉnh thô về lạm phát, bội chi/GDP (đi theo tiền, tín dụng, tăng trưởng) chuyển sang GĐ4; ở GĐ1 chỉ báo cáo số đo (gd1.md mục 14).
 
 Hết quota giữa chừng: trạng thái trong bảng này cộng `git log` là đủ để phiên sau làm tiếp.
 

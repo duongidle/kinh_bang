@@ -420,6 +420,8 @@ Mỗi quyết định có phương án của quy tắc tự động và lý do, 
 | Bội chi / GDP | 3-4% | 2-4% | 0,6%: LỆCH |
 | Nợ công / GDP | 35-37% | 30-45% | 44%: đạt |
 
+**Dương quyết 15/11/2026: GĐ1 là nền kinh tế không tăng trưởng.** Hai dòng lạm phát và bội chi/GDP trong bảng trên phụ thuộc vào tăng trưởng, tiền và tín dụng; mục tiêu của chúng chuyển sang GĐ4. Ở GĐ1 chỉ báo cáo số đo, không tính là lệch. Mục tiêu thất nghiệp giữ ở GĐ1.
+
 Chưa đặt mục tiêu, chỉ báo cáo, vì GĐ1 thiếu cơ chế: tăng trưởng GDP thực (không có tăng năng suất và dân số), đầu tư / GDP (không có nhà ở và đầu tư công), tăng trưởng tín dụng (hộ không vay), Gini của cải (xem K1.13).
 
 Ghi chú trung thực: K1.15, K1.18, K1.20, K1.22, K1.26, K1.28, K1.29 kiểm cơ chế tự thiết kế, không có bài báo nào để so. Chúng kiểm mô hình làm đúng điều thiết kế nói, không kiểm thiết kế đúng với thực tế.

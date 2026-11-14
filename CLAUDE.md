@@ -6,7 +6,7 @@ Web app mô phỏng nền kinh tế một quốc gia giả lập theo Việt Nam
 
 ## Trạng thái
 
-- Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Engine GĐ1 xong; kiểm định đầy đủ phải chạy lại; việc kế tiếp ghi ở đầu progress.md.
+- Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Engine GĐ1 xong. Dương quyết 15/11/2026: hoàn thiện GĐ1 rồi sang GĐ1.5, không thêm cơ chế; kế hoạch ở đầu progress.md.
 - Mọi sai khác so với thiết kế và các phát hiện còn mở: [docs/design/sai-khac.md](docs/design/sai-khac.md). Cơ chế thêm phải là tham số có tên, có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
 - Việc đang làm, giả định đã chọn, việc kế tiếp: [docs/progress.md](docs/progress.md). Đọc file đó và `git log` trước khi làm bất cứ gì.
 
@@ -100,9 +100,11 @@ tests/{unit,validation,perf}
 
 Thứ tự đã duyệt (khác KICKOFF.md, giữ nguyên số hiệu giai đoạn):
 
-GĐ0 nền móng kỹ thuật → GĐ1 lõi kinh tế → **GĐ1.5** đánh bóng trải nghiệm → **GĐ3** tài sản và tài chính → **GĐ5** mở cửa → **GĐ2** con người → GĐ4 cấu trúc thị trường → GĐ6 không gian và vật chất → GĐ7 môi trường và rủi ro → GĐ8 thể chế và xã hội → GĐ9 hiệu chỉnh tinh theo dữ liệu thật.
+GĐ0 nền móng kỹ thuật → GĐ1 lõi kinh tế → **GĐ1.5** đánh bóng trải nghiệm → **GĐ3** tài sản và tài chính (kèm **GĐ1 update 1**) → **GĐ5** mở cửa → **GĐ2** con người → GĐ4 cấu trúc thị trường → GĐ6 không gian và vật chất → GĐ7 môi trường và rủi ro → GĐ8 thể chế và xã hội → GĐ9 hiệu chỉnh tinh theo dữ liệu thật.
 
 **GĐ1.5 - Đánh bóng trải nghiệm** (thêm ngày 13/11/2026). Bắt đầu sau khi GĐ1 qua kiểm định. Một mốc riêng cho UI/UX: hệ thiết kế (màu, chữ, phong cách isometric theo skill anatomy), điều hướng 3 vai, cảm giác "sống" của bản đồ, onboarding. Các giai đoạn sau dùng lại hệ thiết kế này, và mỗi giai đoạn có tiêu chí nghiệm thu UI ghi trong spec của nó. Spec viết vào `docs/design/gd1-5.md` khi tới lượt, theo đúng quy trình thiết kế rồi chờ duyệt. Hệ quả cho GĐ0 và GĐ1: giao diện ở hai giai đoạn này chỉ cần đúng chức năng và đọc được, chưa cần đẹp.
+
+**GĐ1 update 1** (Dương quyết 15/11/2026). GĐ1 chốt là một nền kinh tế **không tăng trưởng**, không phát triển thêm cơ chế. Nhóm việc sau làm cùng GĐ3: biên lãi hồi dần sau khi đổi thuế (việc 8), tăng giá đón trước ngày thuế có hiệu lực (8b), phân tích độ nhạy và soát nguồn tham số (5), lấp phần GDP danh nghĩa chưa gán lý do (6), đề xuất tăng năng suất (3, có thể thuộc GĐ4). Đặc tả từng việc ở progress.md. Mục tiêu hiệu chỉnh về tiền, tín dụng, tăng trưởng (và lạm phát, bội chi đi theo chúng) chuyển sang GĐ4.
 
 Nội dung từng giai đoạn ở KICKOFF.md, với các thay đổi đã duyệt:
 - Lương tối thiểu vùng chuyển từ GĐ2 về GĐ1. BHXH và phần còn lại của GĐ2 giữ nguyên.
