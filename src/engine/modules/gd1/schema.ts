@@ -280,6 +280,7 @@ export interface Gd1State {
   publicWage: number;
   gdpEma: number; // GDP danh nghĩa tháng, làm trơn
   unemp: number;
+  uStar?: number; // mức thất nghiệp bình thường, làm trơn từ chính mô hình
   govArrears: number;
   purchaseBudget: number;
   nPublic: number;

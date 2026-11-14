@@ -134,7 +134,10 @@ export function planFirms(w: World, eng: Engine): void {
   const flexWage = eng.variant(w, 'firm.wage') === 'flex';
   const hkdFlex = eng.param(w, 'hkd.wageFlex') >= 0.5;
   const phillips = eng.param(w, 'firm.wagePhillips');
-  const uRef = eng.param(w, 'firm.wageSlackU');
+  const hkdIndex = eng.param(w, 'hkd.wageIndex');
+  // mức thất nghiệp bình thường: xu thế làm trơn của chính thất nghiệp trong mô hình (Ball và Mankiw 2002), không đặt tay
+  s.uStar = (s.uStar ?? s.unemp) + (s.unemp - (s.uStar ?? s.unemp)) / eng.param(w, 'firm.nairuWindow');
+  const uRef = s.uStar;
   const hkdThreshold = eng.law(w, 'hkd.threshold');
   const hkdDeclare = eng.variant(w, 'tax.compliance') === 'full' ? 1 : eng.param(w, 'hkd.declare');
   const normalCost = eng.param(w, 'firm.normalCostPricing') >= 0.5;
@@ -181,7 +184,7 @@ export function planFirms(w: World, eng: Engine): void {
     }
     if (!f.solo[i] && i % 12 === month && f.born[i] < w.meta.tick - 6) {
       // đợt xét lương năm: theo lạm phát kỳ vọng, cộng trừ theo độ căng của thị trường lao động (Caiani 3.15: ngưỡng thất nghiệp υ)
-      const up = w1 * wageIndex * Math.max(0, piExp);
+      const up = w1 * (f.formal[i] ? wageIndex : hkdIndex) * Math.max(0, piExp);
       const slack = w1 * phillips * (uRef - s.unemp);
       const adj = Math.max(-up, slack); // lương danh nghĩa không giảm trong đợt xét năm
       if (up !== 0) parts.push({ reason: 'w_index', amount: up });

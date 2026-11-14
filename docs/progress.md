@@ -15,10 +15,13 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
   - Bộ kiểm định: `tests/validation/gd1-lib.ts` (K1.1-K1.32), `tests/validation/gd1.test.ts` sinh `docs/validation/gd1.md`. Chạy thử nhanh: `npx tsx scripts/validate.ts 5 [base|exp|all] [S|M|L]`.
   - Chạy thử 5 seed ngày 14/11: mọi mục lần chạy gốc qua; mọi thí nghiệm chạy đôi qua sau khi sửa cách đo K1.22 và K1.26 (xem dưới).
 - **Quyết định của Dương 14/11/2026** (đã làm theo): `exp.saveResponse` về 0,35 theo Havránek 2015, K1.19 ghi "chưa đạt (đã biết)"; vay tiêu dùng và giảm phát nợ để GĐ3; giữ cách đo mới của K1.22 và K1.26; giữ hiện tượng lãi suất cao làm tăng lạm phát qua tiền lãi, làm kịch bản 15; chưa chỉnh lạm phát.
-- **Đang chờ Dương**: chọn hướng sửa lạm phát (sai-khac.md mục D5). Với mặc định hiện tại, 20 seed: K1.5 13/20, K1.10 15/20, K1.12 13/20 không qua. Nguyên nhân: S7 + S25 + S20. **Chưa chạy `npm run validate:gd1` đủ bộ** vì kết quả phụ thuộc quyết định này.
-- **Đang dở** (không phụ thuộc quyết định trên): phần GĐ0 còn lại và GĐ1 mốc M6.
+- **Quyết định lạm phát của Dương 14/11/2026** (đã làm): S20 mặc định tắt; S7 thành bám 50% (Rabanal và Sbrancia 2024); mức thất nghiệp bình thường của S25 tự sinh từ mô hình (Ball và Mankiw 2002). Kết quả 20 seed: K1.5, K1.10 qua; **K1.12 12/20 không qua**, nguyên nhân ở sai-khac.md D5 (giá phản ứng trong cùng quý, không vá). Lạm phát bình quân giờ 0-1,8%.
+- Nội dung học mới: `src/content/notes.ts` (mô hình bỏ qua gì; vì sao lãi suất yếu và room mạnh; vì sao lạm phát gần 0).
+- Kịch bản: 15 cái ở `src/content/scenarios.ts`, kiểm định bằng `npx tsx scripts/scenarios.ts <số seed> [mã]` hoặc `npm run validate:scenarios`. Lần chạy 5 seed trước khi đổi S7/S25: còn hỏng ở thue-nguoi-giau, het-han-giam-thue, song-bang-luong, chu-xuong (đối chứng theo cú sốc chưa chạy), luong-toi-thieu, hai-tay-lai. **Phải sửa lời giải thích hoặc cách đo, rồi chạy lại.**
+- **Đang dở**: phần GĐ0 còn lại và GĐ1 mốc M6.
   - Xong: giao thức `src/protocol/index.ts`; kiểu kịch bản `src/engine/scenario/types.ts`; vai người chơi trong engine `src/engine/modules/gd1/player.ts` (ghi đè sau quy tắc tự động, có mã lý do riêng); hộ và doanh nghiệp có tên `names.ts`.
-  - Kế tiếp: `src/engine/session/session.ts` (xử lý lệnh, khung bản đồ, mẫu giao dịch, truy vấn, thế giới đối chứng bằng cách phát lại nhật ký lệnh từ mốc lưu, bản tin, kịch bản); Worker; test K0.2, K0.10; rồi UI.
+  - Xong: `src/engine/session/session.ts` (xử lý lệnh, khung bản đồ, mẫu giao dịch, truy vấn, thế giới đối chứng bằng cách phát lại nhật ký lệnh từ mốc lưu, bản tin, kịch bản); `src/worker/worker.ts`; test `tests/unit/session.test.ts` (K0.2, K0.10, cỡ tin tick).
+  - Kế tiếp: UI (chưa có dòng nào: thiếu `index.html`, `src/ui`).
 - **Bước tiếp theo sau đó**: 15 kịch bản và kiểm định kịch bản; UI ba vai; GĐ1.5 (viết `docs/design/gd1-5.md` trước).
 - Công cụ soi: `scripts/pairdiag.ts` (hiệu chạy đôi theo năm), `scripts/k119.ts`, `scripts/inflation.ts` (phân rã CPI và lương), `scripts/validate.ts <số seed> <base|exp|all> <S|M|L> [k=v]`.
 
