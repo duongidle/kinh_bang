@@ -6,9 +6,19 @@ Web app mô phỏng nền kinh tế một quốc gia giả lập theo Việt Nam
 
 ## Trạng thái
 
-- Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Đang code theo chế độ tự chạy.
+- Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Engine GĐ1 xong; kiểm định đầy đủ phải chạy lại; việc kế tiếp ghi ở đầu progress.md.
 - Mọi sai khác so với thiết kế và các phát hiện còn mở: [docs/design/sai-khac.md](docs/design/sai-khac.md). Cơ chế thêm phải là tham số có tên, có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
 - Việc đang làm, giả định đã chọn, việc kế tiếp: [docs/progress.md](docs/progress.md). Đọc file đó và `git log` trước khi làm bất cứ gì.
+
+## Ai làm gì (chuyển giao từ 16/11/2026)
+
+Quyền dùng Fable của Dương hết ngày 16/11/2026. Từ ngày đó, hoặc sớm hơn nếu phiên đang chạy không phải Fable:
+
+- **Opus điều phối.** Opus đọc progress.md, quyết thứ tự việc, viết spec và đề xuất, chẩn đoán kiểm định hỏng, đọc nguồn, viết báo cáo cho Dương. Opus không tự code phần lớn.
+- **Sonnet code.** Mọi việc viết code (engine, giao diện, test) Opus giao cho Sonnet bằng subagent, với lời giao việc tự đủ: file nào, lệnh nào, "xong" nghĩa là gì, các quy tắc bắt buộc dưới đây. Opus đọc diff trước khi commit, nhất là diff của `tests/`.
+- **Opus chạy [chong-va-ngam.md](docs/design/chong-va-ngam.md) trước khi báo xong mỗi giai đoạn** (và mỗi mốc lớn M1, M2...). Cụ thể: `npm test` qua, trong đó có `tests/unit/chot-chan.test.ts`; đi hết bảng "Cần người soát" và ghi kết quả từng dòng vào báo cáo giai đoạn; phần "chưa kiểm" đứng trước phần "đã đạt". Thiếu bước này thì chưa được báo xong.
+- **Dừng lại báo Dương** khi gặp một trong bảy trường hợp ở chong-va-ngam.md mục "Khi nào phải dừng lại báo Dương". Sonnet gặp thì báo Opus, Opus báo Dương. Không ai tự quyết thay.
+- Kiểm định thống kê đầy đủ do Opus cho chạy và đọc; không sửa engine trong lúc nó chạy.
 
 ## Tài liệu
 
@@ -64,6 +74,7 @@ tests/{unit,validation,perf}
 12. **Kiểm định thống kê đầy đủ** (`npm run validate:gdN`, nhiều seed × 480 tháng) chỉ chạy ở cuối mỗi mốc lớn (M1, M2... trong spec giai đoạn).
 13. **Test in kết quả gọn.** Vitest dùng reporter `dot`: chỉ in chi tiết khi có lỗi. Test không tự `console.log` khi qua.
 14. Không xoá file hay chạy lệnh ngoài thư mục dự án.
+15. **Chốt chặn chống vá ngầm không được nới.** `tests/unit/chot-chan.test.ts` hỏng nghĩa là có thay đổi cần ghi lại hoặc cần người duyệt: làm đúng việc thông báo lỗi yêu cầu (ghi dòng vào sai-khac.md mục F, bổ sung nguồn, tìm mã lý do còn thiếu). Không sửa test, không nâng trần, không tăng số mục "trí nhớ". Đổi ngưỡng, cửa sổ đo hay cách đo của một kiểm định phải được Dương duyệt trước.
 
 ## Quyết định đã chốt
 

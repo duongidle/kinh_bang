@@ -12,7 +12,9 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 ### VIỆC CHO OPUS: quyết định đợt ba của Dương, tối 14/11/2026 (chưa làm)
 
-Làm theo thứ tự. Mỗi việc: code, `npm test`, commit, cập nhật mục này. Phần UI và test giao Sonnet.
+Làm theo thứ tự. Mỗi việc: code, `npm test`, commit, cập nhật mục này. Phân vai theo CLAUDE.md mục "Ai làm gì": Opus điều phối và chẩn đoán, Sonnet code, Opus chạy chong-va-ngam.md trước khi báo xong.
+
+Lưu ý về chốt chặn (thêm tối 14/11): đổi giá trị tham số trong `gd1.ts`, hoặc sửa `tests/validation/gd1-lib.ts`, `scenarios-lib.ts`, thì `npm test` hỏng cho tới khi có dòng mới trong sai-khac.md mục F. Việc 1 (K1.13) và việc 4 đều chạm vào đó. Tham số mới phải khai `basis`.
 
 **0. Chạy lại kiểm định đầy đủ trên bản code hiện tại, trước khi sửa gì.** `npm run validate:scenarios` rồi `npm run validate:gd1`. Bản `docs/validation/gd1.md` đang có là của trưa 14/11, cũ hơn S31, S32, S34. Bản `docs/validation/scenarios.md` là của bản code trước S34 và trước bất đối xứng thuế. Lượt chạy tối 14/11 bị dừng giữa chừng, không có kết quả. Việc phải xem sau khi chạy:
    - K1.24: nếu hỏng vì tỷ lệ chuyển sau 2 năm, sửa NGƯỠNG theo bằng chứng ở sai-khac.md D9 (Dương đã cho phép), không sửa tham số.
