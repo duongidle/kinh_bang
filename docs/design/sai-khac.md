@@ -370,7 +370,9 @@ Hai kiểm tra thêm ở 500 hộ, 10 seed:
 
 Điều tớ chưa kiểm: nếu tiền thuế được chi ra thì giá sau 24 tháng thế nào; và vì sao ở 500 hộ dấu khác 5000 hộ (500 hộ có ít doanh nghiệp, lương ít giảm hơn: `p_wage` −0,35 so với −0,85).
 
-Các lựa chọn cho Dương (chưa làm cái nào):
+**Dương quyết đêm 14/11/2026** (chưa làm, việc 8, 9, 10 trong progress.md): không đổi cửa sổ đo, giữ assertion 24 tháng. Theo hướng 2: thêm cơ chế biên lãi hồi dần để mức chuyển thuế đi từ 0,34 tới gần trọn trong khoảng 2 năm, tốc độ lấy từ bài IMF 2015, giữ bất đối xứng cho chiều giảm. Theo hướng 3: mọi thí nghiệm và kịch bản đổi thuế phải khai tiền thu thêm đi đâu; mặc định chi lại theo cơ cấu chi hiện tại, giữ lại là biến thể. Tìm hiểu vì sao 500 và 5000 hộ khác dấu.
+
+Các lựa chọn đã trình (để đối chiếu):
 
 1. Giữ assertion, đo ở 12 tháng thay cho 24 tháng: đúng 100% số seed ở mọi quy mô, và là điều test muốn nói ("tăng thuế thì giá cao hơn"). Đây là đổi cửa sổ đo.
 2. Giữ assertion 24 tháng và coi kết quả là dấu hiệu cơ chế sai: cầu sụt 4-6% GDP sau một lần tăng thuế mà Chính phủ ngồi im là quá mạnh, hoặc 0,34 chuyển ngay rồi không đuổi kịp về lâu dài là quá ít (bằng chứng dài hạn ở D9 nói gần trọn).

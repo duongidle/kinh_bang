@@ -12,7 +12,32 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11). Cập 
 
 ### `npm test` ĐANG ĐỎ CÓ CHỦ Ý (một test)
 
-`tests/unit/session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó" hỏng ở dòng đòi CPI cao hơn đối chứng 24 tháng sau khi tăng GTGT. Dương yêu cầu hoàn lại assertion gốc và không nới. Hiện tượng đã đo ở ba quy mô: sai-khac.md D13. **Không sửa test, không sửa cơ chế cho tới khi Dương chọn một trong ba hướng ở D13.** Các test khác (60 cái) qua. Trong lúc chờ, coi "npm test qua" nghĩa là chỉ còn đúng một test này đỏ.
+`tests/unit/session.test.ts` "bỏ một chính sách thì trùng với ván chưa từng có chính sách đó" hỏng ở dòng đòi CPI cao hơn đối chứng 24 tháng sau khi tăng GTGT. Số đo và phân rã: sai-khac.md D13. **Dương đã quyết (đêm 14/11/2026): không đổi cửa sổ đo, giữ assertion 24 tháng, sửa cơ chế.** Việc phải làm là việc 8 và 9 dưới đây. Test này phải tự xanh lại nhờ cơ chế đúng; nếu làm xong 8 và 9 mà nó vẫn đỏ thì báo Dương, không sửa test. Các test khác (60 cái) qua.
+
+### KIỂM ĐỊNH GĐ1 ĐẦY ĐỦ: đang chạy lúc Fable dừng
+
+Lượt `npm run validate:gd1` bắt đầu 23:43 ngày 14/11 trên code của commit `6490ec6` (20 seed ở 500 hộ, 5 seed ở 5000 hộ). Lúc Fable dừng nó chưa xong. Các commit sau `6490ec6` chỉ đổi `tests/unit`, `scripts`, `docs`, không đổi `src` hay `tests/validation`, nên kết quả vẫn là của engine ở `6490ec6` dù dòng "Bản code" trong báo cáo có thể ghi mã commit muộn hơn (dòng đó lấy mã lúc chạy xong: lỗi nhỏ, sửa cho lấy lúc bắt đầu). Opus:
+- Nếu `docs/validation/gd1.md` có dòng "Bản code" thì lượt chạy đã xong: đọc, commit, làm phần còn lại của việc 0.
+- Nếu file vẫn là bản trưa 14/11 (không có dòng "Bản code") thì lượt chạy đã chết: chạy lại.
+- Kiểm định kịch bản đã xong trên `6490ec6`: mọi khẳng định qua (`docs/validation/scenarios.md`).
+
+### VIỆC CHO OPUS, đợt bốn: quyết định D13 của Dương, đêm 14/11/2026 (chưa làm)
+
+Áp SAU khi có kết quả kiểm định GĐ1 đầy đủ ở trên. Thứ tự gợi ý trong toàn bộ danh sách: 0, 8, 9, 1, 4, 2, 3, 5, 6, rồi chạy lại kiểm định. Việc 8 và 9 đi trước vì chúng làm `npm test` xanh lại.
+
+**8. Biên lãi hồi dần sau khi thuế đổi.** Mục tiêu: mức chuyển thuế vào giá đi từ ngắn hạn 0,34 (Benzarti, `firm.taxPassUp`) tới gần trọn trong khoảng 2 năm (Benedek, De Mooij, Keen, Wingender 2015, IMF WP/15/214, đã đọc toàn văn; bản text ở thư mục scratchpad của phiên Fable có thể đã mất, tải lại từ imf.org).
+   - **Tốc độ hồi lấy từ bài, không chọn cho test xanh.** Số trong Bảng 3 của bài, thuế suất phổ thông: trong tháng đổi thuế 0,30; 12 tháng sau cộng thêm 0,38; 12 tháng trước 0,71; cả kỳ 1,39 (sai số 0,36). Một cách quy đổi Fable đã nghĩ nhưng CHƯA kiểm: nếu coi đích dài hạn là 1 và bỏ phần tăng giá đón trước (mô hình chưa có), thì trong 12 tháng sau giá đi thêm 0,38 trên quãng còn lại 0,70, tức 54% quãng đường mỗi năm, khoảng 6,3% quãng còn lại mỗi tháng, và sau 24 tháng đi được khoảng 79%. Opus mở lại bài, xem Hình 2 (đường tích luỹ theo tháng) để kiểm phép quy đổi này, và ghi phép tính vào sai-khac.md. Phải quyết và ghi rõ: đích dài hạn là 1 hay con số khác, và có mô hình hoá việc tăng giá đón trước không (0,71 là phần lớn nhất, bỏ nó là một đơn giản hoá phải nói thật).
+   - **Cách làm gợi ý** (Opus quyết): mỗi đơn vị giữ một cột "phần thuế đang gánh" (mức biên lãi đã hạ ở `p_tax_absorb`). Mỗi tháng nó trả lại một phần `firm.taxPassRecover` vào biên lãi, ghi mã lý do riêng (ví dụ `p_tax_recover`), upstream là các luật thuế. Biên lãi vẫn đi theo sức mua như cũ ở phần còn lại. Tham số mới phải khai `basis` và nguồn; ghi dòng vào sai-khac.md mục F (chốt chặn sẽ đòi).
+   - **Giữ bất đối xứng cho chiều giảm thuế.** Benzarti: sau khi giảm thuế, giá và biên lãi ở lại mức mới nhiều năm. Vậy chiều giảm hoặc không hồi, hoặc hồi chậm hơn hẳn: lấy từ bài Benzarti (đoạn về độ bền của chênh lệch sau 2012), không tự đặt.
+   - Sau khi làm: chạy `npx tsx scripts/vatcpi.ts M 10` và `L 3`; test đỏ phải xanh; K1.24 đo lại (ngưỡng "giữa 0 và 1 sau 2 năm" có thể phải sửa theo bằng chứng, Dương đã cho phép ở đợt hai, nhưng vẫn báo số đo trước).
+
+**9. Mọi thí nghiệm và kịch bản có đổi thuế phải khai rõ tiền thuế thu thêm đi đâu.** Mặc định: **chi lại theo cơ cấu chi hiện tại**. Giữ lại không chi là biến thể so sánh.
+   - Cần một cơ chế có tên trong engine, vì "thu thêm" phải tính được mà không cần thế giới đối chứng. Gợi ý: một luật `gov.revenueUse` (0 giữ lại, 1 chi lại) và quy tắc: phần thu ngân sách vượt mức "trước khi đổi luật thuế" được chia cho lương công chức, mua hàng, trợ cấp theo tỷ trọng 12 tháng gần nhất. Khó ở chỗ định nghĩa "vượt": cách của `revenueUseOptions` trong `src/content/scenarios.ts` (thu 12 tháng sau trừ 12 tháng trước đã chỉnh theo GDP danh nghĩa, tính một lần sau năm đầu) là một điểm bắt đầu, nhưng nó chậm một năm. Opus viết đề xuất ngắn vào sai-khac.md trước khi giao code; đây là cơ chế ngoài thiết kế nên theo chong-va-ngam.md mục A.
+   - Rà và khai báo ở: `tests/validation/gd1-lib.ts` (K1.24 tăng GTGT, K1.25 hạ giảm trừ, K1.26 nộp thuế đủ), `tests/unit` (hai test tăng GTGT trong `session.test.ts`, test chuyển thuế trong `scenario-options.test.ts`), kịch bản `het-han-giam-thue`, `thue-nguoi-giau`, `keo-vao-luoi-thue`, và `scripts/vatcpi.ts`. Mỗi chỗ ghi rõ đang dùng "chi lại" hay "giữ lại". Sửa `gd1-lib.ts` thì phải ghi mục F.
+   - Chiều giảm thuế (ví dụ gia hạn 8%): "thu hụt" được bù bằng gì cũng phải khai. Mặc định theo cùng nguyên tắc: cắt chi theo cơ cấu hiện tại; vay bù là biến thể. Điểm này Dương chưa nói rõ, **hỏi Dương trước khi làm chiều giảm**.
+   - Thêm vào bảng kiểm chong-va-ngam.md mục F một chốt: thí nghiệm đổi thuế không khai nơi tiền đi thì không được nhận.
+
+**10. Vì sao 500 hộ và 5000 hộ khác dấu ở tháng 24** (D13: +0,36% so với −0,23%). Manh mối: phần `p_wage` là −0,35 điểm ở 500 hộ và −0,85 ở 5000 hộ; GDP thực giảm 4,2% so với 6,1%. Giả thuyết chưa kiểm: ở 500 hộ có ít doanh nghiệp nên đợt xét lương và cắt người thưa hơn, cầu sụt ít hơn. Chạy `scripts/vatcpi.ts L` với nhiều seed hơn (mới có 3), thêm in phân rã lương theo lý do và số doanh nghiệp. Làm lại sau việc 8 và 9, vì cả hai sẽ đổi hiện tượng. Kết quả ghi vào D13.
 
 ### VIỆC CHO OPUS: quyết định đợt ba của Dương, tối 14/11/2026 (chưa làm)
 
