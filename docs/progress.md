@@ -62,6 +62,18 @@ Engine GĐ0 và GĐ1 xong. Đã làm theo hai đợt quyết định tối 14/11
 3. Sau khi Dương trả lời: làm, kiểm định lại.
 4. Báo cáo GĐ0 và GĐ1. Viết `docs/design/gd1-5.md`, dừng chờ duyệt.
 
+### Các quyết định của Dương sáng và trưa 14/11/2026 (đã làm hết, chi tiết ở [design/sai-khac.md](design/sai-khac.md) mục B và D)
+
+1. Mọi cơ chế thêm phải là tham số có tên, có cơ sở. Chỉ để làm số đẹp thì dừng lại báo.
+2. `exp.saveResponse` = 0,35 (Havránek 2015). Không dùng giá trị 2.
+3. Vay tiêu dùng và giảm phát nợ để GĐ3 (đã ghi vào lộ trình trong CLAUDE.md).
+4. Giữ cách đo mới của K1.22 (3 năm đầu) và K1.26 (doanh số thực).
+5. Lãi suất cao kéo dài làm tăng lạm phát qua tiền lãi Chính phủ trả: giữ, ghi thành phát hiện, làm kịch bản 15 "Hai tay lái".
+6. Quy tắc lãi suất tự động của NHNN (S20) tắt theo mặc định, giữ làm chính sách tự động bật được.
+7. Lương bám 50% lạm phát kỳ vọng thay cho 100% (Rabanal và Sbrancia 2024, IMF WP/24/105). Chưa phân biệt chính thức và phi chính thức vì không tìm được ước lượng riêng; đã tách thành hai tham số.
+8. Mức thất nghiệp "bình thường" tự sinh từ mô hình: trung bình trượt 60 tháng (Ball và Mankiw 2002).
+9. Thêm nội dung học: vì sao lãi suất yếu và room mạnh ở GĐ1 (`src/content/notes.ts`).
+
 ### Việc còn mở cần Dương biết
 
 - Lạm phát nền 0-1% là thấp so với Việt Nam (3-4%). Mô hình không có gì đẩy giá lên đều (không tăng năng suất, dân số; ngân sách gần cân; lương bám một nửa lạm phát năm trước).
