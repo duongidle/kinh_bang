@@ -68,26 +68,31 @@ Lần chạy 5 seed (trước khi đổi S7, S25):
   - `hai-tay-lai`: khẳng định "tiêu dùng thực cao hơn sau vài năm" 2/5.
 - Định dạng số đo của `keo-vao-luoi-thue` sai đơn vị (in đồng thành "điểm").
 
-### UI (`index.html`, `src/ui/`, chưa commit)
+### UI (`index.html`, `src/ui/`, đã commit e16d20c)
 
-Đã viết, **chưa biên dịch trọn bộ, chưa mở trong trình duyệt**:
-- `client.ts` (cầu nối Worker), `store.ts` (Zustand, vòng chạy theo tốc độ, lịch sử chuỗi, lời đoán), `format.ts`.
-- `iso/layout.ts`, `iso/IsoMap.tsx`: bản đồ isometric Canvas 2D, lớp tĩnh vẽ lại mỗi tháng, hạt dòng tiền phát lại từ mẫu giao dịch thật, bấm vào tác nhân để soi.
-- `Chart.tsx` (uPlot, sparkline), `App.tsx` (màn hình đầu, thanh trên, dải chỉ số, bản tin, hộp đoán trước), `RolePanel.tsx` (bảng Bộ Tài chính và NHNN, bảng hộ và doanh nghiệp, quan sát, lời đoán, dòng sự kiện có nút "Nếu không làm vậy thì sao?").
+Đã viết đủ bản đầu và mở được trong trình duyệt (`npx vite`): màn hình đầu, bản đồ isometric, chạy ở ×16, dải chỉ số, bản tin, ngăn "Vì sao?" đều chạy, không lỗi console. Các phần khác chưa thử.
 
-Chưa viết:
-- `Drawer.tsx`: chuỗi nhân quả, bảng cân đối chữ T (S4), bảng nguồn tiền (S3), Phòng thí nghiệm, "mô hình bỏ qua gì" (S13), so sánh với thế giới đối chứng (S1), báo cáo kịch bản, biểu đồ và xuất CSV (S14), danh sách tác nhân, lưu tải IndexedDB và file.
-- `app.css`.
-- Đăng ký PWA trong `main.tsx`.
+- `client.ts`, `store.ts`, `format.ts`, `Chart.tsx`, `App.tsx`, `RolePanel.tsx`, `Drawer.tsx`, `app.css`, `iso/layout.ts`, `iso/IsoMap.tsx`.
+- `Drawer.tsx` có: chuỗi nhân quả, bảng cân đối chữ T (S4), bảng nguồn tiền (S3), Phòng thí nghiệm, "mô hình bỏ qua gì" (S13), so với thế giới đối chứng (S1), báo cáo kịch bản, biểu đồ, xuất CSV (S14), danh sách tác nhân, lưu tải IndexedDB và file.
+- PWA đăng ký trong `main.tsx`; `npm run build` chạy được.
+
+### Cách làm việc từ 14/11/2026 (Dương yêu cầu)
+
+Việc liên quan test và code giao diện giao cho Sonnet (subagent). Phiên chính giữ: thiết kế engine, quyết định kinh tế, chẩn đoán, báo cáo.
+
+### Đang chạy (hai subagent Sonnet, giao lúc 12:00)
+
+1. **Kiểm định**: chạy `npm run validate:gd1` và `npx tsx scripts/scenarios.ts 10`, lập bảng kết quả, sửa lỗi của bộ chạy test (không được đổi kinh tế, tham số, ngưỡng, lời khẳng định).
+2. **UI**: thử mọi phần của UI trong trình duyệt theo danh sách, sửa lỗi trong `src/ui`, đo K0.13 (khung/giây ở 5000 hộ), K0.14 (offline), K0.2 (mã băm trong Worker thật so với Node).
+
+Vừa sửa trước khi giao: mốc lưu trong `Session` bị chụp đè sau cú sốc nên đối chứng "bỏ cú sốc" cho hiệu bằng 0 (kịch bản `song-bang-luong`, `chu-xuong`); lời giải mẫu của `het-han-giam-thue` ban hành 8% khi thuế đang 8% nên không có tác dụng, đã dời sang tháng 1/2027.
 
 ### Bước tiếp theo, theo thứ tự
 
-1. Viết `Drawer.tsx` và `app.css`; `npm run build`; mở bằng `npm run dev` và sửa cho chạy được. Commit.
-2. Đọc kết quả kiểm định nền; ghi lại `docs/validation/gd1.md`; cập nhật mục "Kiểm định GĐ1" ở trên.
-3. Sửa 6 kịch bản chưa qua; chạy `npm run validate:scenarios`.
-4. Đo K0.13 và K0.14 trong trình duyệt; thử K0.2 với Worker thật.
-5. Figure bể thuỷ lực (S11).
-6. Báo cáo GĐ0 và GĐ1 cho Dương. Viết `docs/design/gd1-5.md`, dừng chờ duyệt.
+1. Nhận báo cáo của hai subagent; ghi kết quả kiểm định vào đây; quyết từng mục không qua (sửa lời giải thích kịch bản theo điều mô hình nói, hoặc bỏ kịch bản).
+2. Figure bể thuỷ lực (S11): giao Sonnet, theo skill anatomy.
+3. Báo cáo GĐ0 và GĐ1 cho Dương.
+4. Viết `docs/design/gd1-5.md`, dừng chờ duyệt. GĐ1.5 chỉ bắt đầu khi GĐ1 qua kiểm định (hiện còn K1.12 không qua, K1.19 chưa đạt).
 
 ### Công cụ soi
 
