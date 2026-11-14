@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import type { Catalog, CounterfactualResult, EngineMsg, EventInfo, MapFrame, NamedAgent, NewsItem, PlayerOrders, Role, ScaleId, ScenarioInfo, ScenarioReport, SeriesResult, TickMsg, TxSample } from '../protocol';
 import { engine } from './client';
+import { setStartYear } from './format';
 
 export type Speed = 0 | 1 | 4 | 16 | 99;
 export type Panel =
@@ -131,6 +132,7 @@ export const useStore = create<State>((set, get) => {
     }
     if (m.type === 'tick') {
       const s = get();
+      if (m.tick > 0) setStartYear(m.year - Math.floor((m.tick - 1) / 12));
       const h = s.hist;
       if (m.tick === h.n + 1 && h.cols.length === m.values.length) {
         if (h.n >= h.cols[0].length)
@@ -144,13 +146,16 @@ export const useStore = create<State>((set, get) => {
       } else if (m.tick !== h.n) void refill();
       const idx = m.events.filter((e) => e.index >= 0 && e.by === 'Người chơi').map((e) => e.index);
       if (idx.length) lastIdx = idx;
+      // Lệnh chính sách gửi lại tin tick của tháng đó: bỏ bản tin đã có.
+      const seen = new Set(s.news.map((x) => `${x.tick}|${x.text}`));
+      const fresh = m.news.filter((x) => !seen.has(`${x.tick}|${x.text}`));
       set({
         tick: m,
         frame: m.frame ?? s.frame,
         tx: m.tx ?? s.tx,
         txTick: m.tx ? m.tick : s.txTick,
         events: m.events.length ? [...s.events, ...m.events] : s.events,
-        news: m.news.length ? [...m.news.reverse(), ...s.news].slice(0, 60) : s.news,
+        news: fresh.length ? [...fresh.reverse(), ...s.news].slice(0, 60) : s.news,
         busy: false,
       });
       void checkPredictions(m.tick);
@@ -158,7 +163,11 @@ export const useStore = create<State>((set, get) => {
       schedule();
       return;
     }
-    if (m.type === 'error') set({ error: m.message, busy: false });
+    if (m.type === 'error') {
+      // Tải file hỏng giữa ván: ván cũ còn nguyên, quay lại chơi tiếp và báo lỗi.
+      const s = get();
+      set({ error: m.message, busy: false, phase: s.phase === 'loading' && s.tick ? 'play' : s.phase });
+    }
     if (m.type === 'violation') set({ violation: m.problems, busy: false, speed: 0 });
   });
 
@@ -272,3 +281,6 @@ export const useStore = create<State>((set, get) => {
     },
   };
 });
+
+// Chỉ khi chạy dev: cho phép đo và thử từ console.
+if (import.meta.env.DEV) (window as unknown as { __store: typeof useStore }).__store = useStore;

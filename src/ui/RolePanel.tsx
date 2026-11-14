@@ -19,7 +19,7 @@ export function RolePanel() {
         <button onClick={() => open({ kind: 'notes' })}>Mô hình bỏ qua gì</button>
         <button onClick={() => open({ kind: 'file' })}>Lưu, tải, xuất</button>
       </nav>
-      {(role === 'government' || role === 'fiscal' || role === 'monetary') && <PolicyPanel />}
+      {(role === 'government' || role === 'fiscal' || role === 'monetary') && <PolicyPanel key={role} />}
       {(role === 'household' || role === 'firm') && <AgentPanel />}
       {role === 'observer' && <ObserverPanel />}
       <Predictions />
@@ -56,7 +56,7 @@ function ScenarioCard() {
         {st.goals.map((g) => (
           <li key={g.id} className={g.ok ? 'ok' : 'no'}>
             <span>{g.label}</span>
-            <b>{g.value}</b>
+            <b>{/NaN/.test(g.value) ? 'chưa đủ số liệu' : g.value}</b>
           </li>
         ))}
       </ul>
@@ -119,7 +119,7 @@ function LawRow({ law }: { law: LawInfo }) {
   const isRate = law.unit === 'tỷ lệ' || law.unit === '%/năm';
   const isMoney = law.unit.startsWith('đồng');
   const scale = isRate ? 100 : isMoney ? 1e-6 : 1;
-  const shown = draft ?? String(Number((value * scale).toFixed(isRate ? 2 : 3)));
+  const shown = draft ?? String(Number((value * scale).toFixed(isRate ? 2 : 3))).replace('.', ',');
   const apply = (v: number) => {
     const lo = law.min ?? -Infinity;
     const hi = law.max ?? Infinity;
@@ -222,7 +222,7 @@ function AgentPanel() {
 }
 
 function Lever({ label, unit, scale, auto, value, onChange }: { label: string; unit: string; scale: number; auto: number; value: number | null; onChange: (v: number | null) => void }) {
-  const [draft, setDraft] = useState<string>(value === null ? '' : String(Number((value * scale).toFixed(3))));
+  const [draft, setDraft] = useState<string>(value === null ? '' : String(Number((value * scale).toFixed(3))).replace('.', ','));
   useEffect(() => {
     if (value === null) setDraft('');
   }, [value]);

@@ -439,7 +439,7 @@ function ParamRow({ id, label, source, note, value, onChange }: { id: string; la
     <div className="law">
       <label htmlFor={`p-${id}`}>{label}</label>
       <div className="row">
-        <input id={`p-${id}`} inputMode="decimal" value={draft ?? String(Number(value.toPrecision(6)))} onChange={(e) => setDraft(e.target.value)} />
+        <input id={`p-${id}`} inputMode="decimal" value={draft ?? String(Number(value.toPrecision(6))).replace('.', ',')} onChange={(e) => setDraft(e.target.value)} />
         <button
           disabled={!Number.isFinite(v) || v === value}
           onClick={() => {
@@ -491,7 +491,7 @@ function Compare({ data, focus }: { data: CounterfactualResult; focus?: string }
     return src.subarray(k * data.n, (k + 1) * data.n);
   };
   const def = catalog.indicators.find((x) => x.id === id)!;
-  if (data.n < 2) return <p className="hint">Chưa đủ tháng để so. Chạy thêm vài tháng rồi thử lại.</p>;
+  if (data.n < 2) return <p className="hint">Chưa có gì để so. Hoặc ván này không có quyết định nào của cậu để bỏ đi, hoặc chưa chạy đủ tháng. Nếu là vế sau, chạy thêm vài tháng rồi thử lại.</p>;
   return (
     <>
       <p className="lead">

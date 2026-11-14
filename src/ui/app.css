@@ -605,8 +605,10 @@ summary {
   border-radius: 0;
   background: none;
   padding: 7px 10px;
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   text-align: left;
   gap: 0 6px;
 }
@@ -614,11 +616,12 @@ summary {
   background: var(--raise);
 }
 .strip .k {
-  grid-column: 1 / 3;
+  width: 100%;
   font-size: 11px;
   color: var(--muted);
 }
 .strip .v {
+  white-space: nowrap;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -926,14 +929,21 @@ figcaption {
 @media (max-width: 900px) {
   .stage {
     flex-direction: column;
+    overflow-y: auto;
   }
   .mapwrap {
-    min-height: 46vh;
+    flex: none;
+    height: min(52vh, 420px);
   }
   .side {
     width: auto;
+    flex: none;
+    overflow-y: visible;
     border-left: 0;
     border-top: 1px solid var(--line);
+  }
+  .news li:nth-child(n + 3) {
+    display: none;
   }
   .drawer {
     position: fixed;

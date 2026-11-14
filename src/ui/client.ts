@@ -56,3 +56,6 @@ export class EngineClient {
 }
 
 export const engine = new EngineClient();
+
+// Chỉ khi chạy dev: cho phép đo từ console (ví dụ mã băm trạng thái để so với Node).
+if (import.meta.env.DEV) (window as unknown as { __kb: EngineClient }).__kb = engine;

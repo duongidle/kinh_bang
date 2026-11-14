@@ -112,7 +112,7 @@ function Play() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest('input, select, textarea')) return;
+      if ((e.target as HTMLElement | null)?.closest?.('input, select, textarea')) return;
       const s = useStore.getState();
       if (e.key === ' ') {
         e.preventDefault();

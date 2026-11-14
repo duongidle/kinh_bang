@@ -29,7 +29,25 @@ export function fmtDelta(d: number, unit: string): string {
   const a = Math.abs(d);
   if (unit === 'đồng') return sign + money(a);
   if (unit === '%' || unit === 'tỷ lệ' || unit === '%/năm') return `${sign}${num(a * 100, 2)} điểm`;
-  return sign + num(a, a < 10 ? 2 : 0);
+  return sign + num(a, a < 10 ? 2 : a < 100 ? 1 : 0);
 }
 
-export const monthLabel = (tick: number, startYear = 2026) => `${String((tick % 12) + 1).padStart(2, '0')}/${startYear + Math.floor(tick / 12)}`;
+// Năm bắt đầu lấy từ engine (tin tick), không đoán.
+let START_YEAR = 2026;
+export const setStartYear = (y: number) => {
+  START_YEAR = y;
+};
+export const monthLabel = (tick: number, startYear = START_YEAR) => `${String((tick % 12) + 1).padStart(2, '0')}/${startYear + Math.floor(tick / 12)}`;
+
+/** Nhãn trục tung: số chữ số tuỳ theo bước chia, để các vạch không trùng nhãn. */
+export function fmtAxis(splits: number[], incr: number, unit: string): string[] {
+  const out = (x: number, d: number) => num(x, Math.max(0, Math.min(3, d)));
+  const digitsFor = (step: number) => (step > 0 && Number.isFinite(step) ? Math.ceil(-Math.log10(step) - 1e-9) : 0);
+  if (unit === 'đồng' || unit.startsWith('đồng/')) {
+    const top = Math.max(...splits.map((x) => Math.abs(x)));
+    const [div, suf] = top >= 1e12 ? [1e12, 'nghìn tỷ'] : top >= 1e9 ? [1e9, 'tỷ'] : top >= 1e6 ? [1e6, 'triệu'] : [1, 'đ'];
+    return splits.map((x) => `${out(x / div, digitsFor(incr / div))} ${suf}`);
+  }
+  if (unit === '%' || unit === 'tỷ lệ' || unit === '%/năm') return splits.map((x) => `${out(x * 100, digitsFor(incr * 100))}%`);
+  return splits.map((x) => out(x, digitsFor(incr)));
+}

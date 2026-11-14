@@ -2,7 +2,20 @@
 import { useEffect, useRef } from 'react';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
-import { fmt, monthLabel } from './format';
+import { fmtAxis, monthLabel } from './format';
+
+/** Vạch chia trục tung: khoảng 4 vạch nằm trong miền nhìn, bước tròn (1, 2, 5). */
+function niceSplits(lo: number, hi: number): number[] {
+  const span = hi - lo;
+  if (!(span > 0)) return [lo];
+  const raw = span / 4;
+  const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+  const r = raw / pow;
+  const step = (r <= 1 ? 1 : r <= 2 ? 2 : r <= 5 ? 5 : 10) * pow;
+  const out: number[] = [];
+  for (let x = Math.ceil(lo / step - 1e-9) * step; x <= hi + step * 1e-9; x += step) out.push(Math.round(x / step) * step);
+  return out;
+}
 
 export interface Line {
   label: string;
@@ -31,7 +44,7 @@ export function Chart({ lines, from = 0, unit, height = 180, marks = [] }: { lin
         scales: { x: { time: false } },
         axes: [
           { stroke: axis, grid: { stroke: grid, width: 1 }, ticks: { show: false }, values: (_u, v) => v.map((x) => (Number.isInteger(x) ? monthLabel(x) : '')), font: '11px system-ui', space: 70 },
-          { stroke: axis, grid: { stroke: grid, width: 1 }, ticks: { show: false }, values: (_u, v) => v.map((x) => fmt(x, unit)), font: '11px system-ui', size: 62 },
+          { stroke: axis, grid: { stroke: grid, width: 1 }, ticks: { show: false }, splits: (_u, _i, lo, hi) => niceSplits(lo, hi), values: (_u, v, _i, _s, incr) => fmtAxis(v, v.length > 1 ? v[1] - v[0] : incr, unit), font: '11px system-ui', size: 62 },
         ],
         series: [{}, ...lines.map((l, i) => ({ label: l.label, stroke: l.color ?? palette[i % palette.length], width: 1.6, dash: l.dash, points: { show: false } }))],
         hooks: {

@@ -230,9 +230,23 @@ function drawStatic(c: CanvasRenderingContext2D, v: View, f: MapFrame, L: Layout
     if (!s) continue;
     const mine = (n.sector === 'hh' && focus.hh === n.id) || (n.sector === 'firm' && focus.firm === n.id);
     const [x, y] = project(v, s.gx, s.gy, n.sector === 'hh' ? hhH + 1 : 4);
-    c.fillStyle = mine ? P.cb.top : P.label;
     c.font = `${mine ? 600 : 500} 10px system-ui, sans-serif`;
+    // viền màu nền quanh chữ để đọc được khi đè lên nhà
+    c.lineJoin = 'round';
+    c.lineWidth = 3;
+    c.strokeStyle = P.ground;
+    c.strokeText(n.name, x, y - 4);
+    c.fillStyle = mine ? P.cb.top : P.label;
     c.fillText(n.name, x, y - 4);
+    if (mine) {
+      // vòng quanh nhà hoặc xưởng đang điều khiển
+      const [bx, by] = project(v, s.gx, s.gy, 0);
+      c.strokeStyle = P.cb.left;
+      c.lineWidth = 2;
+      c.beginPath();
+      c.ellipse(bx, by, s.size * v.s * 0.9, s.size * v.s * 0.5, 0, 0, 6.3);
+      c.stroke();
+    }
     c.fillRect(x - 0.5, y - 2, 1, n.sector === 'hh' ? 6 : 10);
   }
   return hits;
