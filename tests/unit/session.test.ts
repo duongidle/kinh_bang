@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { gd1Engine } from '@/engine/modules/gd1/index';
 import { F, H } from '@/engine/modules/gd1/schema';
 import { Session } from '@/engine/session/session';
+import type { ScenarioDef } from '@/engine/scenario/types';
 import type { Command, CounterfactualResult, EngineMsg, TickMsg } from '@/protocol';
 
 /** Gửi lệnh như Worker: lệnh và tin trả về đều đi qua structuredClone. */
@@ -91,6 +92,35 @@ describe('thế giới đối chứng', () => {
     const actual = cf.actual.subarray(k * cf.n, (k + 1) * cf.n);
     expect(Array.from(control)).toEqual(Array.from(eng.seriesOf(w, 'cpi', cf.from, 36)));
     expect(actual[cf.n - 1]).toBeGreaterThan(control[cf.n - 1]);
+  });
+});
+
+describe('thế giới đối chứng của kịch bản', () => {
+  const def: ScenarioDef = {
+    id: 'thu-cu-soc',
+    title: 'Thử cú sốc',
+    role: 'observer',
+    scale: 'S',
+    question: '',
+    intro: '',
+    prereq: [],
+    warmup: 12,
+    months: 24,
+    shocks: [{ at: 0, laws: { 'vat.rate.standard': 0.2 }, label: 'Tăng GTGT' }],
+    control: 'shock',
+    goals: [],
+    predict: [],
+    demo: [],
+    claims: [{ text: 'Mức giá cao hơn', test: (c) => ({ ok: true, detail: String(c.eng.value(c.w, 'cpi', c.t1 - 1) / c.eng.value(c.base, 'cpi', c.t1 - 1) - 1) }) }],
+    explanation: '',
+    simplifications: [],
+  };
+  it('control = shock: thế giới đối chứng không có cú sốc, nên khác ván thật (không bằng 0)', () => {
+    const s = new Session([def]);
+    send(s, { type: 'init', scale: 'S', seed: 4, scenario: def.id });
+    send(s, { type: 'step', months: 24 });
+    const diff = Number(s.scenarioReport().claims[0].detail);
+    expect(diff).toBeGreaterThan(0.01);
   });
 });
 
