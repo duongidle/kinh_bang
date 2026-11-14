@@ -21,7 +21,7 @@ Engine GĐ0 và GĐ1 xong. UI bản đầu chạy được và đã thử gần 
 | GĐ1 engine (M1-M5) | Xong | |
 | **GĐ1 kiểm định thống kê** | **Chưa qua: K1.12, K1.19, K1.24, K1.28, K1.29, K1.31, K1.13 (ở 5000 hộ)** | Số đo và nguyên nhân: sai-khac.md D6; báo cáo đầy đủ: [validation/gd1.md](validation/gd1.md) |
 | GĐ1 vai người chơi trong engine | Xong phần chính | Chưa có: đổi ngân hàng, bỏ vốn lập doanh nghiệp, xin vay, chia cổ tức, tỷ lệ tiền mặt |
-| GĐ1 kịch bản (15 cái) | 13/15 qua hết ở 10 seed; đã sửa lời giải thích của 3 cái, **đang chạy lại** | |
+| GĐ1 kịch bản (15 cái) | **Qua kiểm định kịch bản** (10 seed, mọi khẳng định ≥ 80%) | [validation/scenarios.md](validation/scenarios.md). Yếu: `luong-toi-thieu` qua 8/10 nhưng số đo gần 0 (cùng gốc với K1.31); khẳng định Gini của `thue-nguoi-giau` có lề hẹp |
 | GĐ1 M6 UI và tính năng S1-S4, S7, S8, S10, S13, S14 | Có đủ, đã thử trong Chrome | Mới thử 3/15 kịch bản trên giao diện |
 | GĐ1 figure bể thuỷ lực (S11) | **Đang làm** (Sonnet) | |
 | GĐ1.5 | Chưa bắt đầu | Phải viết `docs/design/gd1-5.md` rồi chờ duyệt; và GĐ1 phải qua kiểm định trước |
@@ -76,7 +76,7 @@ Việc liên quan test và code giao diện giao cho Sonnet (subagent). Phiên c
 
 ### Đang chạy (subagent Sonnet, giao lúc 13:05)
 
-1. Chạy lại `npm run validate:scenarios` sau khi sửa ba lời giải thích.
+1. (Xong 13:20) `npm run validate:scenarios` qua.
 2. Figure bể thuỷ lực (S11) theo skill anatomy: `src/ui/Machine.tsx`, mở từ nút "Cỗ máy dòng tiền".
 
 ### Bước tiếp theo, theo thứ tự
