@@ -413,7 +413,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
       const rev = diff(p, 'gov.tax.vat', 6, 24, true);
       return { ok: pass > 0 && pass <= 1.39 && c < 0 && rev > 0, m: Math.min(pass, 1.39 - pass), value: `chuyển vào giá ${f2(pass)}; tiêu dùng thực ${pc(c)}; thu GTGT ${pc(rev)}` };
     },
-    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Trần 1,39 lấy từ Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, Bảng 3, thuế suất phổ thông): 0,71 trong 12 tháng trước ngày đổi thuế, 0,30 trong tháng đổi, 0,38 trong 12 tháng sau; sai số chuẩn của tổng là 0,36.',
+    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Trần 1,39 lấy từ Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, Bảng 3, thuế suất phổ thông): 0,71 trong 12 tháng trước ngày đổi thuế, 0,30 trong tháng đổi, 0,38 trong 12 tháng sau; sai số chuẩn của tổng là 0,36. Phải nói thật: theo cùng bảng đó, phần SAU ngày đổi thuế chỉ khoảng 0,68 (0,30 + 0,38); 0,71 còn lại là tăng giá đón trước, mô hình chưa có. Mô hình chuyển trọn (quanh 1) sau ngày đổi thuế, tức là đang thổi phồng phần này. Sửa ở việc 8 và 8b.',
   );
   each(
     'K1.25',
