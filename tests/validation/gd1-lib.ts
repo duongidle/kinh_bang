@@ -398,8 +398,8 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
   });
   each(
     'K1.24',
-    'Tăng GTGT: giá hàng chịu thuế tăng nhưng ít hơn mức thuế; tiêu dùng thực giảm; thu ngân sách tăng',
-    'tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1',
+    'Tăng GTGT: giá hàng chịu thuế tăng; tiêu dùng thực giảm; thu ngân sách tăng',
+    'tỷ lệ chuyển vào giá sau 2 năm lớn hơn 0 và không quá 1,39',
     (seed) => {
       const p = pair(seed, { laws: { 'vat.rate.standard': 0.15 } }, 24, { laws: { 'vat.rate.standard': 0.1 }, params: { 'cb.autopilot': 0 }, variants: { 'gov.revenueUse': 'keep' } }, scale);
       // giá hàng chịu thuế so với hàng cùng loại không chịu GTGT (của hộ kinh doanh), bình quân năm thứ hai
@@ -409,9 +409,9 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
       const pass = (rel(p.alt) / rel(p.base) - 1) / full;
       const c = diff(p, 'consumption.real', 6, 24, true);
       const rev = diff(p, 'gov.tax.vat', 6, 24, true);
-      return { ok: pass > 0 && pass < 1 && c < 0 && rev > 0, m: Math.min(pass, 1 - pass), value: `chuyển vào giá ${f2(pass)}; tiêu dùng thực ${pc(c)}; thu GTGT ${pc(rev)}` };
+      return { ok: pass > 0 && pass <= 1.39 && c < 0 && rev > 0, m: Math.min(pass, 1.39 - pass), value: `chuyển vào giá ${f2(pass)}; tiêu dùng thực ${pc(c)}; thu GTGT ${pc(rev)}` };
     },
-    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.',
+    'Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Trần 1,39 lấy từ Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, Bảng 3, thuế suất phổ thông): 0,71 trong 12 tháng trước ngày đổi thuế, 0,30 trong tháng đổi, 0,38 trong 12 tháng sau; sai số chuẩn của tổng là 0,36.',
   );
   each(
     'K1.25',
