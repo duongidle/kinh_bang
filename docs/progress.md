@@ -6,6 +6,20 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
+### U1 (đang làm, Dương bảo bắt đầu 15/11/2026; Opus điều phối, Sonnet code)
+
+Phạm vi: chỉ U1 (spec gd1-5.md mục 3, mục 11). Xong U1 thì soát, báo Dương, rồi DỪNG; không tự sang U2. Lời giao đầy đủ có sáu bước: (1) token + test tương phản, (2) phông, (3) bảng thuật ngữ `src/content/glossary.ts`, (4) `format.ts` theo mục 3.5, (5) thành phần `src/ui/design/components/`, (6) trang xem thử `?design` chỉ bản dev.
+
+Quyết định của người điều phối (tự quyết theo spec mục 13, đã phản biện phương án khác):
+- **Bảng màu**: giữ nền, chữ, hổ phách làm màu nhấn như `app.css`. Màu "mua hàng" đổi từ hổ phách sang xanh mòng két, vì spec 3.1 nói một màu nhấn và màu còn lại dành cho nghĩa; phương án giữ hổ phách cho mua hàng bị bỏ vì một màu mang hai nghĩa. "Thuế" đổi sang hồng để khác "xấu" (trước trùng tông đỏ). Mọi màu chữ và màu nghĩa đạt ≥ 4,5:1 trên ba mức nền ở cả hai theme (đo trước khi giao, thấp nhất 4,73). Bản đồ, biểu đồ cũ giữ màu cũ tới U2/U4.
+- **Tên biến CSS mới** có tiền tố `--color-`, `--space-`... để không đè biến cũ của `app.css`; U2 chuyển `app.css` sang token.
+- **Phông** chỉ nạp từ lớp design ở U1, chưa nạp vào app.
+- **`format.ts` sửa ngay ở U1** (hậu tố "tỷ đồng", "điểm phần trăm", thêm `fmtPctChange`) vì trang xem thử phải đúng văn phong và mọi số đi qua file này; bỏ phương án viết hàm định dạng thứ hai vì sẽ có hai cách làm tròn. Màn hình cũ đổi chữ theo, là chủ ý.
+- **Bảng thuật ngữ**: 34 mục, người điều phối viết nguyên văn, có cột "từ không dùng".
+- **StatTile không tự tính mức đổi 12 tháng**: nơi gọi đưa vào (spec mục 13 dòng 3).
+
+Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
+
 ### Trạng thái lúc này (tối 15/11/2026)
 
 - **BÀN GIAO (Dương quyết tối 15/11/2026): từ GĐ1.5, Opus điều phối, Sonnet code. Fable không làm tiếp.** Opus bắt đầu từ U1 và CHỜ DƯƠNG BẢO mới giao (Dương đã cho tạm dừng sau khi push). Đọc trước: `docs/design/gd1-5.md` (spec đã duyệt; mục 13 "Lưu ý cho người điều phối" nói cách review và khi nào được tự quyết), `docs/validation/chot-gd1.md`, CLAUDE.md mục "Ai làm gì".
