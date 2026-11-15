@@ -333,6 +333,29 @@ Vậy có hai vấn đề tách nhau:
 
 Tớ nghiêng về sửa thất nghiệp trước (có nguồn, tách bạch), rồi đo lại, rồi mới bàn (a) và (c). Chờ Dương.
 
+**Đo tối 15/11/2026: quy tắc dải tồn kho của Lengnick (S38) KHÔNG giải được thất nghiệp. CHƯA NHẬN, chờ Dương.**
+
+Code nằm ở nhánh `thu/3d-dai-ton-kho` (chưa nhập vào main, thiếu test và mục F). Đo bằng `scripts/demand.ts 5 M` (500 hộ, 5 seed, năm 11-40):
+
+| Số đo | Bản đang dùng (`track`) | Dải Lengnick đúng theo bài | Bản thử: tính cả sức làm bỏ không vào tồn kho |
+|---|---|---|---|
+| Thất nghiệp | 6,3% | 4,9% | 6,1% |
+| Người mất việc mỗi tháng, % số hộ | 7,0 | 5,9 | 6,7 |
+| Thời gian thất nghiệp, tháng | 0,9 | 0,84 | 0,90 |
+| Mất việc vì bán chậm, điểm mỗi năm | 48 | 15,5 | 41 |
+| Mất việc vì đơn vị không đủ tiền trả lương, điểm mỗi năm | nhỏ | **34** | 8,8 |
+| Chỗ trống, % số hộ | 8,1 | 7,7 | 6,6 |
+
+Vì sao không được như tớ đoán (2-3%):
+
+1. **Tồn kho của mô hình ta không nằm trong dải.** Soi seed 1, năm 11-20: khoảng 60-65% số đơn vị-tháng có tồn kho DƯỚI ngưỡng dưới (0,25 lần lượng bán), khoảng 25% TRÊN ngưỡng trên, chỉ khoảng 12% ở trong dải. Bản `track` cũng có phân bố y như vậy. Dải không phải là "vùng đứng yên" như trong mô hình của Lengnick.
+2. **Trong mô hình Lengnick, mọi người đang có việc đều sản xuất**, nên thuê thêm là có thêm hàng, thừa người là tồn kho phình ra. Trong mô hình ta, sản lượng bị chặn ở mức mong muốn (Caiani 3.2). Hệ quả: đơn vị hết hàng thuê thêm một người mỗi tháng mà không làm thêm hàng, trả lương tới khi cạn tiền rồi cắt người vì không trả nổi. Việc cắt người chỉ đổi lý do, từ "bán chậm" sang "không đủ tiền trả lương".
+3. Bản thử (cộng sức làm bỏ không vào tồn kho, để giống Lengnick hơn; tự thiết kế, chỉ để chẩn đoán, diff không commit) đưa mọi số về gần bản cũ.
+
+Tác dụng phụ: với dải Lengnick, test `session.test.ts` "bỏ một chính sách..." đỏ lại (50 hộ, seed 3: CPI ván tăng thuế 107,1 so với đối chứng 108,5). Đo `scripts/vatcpi.ts`: 500 hộ +4,22%, 10/10 seed dương; 50 hộ +2,65%, 9/10 seed dương. Tức là nhiễu của một seed ở 50 hộ, không phải hiện tượng D13 quay lại. Nhưng test đó Dương đã yêu cầu giữ nguyên.
+
+Kết luận của tớ: nguyên nhân gốc ở D11 mục 1 vẫn đúng (đơn vị 2-5 người, số người là số nguyên), nhưng thuốc không hợp. Muốn ghép dải của Lengnick vào thì phải đổi cả cách quyết sản lượng, tức là một cơ chế mới. Đề xuất: **không đưa S38 vào GĐ1**, ghi thất nghiệp 6-7% là "đã biết", chuyển việc này sang GĐ2 (con người, thị trường lao động) hoặc GĐ1 update 1. Dương quyết.
+
 ### D12. Sửa một lỗi phân rã giá (S35) và hệ quả cho D5
 
 Khi một nơi bán mới mở tính giá lần đầu, bản ghi quyết định ghi cả mức giá vào `p_wage` rồi trừ lại ở "yếu tố khác". Tổng vẫn đúng nên test không bắt được. Ở 5 seed: `p_wage` +1,32 điểm và "yếu tố khác" −1,41 điểm mỗi năm; sau khi sửa `p_wage` còn +0,20 và không còn phần "khác". Kinh tế không đổi, chỉ nhãn đổi.

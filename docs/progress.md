@@ -6,11 +6,12 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
-### Trạng thái lúc này (chiều 15/11/2026, sau commit `0441f84`)
+### Trạng thái lúc này (tối 15/11/2026)
 
-- **Xong và đã commit:** bước 0, 1, 2, 3a, 3b, 3c, 3e, 7 của bảng kế hoạch dưới. `npm test` xanh 69/69 ở `0441f84`.
-- **Đang chạy dở:** bước 3d (dải tồn kho Lengnick, S38), Sonnet đang làm, CHƯA commit. Lời giao: đo `scripts/demand.ts 5 M` trước khi sửa; thêm cột `fireAt`, tham số `firm.invBandLow` 0,25 và `firm.invBandHigh` 1, quy tắc `firm.staffing` (dải mặc định, `track` là bản cũ, phải trùng từng bit với code cũ); test `tests/unit/staffing.test.ts`; dòng mục F; S38 ở sai-khac.md; đo lại M 5 seed và L 2 seed, ghi bảng trước/sau vào D11. Bản nháp logic: đoạn "Bản nháp Fable đã soạn" ở việc 2 bên dưới. **Phiên sau nếu thấy thay đổi chưa commit của 3d: review theo lời giao này; không chắc đúng thì `git checkout` bỏ và giao lại.**
-- **Chưa làm:** bước 4 (kiểm định đầy đủ), 5 (chốt GĐ1 có điều kiện, báo cáo GĐ0 + GĐ1), 6 (spec GĐ1.5).
+- **Xong và đã commit:** bước 0, 1, 2, 3a, 3b, 3c, 3e, 7 của bảng kế hoạch dưới. `npm test` xanh 69/69 trên main.
+- **Bước 3d (dải tồn kho Lengnick, S38): đã đo, CHƯA NHẬN, chờ Dương quyết.** Bản Sonnet viết dở nằm ở nhánh `thu/3d-dai-ton-kho` (một commit WIP: code engine có, thiếu test và mục F, `npm test` đỏ 2 chỗ). Main KHÔNG có S38. Số đo và lý do: sai-khac.md D11, đoạn "Đo tối 15/11/2026". Tóm tắt: thất nghiệp 6,3% xuống 4,9% chứ không về 2-3%; việc cắt người chỉ đổi lý do sang "không đủ tiền trả lương"; test "bỏ một chính sách" đỏ lại ở 50 hộ seed 3 (nhiễu một seed: 9/10 seed ở 50 hộ và 10/10 ở 500 hộ vẫn dương). Người điều phối đề xuất không đưa S38 vào GĐ1. **Không nhập nhánh này vào main khi Dương chưa quyết.**
+- **Đang làm:** bước 4 (kiểm định đầy đủ) trên main, không có S38. Nếu Dương quyết nhận S38 thì phải chạy lại.
+- **Chưa làm:** bước 5 (chốt GĐ1 có điều kiện, báo cáo GĐ0 + GĐ1), 6 (spec GĐ1.5).
 
 **Những thứ phải đưa vào báo cáo cho Dương (chưa báo đủ):**
 1. **K1.24 nhiều khả năng hỏng lại** ở khoảng một nửa số seed: nó đòi tỷ lệ chuyển thuế sau 2 năm dưới 1, mà S36 cho chuyển trọn (quanh 1). Chưa đổi ngưỡng; chờ số đo bước 4. Đổi ngưỡng cần Dương duyệt.
@@ -19,6 +20,7 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 4. **K1.24, K1.25, K1.26 khai `keep`** (giữ lại không chi) để giữ nguyên cách đo đã duyệt. Đổi sang "chi lại" là đổi cách đo: Dương quyết.
 5. **S37 chưa có mã lý do riêng trong chuỗi nhân quả.** Chi của Chính phủ không có bản ghi quyết định; phần chi lại hiện nằm chung trong `d_wage_public`, `d_purchase`, `d_transfer`. Mới có một sự kiện lúc kích hoạt và chỉ số `gov.respend`. Gợi ý rẻ của Sonnet: thêm `gov.respend` vào upstream của ba mã đó. Chưa làm, chờ quyết.
 6. **Phần dịch vụ của dải tồn kho (S38) là tự thiết kế**: dịch vụ không có tồn kho nên dùng phần sức làm bỏ không của tháng trước, co dải theo `firm.nuServices / firm.nu`. Dương đã duyệt quy tắc Lengnick nhưng chưa soát riêng phần này.
+8. **S38 không giải được thất nghiệp** (D11, đoạn đo tối 15/11): Dương quyết bỏ khỏi GĐ1, hay làm bản khác.
 7. Số đo việc 10 (đã đóng): sau S36 và S37, tăng GTGT lên 20% làm CPI tháng 24 cao hơn đối chứng ở cả hai quy mô: 500 hộ +3,82% (chi lại) và +3,24% (giữ lại), 10/10 seed; 5000 hộ +3,67% và +3,07%, 5/5 seed. Chi lại làm GDP thực năm thứ hai giảm 2,9-4,3% thay vì 5,5-7,4%.
 
 **Kiểm định đầy đủ (bước 4): chưa có kết quả nào trên code hiện tại.** `docs/validation/gd1.md` là bản trưa 14/11, `scenarios.md` là bản đêm 14/11 trên `6490ec6`; cả hai cũ hơn S36, S37, K1.13 mới, S38. Khi chạy: sửa trước lỗi nhỏ ở `stamp()` trong hai file `tests/validation/*.test.ts` (lấy mã commit lúc bắt đầu, không phải lúc xong); ghi log ra file; chạy từng phần (kịch bản trước, rồi GĐ1 ở 500 hộ, rồi 5000 hộ) để chết giữa chừng vẫn giữ được phần đã xong; không sửa `src` hay `tests/validation` trong lúc chạy.
@@ -39,7 +41,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Xong 15/11 (S37, D14) |
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Xong 15/11 (đo nhanh: đạt 3/3 ở 500 hộ, 1/3 ở 5000 hộ; xem D8) |
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Xong 15/11 |
-| 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Chưa |
+| 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Đã đo 15/11, chưa nhận, chờ Dương (D11). Code ở nhánh `thu/3d-dai-ton-kho` |
 | 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Đóng 15/11: hết khác dấu sau S36, S37 (số đo ở D13). Đo lại khi làm việc 8 |
 | 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Chưa |
 | 5 | Điều phối | Chốt GĐ1 có điều kiện: mục còn hỏng ghi "đã biết" trong sai-khac.md kèm nơi sẽ sửa; mục S13 trong game liệt kê các lỗi này. Cập nhật CLAUDE.md để quy tắc kiểm định không chặn GĐ1.5. Viết báo cáo GĐ0 + GĐ1. Chạy chong-va-ngam.md, liệt kê thay đổi `tests/unit` và khẳng định kịch bản kèm lý do | 7 | Chưa |
