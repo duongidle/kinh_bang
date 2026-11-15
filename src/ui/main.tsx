@@ -7,8 +7,20 @@ import { registerSW } from 'virtual:pwa-register';
 // PWA: cài như app, mở không cần mạng (K0.14)
 registerSW({ immediate: true });
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+const root = createRoot(document.getElementById('root')!);
+if (import.meta.env.DEV && new URLSearchParams(location.search).has('design')) {
+  // dynamic import để bản build không chứa trang xem thử
+  import('./design/Preview').then(({ Preview }) =>
+    root.render(
+      <StrictMode>
+        <Preview />
+      </StrictMode>,
+    ),
+  );
+} else {
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+}
