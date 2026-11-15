@@ -1,0 +1,560 @@
+{
+ "part": "S",
+ "nSeeds": 20,
+ "stamp": {
+  "commit": "b7ce617",
+  "dirty": false
+ },
+ "checks": [
+  {
+   "id": "K1.1",
+   "claim": "Bốn đẳng thức kế toán đúng mọi tháng",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.2",
+   "claim": "Thay đổi tiền của công chúng khớp các kênh trong sổ cái",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "khớp"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.3",
+   "claim": "GDP theo chi tiêu = GDP theo thu nhập",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "khớp"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.4",
+   "claim": "Có phá sản và gia nhập mà sổ vẫn cân",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "23 phá sản, 21 gia nhập"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "19 phá sản, 17 gia nhập"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "21 phá sản, 19 gia nhập"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "18 phá sản, 18 gia nhập"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "21 phá sản, 21 gia nhập"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "21 phá sản, 18 gia nhập"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "22 phá sản, 21 gia nhập"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "17 phá sản, 16 gia nhập"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "18 phá sản, 18 gia nhập"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "23 phá sản, 20 gia nhập"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "16 phá sản, 13 gia nhập"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "14 phá sản, 13 gia nhập"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "21 phá sản, 21 gia nhập"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "21 phá sản, 19 gia nhập"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "22 phá sản, 21 gia nhập"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "17 phá sản, 16 gia nhập"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "14 phá sản, 12 gia nhập"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "19 phá sản, 17 gia nhập"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "17 phá sản, 15 gia nhập"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "16 phá sản, 15 gia nhập"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.30",
+   "claim": "Không doanh nghiệp nào trả dưới lương tối thiểu vùng",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "0"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  }
+ ]
+}
