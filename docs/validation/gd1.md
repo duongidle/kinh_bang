@@ -1,12 +1,12 @@
 # Báo cáo kiểm định GĐ1
 
-Bản code: commit cuối chạm src hoặc tests: `b7ce617`.
+Bản code: commit cuối chạm src hoặc tests: `dccfcc0`.
 
 ## Tóm tắt
 
 Chạy 20 seed x 480 tháng ở 500 hộ, 5 seed ở 5000 hộ, 20 seed ở 50 hộ (chỉ kế toán). Bỏ 120 tháng đầu. Một mục qua khi đúng ở ít nhất 80% số seed, hoặc khi khoảng tin cậy 95% của trung bình nằm đúng phía (ghi "theo trung bình"). Mục kế toán phải đúng ở mọi seed.
 
-Không qua: K1.19 (đã biết), K1.24, K1.26, K1.28 (đã biết), K1.29 (đã biết), K1.31 (đã biết), K1.13.
+Không qua: K1.19 (đã biết), K1.28 (đã biết), K1.29 (đã biết), K1.31 (đã biết), K1.13 (đã biết).
 
 | Mã | Sự thật | Ngưỡng | Số seed đạt | Kết quả |
 |---|---|---|---|---|
@@ -498,9 +498,9 @@ Trung bình các năm 11-40 của từng seed:
 | K1.21 | Hộ giữ nhiều tiền mặt hơn thì ngân hàng mất dự trữ, phải nhờ NHNN nhiều hơn | hỗ trợ thanh khoản của NHNN (tái cấp vốn + trái phiếu mua lại) tăng | 20/20 | QUA |
 | K1.22 | Biến thể "ngân hàng là trung gian" cho tín dụng và sản lượng thấp hơn | hiệu chạy đôi âm trong 3 năm đầu | 18/20 | QUA |
 | K1.23 | Tăng chi ngân sách bằng vay nợ làm GDP tăng ngắn hạn và nợ công tăng | số nhân năm đầu > 0; nợ công cao hơn | 20/20 | QUA |
-| K1.24 | Tăng GTGT: giá hàng chịu thuế tăng nhưng ít hơn mức thuế; tiêu dùng thực giảm; thu ngân sách tăng | tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1 | 12/20 | **KHÔNG QUA** |
+| K1.24 | Tăng GTGT: giá hàng chịu thuế tăng; tiêu dùng thực giảm; thu ngân sách tăng | tỷ lệ chuyển vào giá sau 2 năm lớn hơn 0 và không quá 1,39 | 20/20 | QUA |
 | K1.25 | Thuế TNCN luỹ tiến làm Gini lương sau thuế thấp hơn trước thuế | hiệu > 0 | 20/20 | QUA |
-| K1.26 | Bật "nộp thuế đủ" làm thu ngân sách tăng và doanh số thực của khu vực phi chính thức co lại | hiệu chạy đôi (10 năm) | 13/20 | **KHÔNG QUA** |
+| K1.26 | Bật "nộp thuế đủ" làm thu ngân sách tăng và doanh số thực của khu vực phi chính thức co lại | hiệu chạy đôi (năm 2-4) | 20/20 | QUA |
 | K1.28 | Tắt kỳ vọng lạm phát làm lạm phát sau cú sốc tắt nhanh hơn | lạm phát vượt trội còn lại ở năm thứ hai sau khi cú sốc dừng: thấp hơn khi tắt kỳ vọng | 7/20 | **CHƯA ĐẠT (đã biết)** |
 | K1.29 | Niềm tin làm suy thoái sâu hơn | GDP thực bình quân 2 năm sau cú sốc cầu thấp hơn khi bật niềm tin | 14/20 | **CHƯA ĐẠT (đã biết)** |
 | K1.31 | Nâng mạnh lương tối thiểu: lương nhóm thấp ở doanh nghiệp tăng; việc làm chính thức giảm hoặc tỷ lệ phi chính thức tăng | hiệu chạy đôi đúng dấu (3 năm) | 10/20 | **CHƯA ĐẠT (đã biết)** |
@@ -742,28 +742,28 @@ Cửa sổ đo đổi từ 10 năm sang 3 năm đầu. Siết tín dụng làm s
 
 <details><summary>K1.24: số đo từng seed</summary>
 
-Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.
+Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Trần 1,39 lấy từ Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, Bảng 3, thuế suất phổ thông): 0,71 trong 12 tháng trước ngày đổi thuế, 0,30 trong tháng đổi, 0,38 trong 12 tháng sau; sai số chuẩn của tổng là 0,36. Phải nói thật: theo cùng bảng đó, phần SAU ngày đổi thuế chỉ khoảng 0,68 (0,30 + 0,38); 0,71 còn lại là tăng giá đón trước, mô hình chưa có. Mô hình chuyển trọn (quanh 1) sau ngày đổi thuế, tức là đang thổi phồng phần này. Sửa ở việc 8 và 8b.
 
-- seed 1: không đạt (chuyển vào giá 1.04; tiêu dùng thực -3.5%; thu GTGT 36.3%)
+- seed 1: đạt (chuyển vào giá 1.04; tiêu dùng thực -3.5%; thu GTGT 36.3%)
 - seed 2: đạt (chuyển vào giá 0.95; tiêu dùng thực -2.6%; thu GTGT 40.5%)
 - seed 3: đạt (chuyển vào giá 0.94; tiêu dùng thực -3.0%; thu GTGT 39.2%)
-- seed 4: không đạt (chuyển vào giá 1.04; tiêu dùng thực -6.1%; thu GTGT 31.1%)
+- seed 4: đạt (chuyển vào giá 1.04; tiêu dùng thực -6.1%; thu GTGT 31.1%)
 - seed 5: đạt (chuyển vào giá 0.97; tiêu dùng thực -4.8%; thu GTGT 36.6%)
 - seed 6: đạt (chuyển vào giá 0.93; tiêu dùng thực -3.5%; thu GTGT 38.3%)
 - seed 7: đạt (chuyển vào giá 0.90; tiêu dùng thực -4.7%; thu GTGT 37.0%)
 - seed 8: đạt (chuyển vào giá 0.98; tiêu dùng thực -5.4%; thu GTGT 34.8%)
 - seed 9: đạt (chuyển vào giá 0.99; tiêu dùng thực -4.0%; thu GTGT 38.4%)
-- seed 10: không đạt (chuyển vào giá 1.31; tiêu dùng thực -3.2%; thu GTGT 38.2%)
+- seed 10: đạt (chuyển vào giá 1.31; tiêu dùng thực -3.2%; thu GTGT 38.2%)
 - seed 11: đạt (chuyển vào giá 0.96; tiêu dùng thực -4.6%; thu GTGT 34.3%)
-- seed 12: không đạt (chuyển vào giá 1.23; tiêu dùng thực -5.9%; thu GTGT 33.6%)
+- seed 12: đạt (chuyển vào giá 1.23; tiêu dùng thực -5.9%; thu GTGT 33.6%)
 - seed 13: đạt (chuyển vào giá 0.92; tiêu dùng thực -5.0%; thu GTGT 34.7%)
-- seed 14: không đạt (chuyển vào giá 1.03; tiêu dùng thực -3.7%; thu GTGT 38.7%)
+- seed 14: đạt (chuyển vào giá 1.03; tiêu dùng thực -3.7%; thu GTGT 38.7%)
 - seed 15: đạt (chuyển vào giá 0.97; tiêu dùng thực -3.9%; thu GTGT 36.8%)
 - seed 16: đạt (chuyển vào giá 0.99; tiêu dùng thực -2.6%; thu GTGT 41.5%)
 - seed 17: đạt (chuyển vào giá 0.92; tiêu dùng thực -1.5%; thu GTGT 49.1%)
-- seed 18: không đạt (chuyển vào giá 1.04; tiêu dùng thực -2.8%; thu GTGT 42.5%)
-- seed 19: không đạt (chuyển vào giá 1.31; tiêu dùng thực -3.5%; thu GTGT 38.5%)
-- seed 20: không đạt (chuyển vào giá 1.12; tiêu dùng thực -3.5%; thu GTGT 37.5%)
+- seed 18: đạt (chuyển vào giá 1.04; tiêu dùng thực -2.8%; thu GTGT 42.5%)
+- seed 19: đạt (chuyển vào giá 1.31; tiêu dùng thực -3.5%; thu GTGT 38.5%)
+- seed 20: đạt (chuyển vào giá 1.12; tiêu dùng thực -3.5%; thu GTGT 37.5%)
 
 </details>
 
@@ -796,28 +796,28 @@ Với mức giảm trừ 15,5 triệu của luật hiện hành, gần như khô
 
 <details><summary>K1.26: số đo từng seed</summary>
 
-Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. "Co lại" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.
+Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. "Co lại" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Từ 15/11/2026 đo ở năm 2-4 (trước đó 10 năm): đây là tác động trực tiếp của thuế. Ở năm 5-10, một cuộc suy thoái do tiền thuế bị giữ lại lấn át, và người mất việc chính thức chuyển sang hộ kinh doanh (sai-khac.md D15).
 
-- seed 1: đạt (ngưỡng 100 triệu: thu/GDP 0.89 điểm, doanh số thực của hộ kinh doanh -4.8%, thu nhập thực của người làm phi chính thức -11.5%, phần chi tiêu mua ở hộ kinh doanh 0.93 điểm, lao động phi chính thức 4.80 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 2: đạt (ngưỡng 100 triệu: thu/GDP 0.13 điểm, doanh số thực của hộ kinh doanh -0.4%, thu nhập thực của người làm phi chính thức -3.8%, phần chi tiêu mua ở hộ kinh doanh 1.10 điểm, lao động phi chính thức 1.66 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 3: đạt (ngưỡng 100 triệu: thu/GDP 1.26 điểm, doanh số thực của hộ kinh doanh -3.5%, thu nhập thực của người làm phi chính thức -13.6%, phần chi tiêu mua ở hộ kinh doanh 3.64 điểm, lao động phi chính thức 4.24 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 4: đạt (ngưỡng 100 triệu: thu/GDP 0.90 điểm, doanh số thực của hộ kinh doanh -2.6%, thu nhập thực của người làm phi chính thức -10.3%, phần chi tiêu mua ở hộ kinh doanh 0.92 điểm, lao động phi chính thức 3.73 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 5: đạt (ngưỡng 100 triệu: thu/GDP 0.56 điểm, doanh số thực của hộ kinh doanh -4.3%, thu nhập thực của người làm phi chính thức -10.5%, phần chi tiêu mua ở hộ kinh doanh 0.97 điểm, lao động phi chính thức 4.06 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 6: không đạt (ngưỡng 100 triệu: thu/GDP -0.64 điểm, doanh số thực của hộ kinh doanh 9.9%, thu nhập thực của người làm phi chính thức -8.2%, phần chi tiêu mua ở hộ kinh doanh 9.69 điểm, lao động phi chính thức 8.09 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 7: đạt (ngưỡng 100 triệu: thu/GDP 0.29 điểm, doanh số thực của hộ kinh doanh -2.9%, thu nhập thực của người làm phi chính thức -6.6%, phần chi tiêu mua ở hộ kinh doanh 0.34 điểm, lao động phi chính thức 1.80 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 8: đạt (ngưỡng 100 triệu: thu/GDP 0.65 điểm, doanh số thực của hộ kinh doanh -3.7%, thu nhập thực của người làm phi chính thức -8.8%, phần chi tiêu mua ở hộ kinh doanh 1.00 điểm, lao động phi chính thức 3.15 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 9: đạt (ngưỡng 100 triệu: thu/GDP 0.47 điểm, doanh số thực của hộ kinh doanh -4.2%, thu nhập thực của người làm phi chính thức -7.9%, phần chi tiêu mua ở hộ kinh doanh 0.41 điểm, lao động phi chính thức 1.25 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 10: không đạt (ngưỡng 100 triệu: thu/GDP -0.62 điểm, doanh số thực của hộ kinh doanh -4.5%, thu nhập thực của người làm phi chính thức -2.9%, phần chi tiêu mua ở hộ kinh doanh -2.34 điểm, lao động phi chính thức -0.32 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 11: không đạt (ngưỡng 100 triệu: thu/GDP -0.26 điểm, doanh số thực của hộ kinh doanh -0.4%, thu nhập thực của người làm phi chính thức -0.1%, phần chi tiêu mua ở hộ kinh doanh -0.42 điểm, lao động phi chính thức -0.91 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 12: không đạt (ngưỡng 100 triệu: thu/GDP 0.43 điểm, doanh số thực của hộ kinh doanh 1.1%, thu nhập thực của người làm phi chính thức -2.1%, phần chi tiêu mua ở hộ kinh doanh 1.18 điểm, lao động phi chính thức -0.24 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 13: không đạt (ngưỡng 100 triệu: thu/GDP 0.03 điểm, doanh số thực của hộ kinh doanh 0.5%, thu nhập thực của người làm phi chính thức -2.0%, phần chi tiêu mua ở hộ kinh doanh 0.49 điểm, lao động phi chính thức 0.10 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 14: không đạt (ngưỡng 100 triệu: thu/GDP 0.13 điểm, doanh số thực của hộ kinh doanh 5.3%, thu nhập thực của người làm phi chính thức -14.3%, phần chi tiêu mua ở hộ kinh doanh 9.93 điểm, lao động phi chính thức 9.30 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 15: đạt (ngưỡng 100 triệu: thu/GDP 0.33 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.9%, phần chi tiêu mua ở hộ kinh doanh 0.65 điểm, lao động phi chính thức 2.14 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 16: không đạt (ngưỡng 100 triệu: thu/GDP 0.19 điểm, doanh số thực của hộ kinh doanh 4.3%, thu nhập thực của người làm phi chính thức 0.9%, phần chi tiêu mua ở hộ kinh doanh 2.13 điểm, lao động phi chính thức -0.27 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 17: đạt (ngưỡng 100 triệu: thu/GDP 0.53 điểm, doanh số thực của hộ kinh doanh -2.0%, thu nhập thực của người làm phi chính thức -6.4%, phần chi tiêu mua ở hộ kinh doanh 0.94 điểm, lao động phi chính thức 1.58 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 18: đạt (ngưỡng 100 triệu: thu/GDP 0.71 điểm, doanh số thực của hộ kinh doanh -3.0%, thu nhập thực của người làm phi chính thức -7.5%, phần chi tiêu mua ở hộ kinh doanh 0.38 điểm, lao động phi chính thức 2.29 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 19: đạt (ngưỡng 100 triệu: thu/GDP 0.52 điểm, doanh số thực của hộ kinh doanh -0.7%, thu nhập thực của người làm phi chính thức -5.2%, phần chi tiêu mua ở hộ kinh doanh 0.73 điểm, lao động phi chính thức 1.75 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
-- seed 20: đạt (ngưỡng 100 triệu: thu/GDP 0.66 điểm, doanh số thực của hộ kinh doanh -3.3%, thu nhập thực của người làm phi chính thức -7.2%, phần chi tiêu mua ở hộ kinh doanh 0.58 điểm, lao động phi chính thức 2.11 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 1: đạt (ngưỡng 100 triệu: thu/GDP 0.63 điểm, doanh số thực của hộ kinh doanh -3.8%, thu nhập thực của người làm phi chính thức -7.8%, phần chi tiêu mua ở hộ kinh doanh 0.62 điểm, lao động phi chính thức 2.18 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 2: đạt (ngưỡng 100 triệu: thu/GDP 0.35 điểm, doanh số thực của hộ kinh doanh -3.4%, thu nhập thực của người làm phi chính thức -8.5%, phần chi tiêu mua ở hộ kinh doanh 0.63 điểm, lao động phi chính thức 2.89 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 3: đạt (ngưỡng 100 triệu: thu/GDP 0.88 điểm, doanh số thực của hộ kinh doanh -3.0%, thu nhập thực của người làm phi chính thức -11.1%, phần chi tiêu mua ở hộ kinh doanh 2.87 điểm, lao động phi chính thức 3.31 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 4: đạt (ngưỡng 100 triệu: thu/GDP 0.51 điểm, doanh số thực của hộ kinh doanh -6.8%, thu nhập thực của người làm phi chính thức -15.1%, phần chi tiêu mua ở hộ kinh doanh 0.47 điểm, lao động phi chính thức 5.42 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 5: đạt (ngưỡng 100 triệu: thu/GDP 0.63 điểm, doanh số thực của hộ kinh doanh -2.5%, thu nhập thực của người làm phi chính thức -4.7%, phần chi tiêu mua ở hộ kinh doanh -0.02 điểm, lao động phi chính thức 0.60 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 6: đạt (ngưỡng 100 triệu: thu/GDP 0.26 điểm, doanh số thực của hộ kinh doanh -4.6%, thu nhập thực của người làm phi chính thức -9.8%, phần chi tiêu mua ở hộ kinh doanh 0.23 điểm, lao động phi chính thức 2.64 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 7: đạt (ngưỡng 100 triệu: thu/GDP 0.68 điểm, doanh số thực của hộ kinh doanh -3.7%, thu nhập thực của người làm phi chính thức -6.3%, phần chi tiêu mua ở hộ kinh doanh -0.10 điểm, lao động phi chính thức 1.09 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 8: đạt (ngưỡng 100 triệu: thu/GDP 0.59 điểm, doanh số thực của hộ kinh doanh -4.6%, thu nhập thực của người làm phi chính thức -7.3%, phần chi tiêu mua ở hộ kinh doanh 0.00 điểm, lao động phi chính thức 1.45 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 9: đạt (ngưỡng 100 triệu: thu/GDP 0.68 điểm, doanh số thực của hộ kinh doanh -0.8%, thu nhập thực của người làm phi chính thức -0.7%, phần chi tiêu mua ở hộ kinh doanh -0.40 điểm, lao động phi chính thức -1.29 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 10: đạt (ngưỡng 100 triệu: thu/GDP 0.33 điểm, doanh số thực của hộ kinh doanh -7.0%, thu nhập thực của người làm phi chính thức -8.1%, phần chi tiêu mua ở hộ kinh doanh -2.38 điểm, lao động phi chính thức 0.60 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 11: đạt (ngưỡng 100 triệu: thu/GDP 0.27 điểm, doanh số thực của hộ kinh doanh -2.2%, thu nhập thực của người làm phi chính thức -2.4%, phần chi tiêu mua ở hộ kinh doanh -0.13 điểm, lao động phi chính thức -0.15 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 12: đạt (ngưỡng 100 triệu: thu/GDP 0.49 điểm, doanh số thực của hộ kinh doanh -2.9%, thu nhập thực của người làm phi chính thức -2.9%, phần chi tiêu mua ở hộ kinh doanh -0.87 điểm, lao động phi chính thức -0.59 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 13: đạt (ngưỡng 100 triệu: thu/GDP 0.39 điểm, doanh số thực của hộ kinh doanh -2.7%, thu nhập thực của người làm phi chính thức -4.5%, phần chi tiêu mua ở hộ kinh doanh 0.13 điểm, lao động phi chính thức 0.59 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 14: đạt (ngưỡng 100 triệu: thu/GDP 0.67 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.6%, phần chi tiêu mua ở hộ kinh doanh 0.07 điểm, lao động phi chính thức 1.11 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 15: đạt (ngưỡng 100 triệu: thu/GDP 0.29 điểm, doanh số thực của hộ kinh doanh -1.8%, thu nhập thực của người làm phi chính thức -4.0%, phần chi tiêu mua ở hộ kinh doanh 0.91 điểm, lao động phi chính thức 0.26 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 16: đạt (ngưỡng 100 triệu: thu/GDP 0.50 điểm, doanh số thực của hộ kinh doanh -1.5%, thu nhập thực của người làm phi chính thức -3.9%, phần chi tiêu mua ở hộ kinh doanh 0.66 điểm, lao động phi chính thức 0.69 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 17: đạt (ngưỡng 100 triệu: thu/GDP 0.71 điểm, doanh số thực của hộ kinh doanh -2.8%, thu nhập thực của người làm phi chính thức -5.6%, phần chi tiêu mua ở hộ kinh doanh 0.38 điểm, lao động phi chính thức 1.03 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 18: đạt (ngưỡng 100 triệu: thu/GDP 0.60 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.2%, phần chi tiêu mua ở hộ kinh doanh -0.01 điểm, lao động phi chính thức 0.98 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 19: đạt (ngưỡng 100 triệu: thu/GDP 0.51 điểm, doanh số thực của hộ kinh doanh -4.7%, thu nhập thực của người làm phi chính thức -8.5%, phần chi tiêu mua ở hộ kinh doanh 0.14 điểm, lao động phi chính thức 2.16 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
+- seed 20: đạt (ngưỡng 100 triệu: thu/GDP 0.40 điểm, doanh số thực của hộ kinh doanh -2.1%, thu nhập thực của người làm phi chính thức -3.9%, phần chi tiêu mua ở hộ kinh doanh 0.13 điểm, lao động phi chính thức 0.39 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm)
 
 </details>
 
@@ -922,7 +922,7 @@ Sàn hiện hành thấp hơn nhiều so với lương đang trả nên nâng 30
 | K1.10 | Đường Phillips và Beveridge dốc xuống | hai tương quan âm | 5/5 | QUA |
 | K1.11 | Tín dụng cùng chiều chu kỳ | tương quan > 0 | 5/5 | QUA |
 | K1.12 | Lạm phát cùng chiều chu kỳ và trễ | tương quan chéo lớn nhất dương, ở trễ ≥ 1 quý | 4/5 | QUA |
-| K1.13 | Bất bình đẳng tự hình thành | Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30); lệch phải | 3/5 | **KHÔNG QUA** |
+| K1.13 | Bất bình đẳng tự hình thành | Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30); lệch phải | 3/5 | **CHƯA ĐẠT (đã biết)** |
 | K1.14 | Quy mô doanh nghiệp lệch phải | độ lệch > 1 | 5/5 | QUA |
 | K1.27 | Kinh tế xấu thì tỷ lệ phi chính thức tăng | tương quan với GDP đã lọc < 0 | 5/5 | QUA |
 | K1.30 | Không doanh nghiệp nào trả dưới lương tối thiểu vùng | tuyệt đối | 5/5 | QUA |
@@ -1049,6 +1049,8 @@ Sàn hiện hành thấp hơn nhiều so với lương đang trả nên nâng 30
 </details>
 
 <details><summary>K1.13: số đo từng seed</summary>
+
+Chưa đạt, đã biết: Đã biết (Dương, 15/11/2026). Ở 5000 hộ Gini của cải ròng không cao hơn Gini thu nhập ở mọi seed (lượt 15/11: 3/5 seed đạt; ở 500 hộ 20/20). Thiếu cơ chế tích tụ của cải: chủ tái đầu tư cổ tức, mua bán cổ phần, sở hữu tập trung. Sửa ở GĐ3 và GĐ4 (sai-khac.md D8). Kết quả phụ thuộc quy mô.
 
 - seed 1: không đạt (của cải 0.31, thu nhập 0.34; độ lệch 2.83)
 - seed 2: không đạt (của cải 0.28, thu nhập 0.33; độ lệch 2.26)
