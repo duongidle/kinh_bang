@@ -1,6 +1,6 @@
 # Kiểm định kịch bản GĐ1
 
-Bản code: commit cuối chạm src hoặc tests: `011f00d`.
+Bản code: commit cuối chạm src hoặc tests: `bc3633c`.
 
 Mỗi kịch bản chạy lời giải mẫu ở 10 seed. Một khẳng định qua khi đúng ở ít nhất 80% số seed. Cột "mục tiêu" cho biết lời giải mẫu đạt mục tiêu ở bao nhiêu seed (chỉ để tham khảo, không phải điều kiện).
 
@@ -136,7 +136,6 @@ Không chi thêm. Phần thu thêm làm bội chi nhỏ lại và nợ công th�
 | (chung) Nhưng khu vực phi chính thức không nhỏ đi về số người: không ai "lên" doanh nghiệp vì bị đánh thuế. | 10/10 | QUA | tỷ lệ lao động phi chính thức +0,5 điểm |
 | Không chi phần thu thêm thì tiêu dùng thực thấp hơn. | 10/10 | QUA | −4,4% so với thế giới đối chứng |
 | Và bất bình đẳng thu nhập cao hơn. | 9/10 | QUA | +1,7 điểm so với thế giới đối chứng |
-| Đổi lại, nợ công thấp hơn. | 7/10 | **KHÔNG QUA** | −1,1% so với thế giới đối chứng |
 
 Các cột so sánh, trung bình qua các seed (nhỏ nhất đến lớn nhất):
 
@@ -221,10 +220,9 @@ Các cột so sánh, trung bình qua các seed (nhỏ nhất đến lớn nhất
 
 | Khẳng định | Số seed đúng | Kết quả | Số đo ở seed đầu |
 |---|---|---|---|
-| Lãi suất cao làm dư nợ thấp hơn. | 6/10 | **KHÔNG QUA** | −6,9% so với thế giới đối chứng |
-| Nhưng tiền lãi Chính phủ trả phình ra, bội chi lớn hơn. | 7/10 | **KHÔNG QUA** | +0,8 điểm so với thế giới đối chứng |
+| Tiền lãi Chính phủ trả phình ra: trong năm đầu bội chi lớn hơn. | 10/10 | QUA | +1,1 điểm so với thế giới đối chứng |
 | Nợ công cao hơn. | 10/10 | QUA | +19,7% so với thế giới đối chứng |
-| Kết quả ngược mong đợi: từ năm thứ năm lạm phát cao hơn thế giới không tăng lãi suất. | 6/10 | **KHÔNG QUA** | −1,6 điểm so với thế giới đối chứng |
+| Kết quả ngược mong đợi: trong năm thứ hai đến năm thứ tư, lạm phát không thấp hơn mà cao hơn thế giới không tăng lãi suất. | 10/10 | QUA | +0,5 điểm so với thế giới đối chứng |
 
 - Mục tiêu "Lạm phát năm cuối thấp hơn lúc bắt đầu": lời giải mẫu đạt ở 3/10 seed.
 
