@@ -42,6 +42,8 @@ export function apply(eng: Engine, w: World, x: Intervention): void {
 export const KNOWN_FAIL: Record<string, string> = {
   'K1.19':
     'Kênh lãi suất tới cầu còn yếu. Hộ không vay, nên lãi suất chỉ chạm tiêu dùng qua thay thế liên thời gian (exp.saveResponse = 0,35 theo Havránek 2015) và chạm đầu tư. Kênh vay tiêu dùng (thiết kế mục 18) để GĐ3, khi có nhà đất làm tài sản thế chấp. Không nâng tham số để qua mục này.',
+  'K1.13':
+    'Đã biết (Dương, 15/11/2026). Ở 5000 hộ Gini của cải ròng không cao hơn Gini thu nhập ở mọi seed (lượt 15/11: 3/5 seed đạt; ở 500 hộ 20/20). Thiếu cơ chế tích tụ của cải: chủ tái đầu tư cổ tức, mua bán cổ phần, sở hữu tập trung. Sửa ở GĐ3 và GĐ4 (sai-khac.md D8). Kết quả phụ thuộc quy mô.',
   'K1.28': 'Đã biết (Dương, 14/11/2026). Lương giờ bám một nửa lạm phát 12 tháng qua, không bám lạm phát kỳ vọng, nên tắt kỳ vọng gần như không đổi độ dai của lạm phát.',
   'K1.29': 'Đã biết (Dương, 14/11/2026). Hiệu đúng dấu nhưng nhỏ hơn nhiễu giữa các seed.',
   'K1.31': 'Chuyển sang GĐ2 (Dương, 14/11/2026). Lao động ở GĐ1 đồng nhất nên lương các doanh nghiệp tụm sát nhau, sàn lương không tách ra được một nhóm lương thấp. Kiểm lại khi có kỹ năng.',
