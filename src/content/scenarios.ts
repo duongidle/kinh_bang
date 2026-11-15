@@ -248,7 +248,7 @@ export const SCENARIOS: ScenarioDef[] = [
         lower('Bất bình đẳng thu nhập không tăng như ở cách trả nợ.', 'gini.income', 24, END, 'pt', 0.03),
       ],
       debt: [
-        lower('Không chi phần thu thêm: đầu tư thường thấp hơn, nhưng không chắc. Cầu yếu đi nên ít doanh nghiệp cần thêm máy; có ván vẫn tăng, vì ở quy mô này đầu tư dồn vào vài doanh nghiệp và dao động mạnh. Nó không tăng mạnh như ở hai cách chi lại.', 'investment', 12, 60, 'rel', 0.2),
+        lower('Không chi phần thu thêm: doanh nghiệp đầu tư ít hẳn đi.', 'investment', 12, 60),
         lower('Sản lượng thực thấp hơn: tiền thuế rời khỏi vòng chi tiêu.', 'gdp.real', 24, END),
         higher('Thất nghiệp cao hơn trong bốn năm đầu.', 'unemployment', 12, 48, 'pt'),
         higher('Kết quả ngược mong đợi: Gini thu nhập cao hơn. Người mất việc kéo khoảng cách rộng ra, lấn át phần thuế lấy bớt của người có vốn.', 'gini.income', 24, END, 'pt'),
@@ -264,7 +264,7 @@ export const SCENARIOS: ScenarioDef[] = [
       { indicator: 'gov.debt', label: 'Nợ công (2 năm cuối)', kind: 'rel', from: 96, to: END },
       { indicator: 'gov.debtGdp', label: 'Nợ công/GDP (2 năm cuối)', kind: 'pt', from: 96, to: END },
     ],
-    explanation: 'Thuế cổ tức và thuế TNDN lấy bớt thu nhập của nhóm có vốn. Phần còn lại của câu chuyện là tiền đó đi đâu. Nếu Chính phủ giữ lại để trả nợ, tiền rời khỏi vòng chi tiêu: doanh nghiệp bán ít đi, ít nơi cần thêm máy nên đầu tư thường thấp hơn (nhưng không chắc, vì đầu tư dồn vào vài doanh nghiệp và dao động mạnh), bớt người, và người mất việc làm bất bình đẳng thu nhập tăng. Nợ công tính bằng đồng có giảm, nhưng GDP cũng nhỏ đi nên tỷ lệ nợ trên GDP không giảm rõ. Nếu Chính phủ chi lại số tiền đó, bằng trợ cấp hay mua hàng, cú hãm gần như biến mất. Còn bất bình đẳng thu nhập thì chỉ giảm nhẹ và không chắc: trong mô hình, phần lớn chênh lệch thu nhập đến từ có việc hay mất việc, không phải từ cổ tức.',
+    explanation: 'Thuế cổ tức và thuế TNDN lấy bớt thu nhập của nhóm có vốn. Phần còn lại của câu chuyện là tiền đó đi đâu. Nếu Chính phủ giữ lại để trả nợ, tiền rời khỏi vòng chi tiêu: doanh nghiệp bán ít đi, đầu tư ít đi, bớt người, và người mất việc làm bất bình đẳng thu nhập tăng. Nợ công tính bằng đồng có giảm, nhưng GDP cũng nhỏ đi nên tỷ lệ nợ trên GDP không giảm rõ. Nếu Chính phủ chi lại số tiền đó, bằng trợ cấp hay mua hàng, cú hãm gần như biến mất. Còn bất bình đẳng thu nhập thì chỉ giảm nhẹ và không chắc: trong mô hình, phần lớn chênh lệch thu nhập đến từ có việc hay mất việc, không phải từ cổ tức.',
     simplifications: [...BASE_SIMPLE, 'Người giàu không chuyển tài sản ra nước ngoài, không né thuế.', 'Biểu thuế TNCN gần như không chạm ai vì lương chưa phân tán (GĐ2).', '"Đầu tư công" ở GĐ1 chỉ là Chính phủ mua thêm hàng. Nó chưa tạo ra đường sá hay tài sản công làm tăng năng suất.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán. Năm đầu ở cả ba cách tiền đều chưa được chi.', 'Quy tắc tự động chi lại tiền thuế thu thêm (gov.revenueUse) được đặt về "keep" ở cả ba cách: ba cách tự khai nơi tiền đi bằng bước riêng ở tháng 12, để quy tắc tự động bật thì chi hai lần (sai-khac.md D14).'],
   },
   {
