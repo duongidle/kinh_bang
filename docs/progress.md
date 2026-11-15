@@ -63,7 +63,7 @@ Thiếu hẳn, cần cơ chế mới:
 
 Gộp 1-4 và 6: khoảng 2-3 ngày Sonnet cộng review. Thêm 5: thêm 2-3 ngày và một vòng thiết kế.
 
-Phát hiện khi đọc code (chưa sửa, ngoài phạm vi): `Session.setParam` đổi tham số hành vi mà không gắn `meta.modified`, nên đổi tham số giữa ván không bật dải "đã sửa quy luật"; chỉ đổi biến thể quy tắc mới bật. Phải xem Phòng thí nghiệm hiện có cho đổi tham số không, trước khi kết luận là lỗi. Xem ở U2 khi rà chức năng.
+Phát hiện khi đọc code (chưa sửa, ngoài phạm vi): `Session.setParam` đổi tham số hành vi mà không gắn `meta.modified`, nên đổi tham số giữa ván không bật dải "đã sửa quy luật"; chỉ đổi biến thể quy tắc mới bật. Đã xem: giao diện hiện không có chỗ nào gọi `store.param` (chỉ khai trong `store.ts`), nên người chơi chưa đổi được tham số, chưa phải lỗi đang xảy ra. Thành lỗi nếu sau này giao diện mở chỗ đổi tham số mà engine không sửa.
 
 ### Trạng thái lúc này (tối 15/11/2026)
 
