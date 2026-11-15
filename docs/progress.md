@@ -20,6 +20,8 @@ Quyết định của người điều phối (tự quyết theo spec mục 13, 
 
 Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 
+- U1 bước 1 xong: `src/ui/design/tokens.ts` + `tokens.css` (20 màu hai theme, khoảng cách, bo góc, cỡ chữ, chuyển động) và `tests/unit/design-tokens.test.ts` (tương phản ≥ 4,5:1 mọi cặp, so khớp ts với css). `npm test` xanh 84/84. Commit: `U1 bước 1` trong git log.
+
 ### Trạng thái lúc này (tối 15/11/2026)
 
 - **BÀN GIAO (Dương quyết tối 15/11/2026): từ GĐ1.5, Opus điều phối, Sonnet code. Fable không làm tiếp.** Opus bắt đầu từ U1 và CHỜ DƯƠNG BẢO mới giao (Dương đã cho tạm dừng sau khi push). Đọc trước: `docs/design/gd1-5.md` (spec đã duyệt; mục 13 "Lưu ý cho người điều phối" nói cách review và khi nào được tự quyết), `docs/validation/chot-gd1.md`, CLAUDE.md mục "Ai làm gì".

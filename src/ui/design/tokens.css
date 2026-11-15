@@ -1,0 +1,110 @@
+/* Token của hệ thiết kế GĐ1.5 (U1). Nguồn số liệu: tokens.ts; test tests/unit/design-tokens.test.ts so khớp hai file. */
+:root {
+  color-scheme: light dark;
+  --color-bg: #f4f5f2;
+  --color-surface: #ffffff;
+  --color-raised: #f0f2ee;
+  --color-line: #d9ddd6;
+  --color-text: #1b1f22;
+  --color-text-2: #4a545b;
+  --color-text-3: #5f6a72;
+  --color-accent: #8f5b04;
+  --color-on-accent: #ffffff;
+  --color-good: #1d7a4c;
+  --color-bad: #b42318;
+  --color-warn: #9c4d08;
+  --color-flow-wage: #2a6fa3;
+  --color-flow-buy: #0d7366;
+  --color-flow-tax: #a8325c;
+  --color-flow-credit: #4f7210;
+  --color-flow-gov: #7a48b3;
+  --color-sector-agri: #477233;
+  --color-sector-manu: #53677a;
+  --color-sector-serv: #9a5434;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --font-size-1: 12px;
+  --font-size-2: 13px;
+  --font-size-3: 14px;
+  --font-size-4: 16px;
+  --font-size-5: 20px;
+  --font-size-6: 28px;
+  --line-height-1: 16px;
+  --line-height-2: 18px;
+  --line-height-3: 20px;
+  --line-height-4: 24px;
+  --line-height-5: 28px;
+  --line-height-6: 36px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --dur-fast: 120ms;
+  --dur-mid: 200ms;
+  --dur-slow: 320ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg: #0f1113;
+    --color-surface: #171b1e;
+    --color-raised: #1e2327;
+    --color-line: #2a3136;
+    --color-text: #e6e9eb;
+    --color-text-2: #a3aeb5;
+    --color-text-3: #8b979f;
+    --color-accent: #e8b04a;
+    --color-on-accent: #1a1408;
+    --color-good: #7fd1a3;
+    --color-bad: #f2685f;
+    --color-warn: #f59a4a;
+    --color-flow-wage: #6fb1e0;
+    --color-flow-buy: #4cc7b4;
+    --color-flow-tax: #ee8aaa;
+    --color-flow-credit: #b5d36a;
+    --color-flow-gov: #c79be8;
+    --color-sector-agri: #8fbf78;
+    --color-sector-manu: #9fb3c5;
+    --color-sector-serv: #d79c7b;
+  }
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #0f1113;
+  --color-surface: #171b1e;
+  --color-raised: #1e2327;
+  --color-line: #2a3136;
+  --color-text: #e6e9eb;
+  --color-text-2: #a3aeb5;
+  --color-text-3: #8b979f;
+  --color-accent: #e8b04a;
+  --color-on-accent: #1a1408;
+  --color-good: #7fd1a3;
+  --color-bad: #f2685f;
+  --color-warn: #f59a4a;
+  --color-flow-wage: #6fb1e0;
+  --color-flow-buy: #4cc7b4;
+  --color-flow-tax: #ee8aaa;
+  --color-flow-credit: #b5d36a;
+  --color-flow-gov: #c79be8;
+  --color-sector-agri: #8fbf78;
+  --color-sector-manu: #9fb3c5;
+  --color-sector-serv: #d79c7b;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-mid: 0ms;
+    --dur-slow: 0ms;
+  }
+}
