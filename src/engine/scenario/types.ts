@@ -23,6 +23,13 @@ export interface Ctx {
   others?: Record<string, World>;
 }
 
+/**
+ * Số tháng chạy trước mặc định của mọi kịch bản, với lịch đứng yên ở tháng bắt đầu (luật giữ phiên bản của ngày bắt đầu).
+ * Lý do: 20 năm đầu của nền kinh tế mặc định là giai đoạn khởi động có một đợt bùng rồi vỡ (sai-khac.md D16).
+ * Tick không đặt lại; `warmup` và mọi `at` vẫn tính từ lúc chạy trước xong.
+ */
+export const SCENARIO_PREWARM = 240;
+
 export interface Step extends Intervention {
   /** Số tháng tính từ lúc người chơi nhận quyền. */
   at: number;
@@ -66,7 +73,13 @@ export interface ScenarioDef {
   question: string;
   intro: string;
   prereq: string[];
-  /** Số tháng chạy trước khi người chơi nhận quyền, để nền kinh tế vào nhịp. */
+  /**
+   * Số tháng chạy trước với lịch đứng yên, trước `warmup` (bội của 12). Không khai thì dùng `SCENARIO_PREWARM`.
+   * Người chơi nhận quyền ở tháng `prewarm + warmup`; mọi `at`, cửa sổ đo và `months` tính từ đó.
+   * Khai 0 khi câu hỏi của kịch bản đòi chạy từ trạng thái khởi tạo.
+   */
+  prewarm?: number;
+  /** Số tháng chạy thêm sau `prewarm` (lịch đã chạy) trước khi người chơi nhận quyền, để nền kinh tế vào nhịp. */
   warmup: number;
   months: number;
   startYear?: number;

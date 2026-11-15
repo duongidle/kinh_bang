@@ -113,7 +113,7 @@ describe('Kiểm định GĐ1', () => {
     const md = renderReport('Báo cáo kiểm định GĐ1', [
       {
         heading: `Tóm tắt`,
-        intro: `Chạy ${M?.nSeeds ?? '?'} seed x 480 tháng ở 500 hộ, ${L?.nSeeds ?? '?'} seed ở 5000 hộ, ${S?.nSeeds ?? '?'} seed ở 50 hộ (chỉ kế toán). Bỏ 120 tháng đầu. Một mục qua khi đúng ở ít nhất 80% số seed, hoặc khi khoảng tin cậy 95% của trung bình nằm đúng phía (ghi "theo trung bình"). Mục kế toán phải đúng ở mọi seed.\n\nKhông qua: ${failed.length ? failed.map((c) => (c.known ? `${c.id} (đã biết)` : c.id)).join(', ') : 'không có'}.`,
+        intro: `Chạy ${M?.nSeeds ?? '?'} seed x 480 tháng ở 500 hộ, ${L?.nSeeds ?? '?'} seed ở 5000 hộ, ${S?.nSeeds ?? '?'} seed ở 50 hộ (chỉ kế toán). Bỏ 120 tháng đầu. Thí nghiệm chạy đôi tách nhánh ở tháng 240 (trước 15/11/2026: tháng 120; sai-khac.md D16). Một mục qua khi đúng ở ít nhất 80% số seed, hoặc khi khoảng tin cậy 95% của trung bình nằm đúng phía (ghi "theo trung bình"). Mục kế toán phải đúng ở mọi seed.\n\nKhông qua: ${failed.length ? failed.map((c) => (c.known ? `${c.id} (đã biết)` : c.id)).join(', ') : 'không có'}.`,
         checks: [],
       },
       { heading: 'Lần chạy gốc, 500 hộ', checks: M?.checks ?? [], table: M?.table },

@@ -110,6 +110,8 @@ export interface NewWorldOptions {
   nHouseholds?: number;
   startYear?: number;
   startMonth?: number;
+  /** Số tháng chạy trước với lịch đứng yên (bội của 12, mặc định 0). Xem `dateOf`. */
+  prewarm?: number;
   params?: Record<string, number>;
   variants?: Record<string, string>;
   laws?: Record<string, number>;
@@ -158,6 +160,7 @@ export class Engine {
       modules: this.modules.map((m) => m.id),
       startYear: o.startYear,
       startMonth: o.startMonth,
+      prewarm: o.prewarm,
       nkind: NKIND,
       ledgerCap: n >= 5000 ? 1 << 21 : n >= 500 ? 1 << 19 : 1 << 16,
       keepDecisionTicks: n >= 5000 ? 13 : n >= 500 ? 36 : 600,

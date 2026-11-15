@@ -149,6 +149,11 @@ export interface WorldMeta {
   tick: number;
   startYear: number;
   startMonth: number; // 1..12
+  /**
+   * Số tháng chạy trước mà lịch đứng yên (bội của 12). Tick vẫn đếm từ 0; `dateOf` tính lịch theo max(0, tick - prewarm).
+   * Ván lưu cũ không có trường này: đọc thành 0. Xem sai-khac.md D16.
+   */
+  prewarm: number;
   scale: ScaleId;
   nHouseholds: number;
   modified: boolean;
@@ -175,12 +180,18 @@ export interface WorldInit {
   modules: string[];
   startYear?: number;
   startMonth?: number;
+  /** Số tháng chạy trước với lịch đứng yên. Mặc định 0. Phải là số nguyên không âm, bội của 12. */
+  prewarm?: number;
   ledgerCap?: number;
   nkind: number;
   keepDecisionTicks?: number;
 }
 
 export function createWorld(init: WorldInit): World {
+  const prewarm = init.prewarm ?? 0;
+  if (!Number.isInteger(prewarm) || prewarm < 0 || prewarm % 12 !== 0) {
+    throw new Error(`Số tháng chạy trước (prewarm) phải là số nguyên không âm và là bội của 12, nhận được ${prewarm}.`);
+  }
   const cap = init.ledgerCap ?? 1 << 16;
   const nk = init.nkind;
   const tables: Record<string, Table> = {
@@ -200,6 +211,7 @@ export function createWorld(init: WorldInit): World {
       tick: 0,
       startYear: init.startYear ?? 2026,
       startMonth: init.startMonth ?? 1,
+      prewarm,
       scale: init.scale,
       nHouseholds: init.nHouseholds,
       modified: false,
@@ -237,8 +249,13 @@ export function createWorld(init: WorldInit): World {
 }
 
 // ---- Lịch ----
+/**
+ * Ngày lịch của một tick. Trong `prewarm` tháng đầu lịch đứng ở tháng bắt đầu, sau đó chạy bình thường.
+ * Chỉ lịch đổi; tick, sổ cái, chuỗi số liệu và số ngẫu nhiên vẫn theo tick.
+ * Trường `prewarm` có thể thiếu ở ván lưu cũ: coi là 0.
+ */
 export function dateOf(w: World, tick = w.meta.tick): { year: number; month: number; iso: string } {
-  const m0 = w.meta.startMonth - 1 + tick;
+  const m0 = w.meta.startMonth - 1 + Math.max(0, tick - (w.meta.prewarm ?? 0));
   const year = w.meta.startYear + Math.floor(m0 / 12);
   const month = (m0 % 12) + 1;
   return { year, month, iso: `${year}-${String(month).padStart(2, '0')}-01` };

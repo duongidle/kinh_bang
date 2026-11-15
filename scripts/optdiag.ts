@@ -4,9 +4,11 @@ import { revenueUseOptions, SCENARIOS } from '../src/content/scenarios';
 import { gd1Engine } from '../src/engine/modules/gd1/index';
 import type { Engine } from '../src/engine/core/engine';
 import type { World } from '../src/engine/core/world';
-import type { Step } from '../src/engine/scenario/types';
+import { SCENARIO_PREWARM, type Step } from '../src/engine/scenario/types';
 const def = SCENARIOS.find((d) => d.id === process.argv[2])!;
 const N = Number(process.argv[3] ?? 5);
+const PRE = def.prewarm ?? SCENARIO_PREWARM; // giống Session: chạy trước với lịch đứng yên
+const T0 = PRE + def.warmup;
 const TAXES: Record<string, string[]> = { 'thue-nguoi-giau': ['gov.tax.cit', 'gov.tax.pit'], 'keo-vao-luoi-thue': ['gov.tax.hkd'] };
 const options = def.options ?? revenueUseOptions(TAXES[def.id], { transfer: [], purchase: [], debt: [] });
 const specs = process.argv.slice(4).map((a) => { const [id, kind, x, y] = a.split(':'); return { id, kind, a: Number(x ?? 12), b: Number(y ?? def.months) }; });
@@ -20,9 +22,9 @@ const mean = (x: ArrayLike<number>) => { let s = 0; for (let i = 0; i < x.length
 const acc: Record<string, number[][]> = {};
 for (let seed = 1; seed <= N; seed++) {
   const eng = gd1Engine(); eng.checkEvery = 0;
-  const root = eng.newWorld({ seed, scale: def.scale });
+  const root = eng.newWorld({ seed, scale: def.scale, prewarm: PRE });
   if (def.setup) apply(eng, root, { at: 0, ...def.setup });
-  eng.run(root, def.warmup);
+  eng.run(root, T0);
   const base = eng.fork(root);
   eng.run(base, def.months);
   for (const o of options) {
@@ -30,8 +32,8 @@ for (let seed = 1; seed <= N; seed++) {
     const steps = [...def.demo, ...o.steps];
     for (let t = 0; t < def.months; t++) { for (const s of steps) if (s.at === t) apply(eng, w, s); eng.step(w); }
     specs.forEach((sp, k) => {
-      const x = mean(eng.seriesOf(w, sp.id, def.warmup + sp.a, def.warmup + sp.b));
-      const y = mean(eng.seriesOf(base, sp.id, def.warmup + sp.a, def.warmup + sp.b));
+      const x = mean(eng.seriesOf(w, sp.id, T0 + sp.a, T0 + sp.b));
+      const y = mean(eng.seriesOf(base, sp.id, T0 + sp.a, T0 + sp.b));
       ((acc[o.id] ??= [])[k] ??= []).push(sp.kind === 'rel' ? x / y - 1 : x - y);
     });
   }

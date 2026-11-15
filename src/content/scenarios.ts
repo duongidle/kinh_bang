@@ -219,6 +219,8 @@ export const SCENARIOS: ScenarioDef[] = [
     question: 'Mọi nhà bắt đầu gần bằng nhau. Vì sao sau 30 năm lại chênh lệch?',
     intro: 'Lúc đầu của cải các hộ gần như bằng nhau. Chạy 30 năm ở tốc độ tối đa và theo dõi Gini của cải. Sau đó thử Phòng thí nghiệm: chia đều cổ tức.',
     prereq: [],
+    // Không chạy trước: câu hỏi của kịch bản là "mọi nhà bắt đầu gần bằng nhau", nên phải chạy từ trạng thái khởi tạo.
+    prewarm: 0,
     warmup: 0,
     months: 360,
     goals: [below('gini', 'Gini thu nhập bình quân 5 năm cuối dưới 0,22', 'gini.income', 0.22, 60, (x) => x.toFixed(2).replace('.', ','))],

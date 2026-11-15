@@ -40,7 +40,7 @@ import { publicMoney } from '../ledger/ledger';
 import { gd1Engine } from '../modules/gd1/index';
 import { playerOf } from '../modules/gd1/player';
 import { B, bankEquity, F, H, PUBLIC, SECTOR_NAME, st, UNEMPLOYED } from '../modules/gd1/schema';
-import type { Ctx, ScenarioDef, Step } from '../scenario/types';
+import { SCENARIO_PREWARM, type Ctx, type ScenarioDef, type Step } from '../scenario/types';
 
 type StateCmd = Extract<Command, { type: 'policy' | 'param' | 'lab' | 'possess' | 'orders' }>;
 interface LogEntry {
@@ -118,7 +118,9 @@ export class Session {
     const def = cmd.scenario ? this.defs.find((d) => d.id === cmd.scenario) : undefined;
     if (cmd.scenario && !def) throw new Error(`Không có kịch bản: ${cmd.scenario}`);
     this.def = def;
-    this.w = this.eng.newWorld({ seed: cmd.seed, scale: def?.scale ?? cmd.scale, scenario: def?.id, startYear: def?.startYear });
+    // Kịch bản chạy trước `prewarm` tháng với lịch đứng yên (sai-khac.md D16); ván tự do không chạy trước.
+    const prewarm = def ? (def.prewarm ?? SCENARIO_PREWARM) : 0;
+    this.w = this.eng.newWorld({ seed: cmd.seed, scale: def?.scale ?? cmd.scale, scenario: def?.id, startYear: def?.startYear, prewarm });
     this.log = [];
     this.applied.clear();
     this.eventLog.clear();
@@ -137,7 +139,7 @@ export class Session {
     };
     if (def?.setup) add(0, 'setup', def.setup);
     if (cmd.setup) add(0, 'setup', cmd.setup);
-    this.t0 = def?.warmup ?? 0;
+    this.t0 = prewarm + (def?.warmup ?? 0);
     for (const s of def?.shocks ?? []) add(this.t0 + s.at, 'shock', s, s.label);
     this.applyDue();
     // Tháng cuối của giai đoạn chạy trước: chưa áp cú sốc của tháng t0, để chụp trạng thái xuất phát cho các nhánh.

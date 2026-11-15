@@ -1,5 +1,5 @@
 // Kiểm định thống kê GĐ1 (gd1 mục 14). Mỗi mục trả về kết quả từng seed; qua khi đúng ở ít nhất 80% số seed.
-// Thí nghiệm chính sách dùng chạy đôi cùng seed: tách nhánh ở tháng 120, một bên có can thiệp, một bên không.
+// Thí nghiệm chính sách dùng chạy đôi cùng seed: tách nhánh ở tháng 240 (`FORK`), một bên có can thiệp, một bên không.
 
 import type { Engine } from '@/engine/core/engine';
 import type { ScaleId, World } from '@/engine/core/world';
@@ -7,6 +7,8 @@ import { corr, hpCycle, logOf, mean, sd, toQuarterly } from '@/engine/indicators
 import { gd1Engine } from '@/engine/modules/gd1/index';
 
 export const BURN = 120;
+/** Điểm tách nhánh của mọi thí nghiệm chạy đôi. Trước 15/11/2026 là 120 (`BURN`), đúng đỉnh của đợt bùng nổ giai đoạn khởi động; sau tháng 240 nền kinh tế mới đứng yên (sai-khac.md D16). */
+export const FORK = 240;
 export const MONTHS = 480;
 
 export interface Check {
@@ -256,7 +258,7 @@ export interface Pair {
 }
 
 /** Chạy tới `at`, tách nhánh, áp can thiệp lên một nhánh, chạy tiếp `horizon` tháng ở cả hai. `common` áp cho cả hai nhánh. */
-export function pair(seed: number, x: Intervention, horizon: number, common: Intervention = {}, scale: ScaleId = 'M', at = BURN): Pair {
+export function pair(seed: number, x: Intervention, horizon: number, common: Intervention = {}, scale: ScaleId = 'M', at = FORK): Pair {
   const eng = gd1Engine();
   eng.checkEvery = 12;
   const base = eng.newWorld({ seed, scale });
@@ -282,7 +284,7 @@ function fourWay(seed: number, scale: ScaleId, variant: Intervention, shock: (en
   const eng = gd1Engine();
   eng.checkEvery = 12;
   const root = eng.newWorld({ seed, scale });
-  eng.run(root, BURN);
+  eng.run(root, FORK);
   apply(eng, root, common);
   const mk = (withVariant: boolean, withShock: boolean): World => {
     const w = eng.fork(root);
@@ -471,8 +473,8 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
         [36, 36],
         noTaylor,
       );
-      const excess = (a: World, b: World) => mean(r.eng.seriesOf(a, 'inflation.yoy', BURN + 48, BURN + 72)) - mean(r.eng.seriesOf(b, 'inflation.yoy', BURN + 48, BURN + 72));
-      const peak = (a: World, b: World) => mean(r.eng.seriesOf(a, 'inflation.yoy', BURN + 24, BURN + 36)) - mean(r.eng.seriesOf(b, 'inflation.yoy', BURN + 24, BURN + 36));
+      const excess = (a: World, b: World) => mean(r.eng.seriesOf(a, 'inflation.yoy', FORK + 48, FORK + 72)) - mean(r.eng.seriesOf(b, 'inflation.yoy', FORK + 48, FORK + 72));
+      const peak = (a: World, b: World) => mean(r.eng.seriesOf(a, 'inflation.yoy', FORK + 24, FORK + 36)) - mean(r.eng.seriesOf(b, 'inflation.yoy', FORK + 24, FORK + 36));
       const on = excess(r.on1, r.on0) / Math.max(1e-6, peak(r.on1, r.on0));
       const off = excess(r.off1, r.off0) / Math.max(1e-6, peak(r.off1, r.off0));
       return { ok: off < on, m: on - off, value: `phần lạm phát vượt trội còn lại: bật ${pc(on)}, tắt ${pc(off)}` };
@@ -481,7 +483,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
   );
   each('K1.29', 'Niềm tin làm suy thoái sâu hơn', 'GDP thực bình quân 2 năm sau cú sốc cầu thấp hơn khi bật niềm tin', (seed) => {
     const r = fourWay(seed, scale, { variants: { 'exp.confidence': 'off' } }, (eng, w) => apply(eng, w, { laws: { 'gov.purchase.share': 0.01 } }), [24]);
-    const gap = (a: World, b: World) => mean(r.eng.seriesOf(a, 'gdp.real', BURN, BURN + 24)) / mean(r.eng.seriesOf(b, 'gdp.real', BURN, BURN + 24)) - 1;
+    const gap = (a: World, b: World) => mean(r.eng.seriesOf(a, 'gdp.real', FORK, FORK + 24)) / mean(r.eng.seriesOf(b, 'gdp.real', FORK, FORK + 24)) - 1;
     const on = gap(r.on1, r.on0);
     const off = gap(r.off1, r.off0);
     return { ok: on < off, m: off - on, value: `bật ${pc(on)}, tắt ${pc(off)}` };
@@ -509,13 +511,13 @@ function pairWith(seed: number, scale: ScaleId, horizon: number, f: (eng: Engine
   const eng = gd1Engine();
   eng.checkEvery = 12;
   const base = eng.newWorld({ seed, scale });
-  eng.run(base, BURN);
+  eng.run(base, FORK);
   apply(eng, base, common);
   const alt = eng.fork(base);
   f(eng, alt);
   eng.run(base, horizon);
   eng.run(alt, horizon);
-  return { eng, base, alt, t0: BURN };
+  return { eng, base, alt, t0: FORK };
 }
 
 // =====================================================================
