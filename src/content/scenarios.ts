@@ -344,7 +344,7 @@ export const SCENARIOS: ScenarioDef[] = [
       lower('Đổi lại, thu GTGT thấp hơn.', 'gov.tax.vat', 12, END),
       higher('Tiêu dùng thực cao hơn.', 'consumption.real', 12, END),
     ],
-    explanation: 'Thuế GTGT nằm trong giá bán. Khi thuế đổi, người bán không chuyển hết vào giá ngay: trong mô hình khoảng một phần ba đi vào giá, phần còn lại ăn vào biên lãi, rồi biên lãi lại đi theo sức mua. Thuế thấp hơn thì giá thấp hơn, nhưng ít hơn mức giảm thuế. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn, và phần thu hụt đó Chính phủ phải vay để bù.',
+    explanation: 'Thuế GTGT nằm trong giá bán. Trong mô hình, khi thuế về 10% người bán cộng trọn phần thuế vào giá ngay. Khi cậu ban hành lại mức 8% thì giá gần như không giảm theo ngay: phần lớn mức giảm thuế thành biên lãi của người bán, rồi biên lãi mới đi dần theo sức mua. Vì vậy giá hàng chịu thuế thấp hơn, nhưng ít hơn mức giảm thuế. Người mua tiêu được nhiều hàng hơn, ngân sách thu ít hơn, và phần thu hụt đó Chính phủ phải vay để bù.',
     history: 'Việt Nam giảm GTGT từ 10% xuống 8% cho phần lớn hàng hoá từ 2022 và gia hạn nhiều lần, tới hết 2026.',
     simplifications: [...BASE_SIMPLE, 'Gom thuế suất theo ngành; ngoài đời một số nhóm hàng không được giảm.', 'Tỷ lệ chuyển thuế vào giá lấy từ số liệu châu Âu (IMF WP/21/61: bình quân 31%); chưa có ước lượng cho Việt Nam.', 'Mô hình chưa có bất đối xứng: ngoài đời giá tăng theo thuế mạnh hơn là giảm theo thuế (Benzarti và cộng sự 2020).', 'Giả định ngầm: Chính phủ không cắt chi khi thu hụt. Phần thiếu được bù bằng vay nợ.', 'Gia hạn 8% là giảm thuế so với luật hiện hành (về 10%): theo quy tắc gov.revenueUse mặc định, Chính phủ vay bù và giữ nguyên chi, không cắt chi (sai-khac.md D14).'],
   },
@@ -388,7 +388,6 @@ export const SCENARIOS: ScenarioDef[] = [
       debt: [
         lower('Không chi phần thu thêm thì tiêu dùng thực thấp hơn.', 'consumption.real', 24, END),
         higher('Và bất bình đẳng thu nhập cao hơn.', 'gini.income', 24, END, 'pt'),
-        lower('Đổi lại, nợ công thấp hơn.', 'gov.debt', 60, END),
       ],
     }),
     compare: [
@@ -399,7 +398,7 @@ export const SCENARIOS: ScenarioDef[] = [
       { indicator: 'gini.income', label: 'Gini thu nhập', kind: 'pt', from: 24, to: END },
       { indicator: 'gov.debt', label: 'Nợ công (năm cuối)', kind: 'rel', from: 60, to: END },
     ],
-    explanation: 'Thuế theo doanh thu đi vào giá bán của hộ kinh doanh và vào thu nhập của chủ hộ. Khu vực này nghèo đi. Nó không co lại về số người, vì người làm ở đó không có chỗ nào khác để đi, và hộ kinh doanh trong mô hình không chuyển lên doanh nghiệp được. Tiền thuế đi đâu chỉ đổi mức độ: giữ lại trả nợ thì khu vực phi chính thức mất khoảng 3% thu nhập thực, chi lại ra thì mất khoảng 2%.',
+    explanation: 'Thuế theo doanh thu đi vào giá bán của hộ kinh doanh và vào thu nhập của chủ hộ. Khu vực này nghèo đi. Nó không co lại về số người, vì người làm ở đó không có chỗ nào khác để đi, và hộ kinh doanh trong mô hình không chuyển lên doanh nghiệp được. Tiền thuế đi đâu chỉ đổi mức độ: giữ lại trả nợ thì khu vực phi chính thức mất khoảng 5% thu nhập thực, chi lại ra thì mất khoảng 3%. Giữ tiền lại cũng không chắc làm nợ công thấp hơn: năm cuối nợ công thấp hơn bình quân khoảng 3%, nhưng có ván không thấp hơn.',
     simplifications: [...BASE_SIMPLE, 'Hộ kinh doanh khai một nửa doanh thu (giá trị tạm, chưa có số liệu).', 'Chưa có đường chuyển từ hộ kinh doanh lên doanh nghiệp.', 'Phần thu thêm được tính một lần sau năm đầu rồi giữ nguyên, giống một dự toán.', 'Quy tắc tự động chi lại tiền thuế thu thêm (gov.revenueUse) được đặt về "keep" ở cả ba cách: ba cách tự khai nơi tiền đi bằng bước riêng ở tháng 12, để quy tắc tự động bật thì chi hai lần (sai-khac.md D14).'],
   },
   {
@@ -640,12 +639,11 @@ export const SCENARIOS: ScenarioDef[] = [
     ],
     demo: [{ at: 0, dynamic: (eng, w) => ({ laws: { 'cb.rate.refinancing': eng.law(w, 'cb.rate.refinancing') + 0.06 } }) }],
     claims: [
-      lower('Lãi suất cao làm dư nợ thấp hơn.', 'credit', 12, 36),
-      higher('Nhưng tiền lãi Chính phủ trả phình ra, bội chi lớn hơn.', 'gov.deficitGdp', 12, END, 'pt'),
+      higher('Tiền lãi Chính phủ trả phình ra: trong năm đầu bội chi lớn hơn.', 'gov.deficitGdp', 0, 12, 'pt'),
       higher('Nợ công cao hơn.', 'gov.debt', 48, END),
-      higher('Kết quả ngược mong đợi: từ năm thứ năm lạm phát cao hơn thế giới không tăng lãi suất.', 'inflation.yoy', 48, END, 'pt'),
+      higher('Kết quả ngược mong đợi: trong năm thứ hai đến năm thứ tư, lạm phát không thấp hơn mà cao hơn thế giới không tăng lãi suất.', 'inflation.yoy', 12, 48, 'pt'),
     ],
-    explanation: 'Lãi suất cao hãm tín dụng, đúng như sách. Nhưng Chính phủ là con nợ lớn nhất, và tiền lãi nó trả là thu nhập của ngân hàng và người gửi tiền. Nếu Bộ Tài chính không cắt chi hay tăng thuế để bù, thì chính sách thắt tiền tệ lại bơm tiền ra qua cửa ngân sách. Hai tay lái phải xoay cùng chiều.',
+    explanation: 'Trong mô hình này lãi suất cao gần như không hãm được tín dụng: hộ không vay, doanh nghiệp chỉ vay để mua máy, nên dư nợ có ván thấp hơn, có ván cao hơn. Trong khi đó Chính phủ là con nợ lớn nhất, và tiền lãi nó trả là thu nhập của ngân hàng và người gửi tiền. Bộ Tài chính không cắt chi hay tăng thuế để bù, nên nợ công phình dần và chính sách thắt tiền tệ lại bơm tiền ra qua cửa ngân sách: lạm phát cao hơn khoảng 1 điểm trong năm thứ hai đến năm thứ tư. Sang năm thứ năm và thứ sáu, chênh lệch lạm phát không còn rõ. Hai tay lái phải xoay cùng chiều.',
     simplifications: [...BASE_SIMPLE, 'Hộ không vay, nên lãi suất gần như không hãm được tiêu dùng (kênh vay tiêu dùng: GĐ3).', 'Không có tỷ giá: ngoài đời lãi suất cao còn hút vốn ngoại và làm nội tệ lên giá.'],
   },
 ];
