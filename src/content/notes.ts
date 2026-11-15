@@ -66,6 +66,21 @@ export const NOTES: Note[] = [
     ],
   },
   {
+    id: 'cu-soc-khuech-dai',
+    title: 'Cú sốc chính sách bị khuếch đại mạnh hơn thực tế',
+    body: [
+      'Trong mô hình, một cú rút tiền nhỏ khỏi vòng chi tiêu có thể kéo sản lượng xuống rất sâu sau vài năm. Ví dụ đã đo: thu thêm khoảng 0,8% GDP tiền thuế rồi giữ lại không chi, có ván GDP thực thấp hơn tới 25% ở năm thứ 5-7. Ngoài đời có những tấm đệm mà mô hình chưa có: bảo hiểm thất nghiệp và bảo hiểm xã hội giữ thu nhập cho người mất việc, hộ gia đình vay được để giữ mức tiêu dùng. Vì vậy hãy tin chiều của tác động hơn độ lớn, nhất là ở các kịch bản dài hơn 4 năm. Các tấm đệm này sẽ có ở GĐ2 và GĐ3.',
+    ],
+  },
+  {
+    id: 'chuyen-thue-vao-gia',
+    title: 'Tăng thuế vào giá nhanh và nhiều hơn thực tế',
+    near: ['vat.'],
+    body: [
+      'Khi thuế tăng, người bán trong mô hình cộng trọn phần thuế vào giá ngay trong tháng đó. Bằng chứng từ 17 nước khu vực đồng euro (Benedek và cộng sự 2015, IMF) cho thấy trong một năm sau ngày đổi thuế, giá chỉ nhận khoảng hai phần ba mức thuế; phần còn lại người bán đã tăng dần từ trước ngày thuế có hiệu lực. Mô hình chưa có việc tăng giá đón trước, nên dồn hết vào sau ngày đổi thuế. Khi thuế giảm thì ngược lại: giá gần như không giảm, giống bằng chứng.',
+    ],
+  },
+  {
     id: 'phan-ra-va-doi-chung',
     title: 'Hai loại câu trả lời "vì sao"',
     body: [
