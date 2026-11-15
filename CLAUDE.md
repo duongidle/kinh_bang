@@ -6,7 +6,7 @@ Web app mô phỏng nền kinh tế một quốc gia giả lập theo Việt Nam
 
 ## Trạng thái
 
-- Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Engine GĐ1 xong. Dương quyết 15/11/2026: hoàn thiện GĐ1 rồi sang GĐ1.5, không thêm cơ chế; kế hoạch ở đầu progress.md.
+- Thiết kế GĐ0 + GĐ1 đã được duyệt ngày 13/11/2026. Engine GĐ1 xong. Dương quyết 15/11/2026: hoàn thiện GĐ1 rồi sang GĐ1.5, không thêm cơ chế. GĐ1 được chốt có điều kiện ngày 15/11/2026 ([docs/validation/chot-gd1.md](docs/validation/chot-gd1.md)), nên không chặn GĐ1.5; ngoại lệ ghi ở [docs/lo-trinh.md](docs/lo-trinh.md). Đang làm GĐ1.5; kế hoạch ở đầu progress.md.
 - Mọi sai khác so với thiết kế và các phát hiện còn mở: [docs/design/sai-khac.md](docs/design/sai-khac.md). Cơ chế thêm phải là tham số có tên, có cơ sở; chỉ để làm số đẹp thì dừng lại báo.
 - Việc đang làm, giả định đã chọn, việc kế tiếp: [docs/progress.md](docs/progress.md). Đọc file đó và `git log` trước khi làm bất cứ gì.
 
@@ -23,7 +23,7 @@ Dương quyết ngày 15/11/2026. **Phân việc chỉ đổi khi Dương yêu c
 - **Review code của Sonnet trước khi nhận**: đọc diff, nhất là diff của `tests/` và `src/content/scenarios.ts`.
 - **Đầu mỗi phiên: chạy `git status`.** Nếu có thay đổi chưa commit từ lượt bị ngắt thì review trước; không chắc đúng thì bỏ và làm lại bước đó.
 - **Xong mỗi bước nhỏ: commit và cập nhật progress.md ngay**, để hết quota lúc nào phiên sau cũng làm tiếp được.
-- **Người điều phối chạy [chong-va-ngam.md](docs/design/chong-va-ngam.md) trước khi báo xong mỗi giai đoạn** (và mỗi mốc lớn M1, M2...). Cụ thể: `npm test` qua, trong đó có `tests/unit/chot-chan.test.ts`; đi hết bảng "Cần người soát" và ghi kết quả từng dòng vào báo cáo giai đoạn; phần "chưa kiểm" đứng trước phần "đã đạt"; liệt kê mọi thay đổi trong `tests/unit` và khẳng định kịch bản kèm lý do. Thiếu bước này thì chưa được báo xong.
+- **Người điều phối chạy [chong-va-ngam.md](docs/design/chong-va-ngam.md) trước khi báo xong mỗi giai đoạn** (và mỗi mốc lớn M1, M2...). Cụ thể: `npm test` qua, trong đó có `tests/unit/chot-chan.test.ts`; đi hết bảng "Cần người soát" và ghi kết quả từng dòng vào báo cáo giai đoạn; phần "chưa kiểm" đứng trước phần "đã đạt"; liệt kê mọi thay đổi trong `tests/unit` và khẳng định kịch bản kèm lý do. Thiếu bước này thì chưa được báo xong. Ngoại lệ duy nhất: bảng kiểm cho GĐ1 dời sang đầu GĐ3 (Dương quyết 15/11/2026, [docs/lo-trinh.md](docs/lo-trinh.md)).
 - **Dừng lại báo Dương** khi gặp một trong bảy trường hợp ở chong-va-ngam.md mục "Khi nào phải dừng lại báo Dương". Sonnet gặp thì báo người điều phối, người điều phối báo Dương. Không ai tự quyết thay.
 - Kiểm định thống kê đầy đủ: Sonnet cho chạy (ghi log ra file, chạy từng phần), người điều phối đọc và đánh giá. Không sửa engine trong lúc nó chạy.
 
@@ -42,7 +42,7 @@ Dương đặt ngày 15/11/2026, rút từ cách làm ở cuối GĐ1. Áp cho m
 9. **Giữ đúng phạm vi.** Thấy lỗi nằm ngoài việc được giao: cùng loại và chắc chắn thì sửa kèm và nói; không chắc thì ghi vào progress.md hoặc sai-khac.md, không tự mở việc mới. Không tự chạy thêm kiểm định, không tự push, không tự bắt đầu mốc kế tiếp khi Dương chưa bảo.
 10. **Dương đổi lệnh giữa chừng thì dừng thật.** Ngắt việc đang chạy nền, xem nó đã để lại gì (`git status`, file mới, tiến trình còn sống), báo đúng trạng thái đó. Không để việc cũ chạy nốt.
 11. **Lúc nào cũng bàn giao được.** Sau mỗi bước: commit, progress.md nói đúng "xong gì, dở gì, kế tiếp là gì, đang chờ ai". Quyết định của Dương ghi kèm ngày vào đúng file nó chi phối (spec, sai-khac.md, progress.md), không chỉ nằm trong cuộc trò chuyện.
-12. **Cửa ra production.** Trước khi báo xong một mốc có đụng tới app: `npm test`, `npx tsc --noEmit`, `npx eslint src tests`, `npm run build` đều qua; tự mở app bằng trình duyệt ở 50 và 5.000 hộ, sáng và tối, console không có lỗi; lưu, tải ván, mở ván lưu của bản trước, và chạy offline còn dùng được; sổ kế toán không báo lệch. Mục nào chưa kiểm thì ghi "chưa kiểm", không bỏ qua trong im lặng.
+12. **Cửa ra production.** Trước khi báo xong một mốc có đụng tới app: `npm test`, `npx tsc --noEmit`, `npx eslint src tests`, `npm run build` đều qua; tự mở app bằng trình duyệt ở 50 và 5.000 hộ, sáng và tối, console không có lỗi; lưu, tải ván, mở ván lưu của bản trước, và chạy offline còn dùng được; sổ kế toán không báo lệch. Mục nào chưa kiểm thì ghi "chưa kiểm", không bỏ qua trong im lặng. Phiên không có công cụ trình duyệt thì ghi "chưa kiểm bằng trình duyệt" và liệt kê từng bước để Dương tự mở kiểm tra; không được ghi là đã xem.
 
 ## Tài liệu
 
@@ -54,6 +54,7 @@ Dương đặt ngày 15/11/2026, rút từ cách làm ở cuối GĐ1. Áp cho m
 | [docs/design/sai-khac.md](docs/design/sai-khac.md) | Mọi sai khác so với thiết kế đã duyệt, phát hiện và việc còn mở |
 | [docs/design/chong-va-ngam.md](docs/design/chong-va-ngam.md) | Bảng kiểm chống vá ngầm rút từ GĐ1. Đọc trước khi sửa engine hoặc sửa một kiểm định |
 | [docs/design/phac-thao-gd3-gd5.md](docs/design/phac-thao-gd3-gd5.md) | Phác thảo GĐ3 và GĐ5 (chưa phải spec): cơ chế lõi, thứ tự xây, cạm bẫy, kiểm định then chốt, nguồn nên đọc |
+| [docs/lo-trinh.md](docs/lo-trinh.md) | Lộ trình: thứ tự giai đoạn, nội dung đã đổi so với KICKOFF.md, quy trình mỗi giai đoạn, ngoại lệ GĐ1 |
 | [docs/progress.md](docs/progress.md) | Nhật ký tiến độ, giả định, quyết định nhỏ |
 | [research/abm-models.md](research/abm-models.md) | Research mô hình ABM, game, đặc thù Việt Nam |
 | [research/vn-params.md](research/vn-params.md) | Tham số luật Việt Nam, có mức xác minh A/B/C |
@@ -115,27 +116,9 @@ tests/{unit,validation,perf}
 
 ## Lộ trình
 
-Thứ tự đã duyệt (khác KICKOFF.md, giữ nguyên số hiệu giai đoạn):
+GĐ0 → GĐ1 → GĐ1.5 → GĐ3 (kèm GĐ1 update 1) → GĐ5 → GĐ2 → GĐ4 → GĐ6 → GĐ7 → GĐ8 → GĐ9.
 
-GĐ0 nền móng kỹ thuật → GĐ1 lõi kinh tế → **GĐ1.5** đánh bóng trải nghiệm → **GĐ3** tài sản và tài chính (kèm **GĐ1 update 1**) → **GĐ5** mở cửa → **GĐ2** con người → GĐ4 cấu trúc thị trường → GĐ6 không gian và vật chất → GĐ7 môi trường và rủi ro → GĐ8 thể chế và xã hội → GĐ9 hiệu chỉnh tinh theo dữ liệu thật.
-
-**GĐ1.5 - Đánh bóng trải nghiệm** (thêm ngày 13/11/2026). Bắt đầu sau khi GĐ1 qua kiểm định. Một mốc riêng cho UI/UX: hệ thiết kế (màu, chữ, phong cách isometric theo skill anatomy), điều hướng 3 vai, cảm giác "sống" của bản đồ, onboarding. Các giai đoạn sau dùng lại hệ thiết kế này, và mỗi giai đoạn có tiêu chí nghiệm thu UI ghi trong spec của nó. Spec viết vào `docs/design/gd1-5.md` khi tới lượt, theo đúng quy trình thiết kế rồi chờ duyệt. Hệ quả cho GĐ0 và GĐ1: giao diện ở hai giai đoạn này chỉ cần đúng chức năng và đọc được, chưa cần đẹp.
-
-**GĐ1 update 1** (Dương quyết 15/11/2026). GĐ1 chốt là một nền kinh tế **không tăng trưởng**, không phát triển thêm cơ chế. Nhóm việc sau làm cùng GĐ3: biên lãi hồi dần sau khi đổi thuế (việc 8), tăng giá đón trước ngày thuế có hiệu lực (8b), phân tích độ nhạy và soát nguồn tham số (5), lấp phần GDP danh nghĩa chưa gán lý do (6), đề xuất tăng năng suất (3, có thể thuộc GĐ4), quy tắc giữ người qua tháng bán chậm để hạ thất nghiệp (việc 2; bản dải tồn kho Lengnick S38 đã thử ngày 15/11/2026 và không hợp, xem sai-khac.md D11). Đặc tả từng việc ở progress.md. Mục tiêu hiệu chỉnh về tiền, tín dụng, tăng trưởng (và lạm phát, bội chi đi theo chúng) chuyển sang GĐ4.
-
-Nội dung từng giai đoạn ở KICKOFF.md, với các thay đổi đã duyệt:
-- Lương tối thiểu vùng chuyển từ GĐ2 về GĐ1. BHXH và phần còn lại của GĐ2 giữ nguyên.
-- Kiểm định K1.31 (nâng mạnh lương tối thiểu) chuyển sang GĐ2 (Dương quyết 14/11/2026): cần lương phân tán theo kỹ năng. Lý do: [sai-khac.md mục D6](docs/design/sai-khac.md).
-- Vốn cố định dạng đơn giản có ngay GĐ1; đời máy, R&D vẫn ở GĐ4.
-- Thêm vào GĐ3: tín dụng ngoài ngân hàng (hụi họ, tín dụng đen) và thị trường liên ngân hàng.
-- Thêm vào GĐ3 (Dương quyết 14/11/2026): vay tiêu dùng của hộ (kênh lãi suất tới cầu, để K1.19 đạt) và cơ chế giảm phát nợ. Lý do và số đo: [sai-khac.md mục D](docs/design/sai-khac.md).
-- Thêm vào GĐ5: vàng và đô la làm nơi trú ẩn; kịch bản 1997, Zimbabwe và siêu lạm phát đầy đủ.
-- Thêm vào GĐ8: mức đồng thuận của các nhóm dân cư với Chính phủ.
-- Mỗi giai đoạn có mục tiêu hiệu chỉnh thô; GĐ9 chỉ còn hiệu chỉnh tinh.
-- Mỗi kịch bản phải qua kiểm định riêng: lời giải thích đúng ở ít nhất 80% số seed.
-- Tính năng học đã nhận: nút đối chứng, đoán trước khi chạy, bảng nguồn tiền, bảng cân đối sống, bản tin, hộ có tên, tách Bộ Tài chính và NHNN, mục "mô hình bỏ qua gì", xuất CSV, một figure anatomy cuối GĐ1. Để sau GĐ1: theo dấu đồng tiền, tua lại, vai chủ ngân hàng, sổ tay khái niệm. Chi tiết: [de-xuat.md](docs/design/de-xuat.md).
-
-Mỗi giai đoạn: (1) thiết kế vào `docs/design/gdN.md`, dừng chờ duyệt; (2) code, kiểm định, kịch bản, progress log; (3) báo cáo. Chưa qua kiểm định thì chưa sang giai đoạn sau.
+Nội dung từng giai đoạn, các thay đổi đã duyệt so với KICKOFF.md, quy trình mỗi giai đoạn và ngoại lệ GĐ1: [docs/lo-trinh.md](docs/lo-trinh.md).
 
 ## Móc nối đã để sẵn cho giai đoạn sau
 
