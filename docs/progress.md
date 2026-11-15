@@ -25,6 +25,7 @@ Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 - U1 bước 3 xong: `src/content/glossary.ts` (34 mục chép nguyên văn từ lời giao, `GLOSSARY` và `term(id)`), `tests/unit/glossary.test.ts`. `npm test` xanh 89/89. Commit: `U1 bước 3` trong git log.
 - U1 bước 4 xong: `src/ui/format.ts` (`money` hậu tố "... đồng", `fmtDelta` tỷ lệ ghi "điểm phần trăm", thêm `fmtPctChange`; không đổi `fmtAxis`, `num`, `monthLabel`), `tests/unit/format.test.ts`. Chữ màn hình cũ đổi theo, là chủ ý. `npm test` xanh 96/96. Commit: `U1 bước 4` trong git log.
 - U1 bước 5a xong: `src/ui/design/components/` Button, SegmentedControl, NumberInput, Slider (+ `util.ts` có `parseViNumber`, `decimalsOf`), `src/ui/design/components.css` (chỉ dùng token), `tests/unit/number-input.test.ts` (tự thêm, logic đọc số). `npm test` xanh 100/100. Commit: `U1 bước 5a` trong git log.
+- U1 bước 5b xong: StatTile, Card, DataTable, TAccount, StatusBadge, WarningBanner, Dialog, SidePanel, Tabs, Tooltip, GlossaryTerm, SourceTag trong `src/ui/design/components/`, kiểu dáng thêm vào `components.css` (grep không còn mã màu, cỡ chữ hay px khác 1px). Xuất hết ở `src/ui/design/index.ts`. `npm test` xanh 100/100, tsc và eslint qua. Commit: `U1 bước 5b` trong git log.
 
 ### Trạng thái lúc này (tối 15/11/2026)
 
