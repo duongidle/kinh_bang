@@ -59,6 +59,13 @@ export const NOTES: Note[] = [
     ],
   },
   {
+    id: 'that-nghiep-cao',
+    title: 'Thất nghiệp cao hơn thực tế',
+    body: [
+      'Thất nghiệp trong mô hình quanh 6-7%, Việt Nam khoảng 2%. Phần lớn là người đang ở giữa hai việc: họ tìm được việc mới sau chưa đầy một tháng. Lý do: đơn vị sản xuất ở đây rất nhỏ (2-5 người) và tính số người cần theo từng tháng. Doanh số nhích xuống vài phần trăm là đủ để cắt một người, vài tháng sau lại tuyển. Ngoài đời, doanh nghiệp giữ người qua những tháng bán chậm. Mô hình chưa có cơ chế đó; đã thử một quy tắc (Lengnick 2011) nhưng chưa hợp, sẽ làm lại ở bản cập nhật GĐ1.',
+    ],
+  },
+  {
     id: 'phan-ra-va-doi-chung',
     title: 'Hai loại câu trả lời "vì sao"',
     body: [
