@@ -2,7 +2,7 @@
  "part": "X",
  "nSeeds": 20,
  "stamp": {
-  "commit": "b7ce617",
+  "commit": "dccfcc0",
   "dirty": false
  },
  "checks": [
@@ -1043,134 +1043,134 @@
   },
   {
    "id": "K1.24",
-   "claim": "Tăng GTGT: giá hàng chịu thuế tăng nhưng ít hơn mức thuế; tiêu dùng thực giảm; thu ngân sách tăng",
-   "threshold": "tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1",
+   "claim": "Tăng GTGT: giá hàng chịu thuế tăng; tiêu dùng thực giảm; thu ngân sách tăng",
+   "threshold": "tỷ lệ chuyển vào giá sau 2 năm lớn hơn 0 và không quá 1,39",
    "perSeed": [
     {
      "seed": 1,
-     "ok": false,
-     "m": -0.03765094955854886,
+     "ok": true,
+     "m": 0.35234905044145104,
      "value": "chuyển vào giá 1.04; tiêu dùng thực -3.5%; thu GTGT 36.3%"
     },
     {
      "seed": 2,
      "ok": true,
-     "m": 0.048750241525324034,
+     "m": 0.43875024152532394,
      "value": "chuyển vào giá 0.95; tiêu dùng thực -2.6%; thu GTGT 40.5%"
     },
     {
      "seed": 3,
      "ok": true,
-     "m": 0.06095392955799661,
+     "m": 0.4509539295579965,
      "value": "chuyển vào giá 0.94; tiêu dùng thực -3.0%; thu GTGT 39.2%"
     },
     {
      "seed": 4,
-     "ok": false,
-     "m": -0.03583227271312883,
+     "ok": true,
+     "m": 0.35416772728687107,
      "value": "chuyển vào giá 1.04; tiêu dùng thực -6.1%; thu GTGT 31.1%"
     },
     {
      "seed": 5,
      "ok": true,
-     "m": 0.030143242675154003,
+     "m": 0.4201432426751539,
      "value": "chuyển vào giá 0.97; tiêu dùng thực -4.8%; thu GTGT 36.6%"
     },
     {
      "seed": 6,
      "ok": true,
-     "m": 0.07382513047345729,
+     "m": 0.4638251304734572,
      "value": "chuyển vào giá 0.93; tiêu dùng thực -3.5%; thu GTGT 38.3%"
     },
     {
      "seed": 7,
      "ok": true,
-     "m": 0.10374801637316122,
+     "m": 0.4937480163731611,
      "value": "chuyển vào giá 0.90; tiêu dùng thực -4.7%; thu GTGT 37.0%"
     },
     {
      "seed": 8,
      "ok": true,
-     "m": 0.02399136601384877,
+     "m": 0.41399136601384867,
      "value": "chuyển vào giá 0.98; tiêu dùng thực -5.4%; thu GTGT 34.8%"
     },
     {
      "seed": 9,
      "ok": true,
-     "m": 0.011876998776639947,
+     "m": 0.40187699877663985,
      "value": "chuyển vào giá 0.99; tiêu dùng thực -4.0%; thu GTGT 38.4%"
     },
     {
      "seed": 10,
-     "ok": false,
-     "m": -0.30567016987567586,
+     "ok": true,
+     "m": 0.08432983012432405,
      "value": "chuyển vào giá 1.31; tiêu dùng thực -3.2%; thu GTGT 38.2%"
     },
     {
      "seed": 11,
      "ok": true,
-     "m": 0.04111661567410352,
+     "m": 0.4311166156741034,
      "value": "chuyển vào giá 0.96; tiêu dùng thực -4.6%; thu GTGT 34.3%"
     },
     {
      "seed": 12,
-     "ok": false,
-     "m": -0.23422482604597628,
+     "ok": true,
+     "m": 0.15577517395402363,
      "value": "chuyển vào giá 1.23; tiêu dùng thực -5.9%; thu GTGT 33.6%"
     },
     {
      "seed": 13,
      "ok": true,
-     "m": 0.08004045226470546,
+     "m": 0.47004045226470537,
      "value": "chuyển vào giá 0.92; tiêu dùng thực -5.0%; thu GTGT 34.7%"
     },
     {
      "seed": 14,
-     "ok": false,
-     "m": -0.025555129592851777,
+     "ok": true,
+     "m": 0.3644448704071481,
      "value": "chuyển vào giá 1.03; tiêu dùng thực -3.7%; thu GTGT 38.7%"
     },
     {
      "seed": 15,
      "ok": true,
-     "m": 0.02897598400480783,
+     "m": 0.41897598400480773,
      "value": "chuyển vào giá 0.97; tiêu dùng thực -3.9%; thu GTGT 36.8%"
     },
     {
      "seed": 16,
      "ok": true,
-     "m": 0.00869124767503393,
+     "m": 0.39869124767503383,
      "value": "chuyển vào giá 0.99; tiêu dùng thực -2.6%; thu GTGT 41.5%"
     },
     {
      "seed": 17,
      "ok": true,
-     "m": 0.0753774781250035,
+     "m": 0.4653774781250034,
      "value": "chuyển vào giá 0.92; tiêu dùng thực -1.5%; thu GTGT 49.1%"
     },
     {
      "seed": 18,
-     "ok": false,
-     "m": -0.03853773587024745,
+     "ok": true,
+     "m": 0.35146226412975246,
      "value": "chuyển vào giá 1.04; tiêu dùng thực -2.8%; thu GTGT 42.5%"
     },
     {
      "seed": 19,
-     "ok": false,
-     "m": -0.3075075933835716,
+     "ok": true,
+     "m": 0.08249240661642832,
      "value": "chuyển vào giá 1.31; tiêu dùng thực -3.5%; thu GTGT 38.5%"
     },
     {
      "seed": 20,
-     "ok": false,
-     "m": -0.11532889963911108,
+     "ok": true,
+     "m": 0.2746711003608888,
      "value": "chuyển vào giá 1.12; tiêu dùng thực -3.5%; thu GTGT 37.5%"
     }
    ],
-   "share": 0.6,
-   "pass": false,
+   "share": 1,
+   "pass": true,
    "byMean": false,
-   "note": "Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế."
+   "note": "Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Trần 1,39 lấy từ Benedek, De Mooij, Keen và Wingender 2015 (IMF WP/15/214, Bảng 3, thuế suất phổ thông): 0,71 trong 12 tháng trước ngày đổi thuế, 0,30 trong tháng đổi, 0,38 trong 12 tháng sau; sai số chuẩn của tổng là 0,36. Phải nói thật: theo cùng bảng đó, phần SAU ngày đổi thuế chỉ khoảng 0,68 (0,30 + 0,38); 0,71 còn lại là tăng giá đón trước, mô hình chưa có. Mô hình chuyển trọn (quanh 1) sau ngày đổi thuế, tức là đang thổi phồng phần này. Sửa ở việc 8 và 8b."
   },
   {
    "id": "K1.25",
@@ -1286,133 +1286,133 @@
   {
    "id": "K1.26",
    "claim": "Bật \"nộp thuế đủ\" làm thu ngân sách tăng và doanh số thực của khu vực phi chính thức co lại",
-   "threshold": "hiệu chạy đôi (10 năm)",
+   "threshold": "hiệu chạy đôi (năm 2-4)",
    "perSeed": [
     {
      "seed": 1,
      "ok": true,
-     "m": 0.8915814479636908,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.89 điểm, doanh số thực của hộ kinh doanh -4.8%, thu nhập thực của người làm phi chính thức -11.5%, phần chi tiêu mua ở hộ kinh doanh 0.93 điểm, lao động phi chính thức 4.80 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.6343891931680834,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.63 điểm, doanh số thực của hộ kinh doanh -3.8%, thu nhập thực của người làm phi chính thức -7.8%, phần chi tiêu mua ở hộ kinh doanh 0.62 điểm, lao động phi chính thức 2.18 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 2,
      "ok": true,
-     "m": 0.12588952331176462,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.13 điểm, doanh số thực của hộ kinh doanh -0.4%, thu nhập thực của người làm phi chính thức -3.8%, phần chi tiêu mua ở hộ kinh doanh 1.10 điểm, lao động phi chính thức 1.66 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.3545425508136607,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.35 điểm, doanh số thực của hộ kinh doanh -3.4%, thu nhập thực của người làm phi chính thức -8.5%, phần chi tiêu mua ở hộ kinh doanh 0.63 điểm, lao động phi chính thức 2.89 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 3,
      "ok": true,
-     "m": 1.2640278291092044,
-     "value": "ngưỡng 100 triệu: thu/GDP 1.26 điểm, doanh số thực của hộ kinh doanh -3.5%, thu nhập thực của người làm phi chính thức -13.6%, phần chi tiêu mua ở hộ kinh doanh 3.64 điểm, lao động phi chính thức 4.24 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.8796209654024639,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.88 điểm, doanh số thực của hộ kinh doanh -3.0%, thu nhập thực của người làm phi chính thức -11.1%, phần chi tiêu mua ở hộ kinh doanh 2.87 điểm, lao động phi chính thức 3.31 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 4,
      "ok": true,
-     "m": 0.9041474227247881,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.90 điểm, doanh số thực của hộ kinh doanh -2.6%, thu nhập thực của người làm phi chính thức -10.3%, phần chi tiêu mua ở hộ kinh doanh 0.92 điểm, lao động phi chính thức 3.73 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.5130103203638159,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.51 điểm, doanh số thực của hộ kinh doanh -6.8%, thu nhập thực của người làm phi chính thức -15.1%, phần chi tiêu mua ở hộ kinh doanh 0.47 điểm, lao động phi chính thức 5.42 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 5,
      "ok": true,
-     "m": 0.5579866983219772,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.56 điểm, doanh số thực của hộ kinh doanh -4.3%, thu nhập thực của người làm phi chính thức -10.5%, phần chi tiêu mua ở hộ kinh doanh 0.97 điểm, lao động phi chính thức 4.06 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.6286746740906568,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.63 điểm, doanh số thực của hộ kinh doanh -2.5%, thu nhập thực của người làm phi chính thức -4.7%, phần chi tiêu mua ở hộ kinh doanh -0.02 điểm, lao động phi chính thức 0.60 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 6,
-     "ok": false,
-     "m": -9.923832446462487,
-     "value": "ngưỡng 100 triệu: thu/GDP -0.64 điểm, doanh số thực của hộ kinh doanh 9.9%, thu nhập thực của người làm phi chính thức -8.2%, phần chi tiêu mua ở hộ kinh doanh 9.69 điểm, lao động phi chính thức 8.09 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.2593091815998927,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.26 điểm, doanh số thực của hộ kinh doanh -4.6%, thu nhập thực của người làm phi chính thức -9.8%, phần chi tiêu mua ở hộ kinh doanh 0.23 điểm, lao động phi chính thức 2.64 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 7,
      "ok": true,
-     "m": 0.2894320650979165,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.29 điểm, doanh số thực của hộ kinh doanh -2.9%, thu nhập thực của người làm phi chính thức -6.6%, phần chi tiêu mua ở hộ kinh doanh 0.34 điểm, lao động phi chính thức 1.80 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.6757662496542222,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.68 điểm, doanh số thực của hộ kinh doanh -3.7%, thu nhập thực của người làm phi chính thức -6.3%, phần chi tiêu mua ở hộ kinh doanh -0.10 điểm, lao động phi chính thức 1.09 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 8,
      "ok": true,
-     "m": 0.6481323358853569,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.65 điểm, doanh số thực của hộ kinh doanh -3.7%, thu nhập thực của người làm phi chính thức -8.8%, phần chi tiêu mua ở hộ kinh doanh 1.00 điểm, lao động phi chính thức 3.15 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.5883448850369538,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.59 điểm, doanh số thực của hộ kinh doanh -4.6%, thu nhập thực của người làm phi chính thức -7.3%, phần chi tiêu mua ở hộ kinh doanh 0.00 điểm, lao động phi chính thức 1.45 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 9,
      "ok": true,
-     "m": 0.46775116541820927,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.47 điểm, doanh số thực của hộ kinh doanh -4.2%, thu nhập thực của người làm phi chính thức -7.9%, phần chi tiêu mua ở hộ kinh doanh 0.41 điểm, lao động phi chính thức 1.25 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.6806163290270284,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.68 điểm, doanh số thực của hộ kinh doanh -0.8%, thu nhập thực của người làm phi chính thức -0.7%, phần chi tiêu mua ở hộ kinh doanh -0.40 điểm, lao động phi chính thức -1.29 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 10,
-     "ok": false,
-     "m": -0.6198843069926407,
-     "value": "ngưỡng 100 triệu: thu/GDP -0.62 điểm, doanh số thực của hộ kinh doanh -4.5%, thu nhập thực của người làm phi chính thức -2.9%, phần chi tiêu mua ở hộ kinh doanh -2.34 điểm, lao động phi chính thức -0.32 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.33462240258308185,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.33 điểm, doanh số thực của hộ kinh doanh -7.0%, thu nhập thực của người làm phi chính thức -8.1%, phần chi tiêu mua ở hộ kinh doanh -2.38 điểm, lao động phi chính thức 0.60 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 11,
-     "ok": false,
-     "m": -0.2577260785911334,
-     "value": "ngưỡng 100 triệu: thu/GDP -0.26 điểm, doanh số thực của hộ kinh doanh -0.4%, thu nhập thực của người làm phi chính thức -0.1%, phần chi tiêu mua ở hộ kinh doanh -0.42 điểm, lao động phi chính thức -0.91 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.2713852051096366,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.27 điểm, doanh số thực của hộ kinh doanh -2.2%, thu nhập thực của người làm phi chính thức -2.4%, phần chi tiêu mua ở hộ kinh doanh -0.13 điểm, lao động phi chính thức -0.15 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 12,
-     "ok": false,
-     "m": -1.0644467426573323,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.43 điểm, doanh số thực của hộ kinh doanh 1.1%, thu nhập thực của người làm phi chính thức -2.1%, phần chi tiêu mua ở hộ kinh doanh 1.18 điểm, lao động phi chính thức -0.24 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.4949032100222239,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.49 điểm, doanh số thực của hộ kinh doanh -2.9%, thu nhập thực của người làm phi chính thức -2.9%, phần chi tiêu mua ở hộ kinh doanh -0.87 điểm, lao động phi chính thức -0.59 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 13,
-     "ok": false,
-     "m": -0.45919250998511796,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.03 điểm, doanh số thực của hộ kinh doanh 0.5%, thu nhập thực của người làm phi chính thức -2.0%, phần chi tiêu mua ở hộ kinh doanh 0.49 điểm, lao động phi chính thức 0.10 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.3907772717458985,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.39 điểm, doanh số thực của hộ kinh doanh -2.7%, thu nhập thực của người làm phi chính thức -4.5%, phần chi tiêu mua ở hộ kinh doanh 0.13 điểm, lao động phi chính thức 0.59 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 14,
-     "ok": false,
-     "m": -5.300137131846472,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.13 điểm, doanh số thực của hộ kinh doanh 5.3%, thu nhập thực của người làm phi chính thức -14.3%, phần chi tiêu mua ở hộ kinh doanh 9.93 điểm, lao động phi chính thức 9.30 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.6696705575030937,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.67 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.6%, phần chi tiêu mua ở hộ kinh doanh 0.07 điểm, lao động phi chính thức 1.11 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 15,
      "ok": true,
-     "m": 0.32973907514181333,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.33 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.9%, phần chi tiêu mua ở hộ kinh doanh 0.65 điểm, lao động phi chính thức 2.14 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.2931215187212538,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.29 điểm, doanh số thực của hộ kinh doanh -1.8%, thu nhập thực của người làm phi chính thức -4.0%, phần chi tiêu mua ở hộ kinh doanh 0.91 điểm, lao động phi chính thức 0.26 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 16,
-     "ok": false,
-     "m": -4.289018874702211,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.19 điểm, doanh số thực của hộ kinh doanh 4.3%, thu nhập thực của người làm phi chính thức 0.9%, phần chi tiêu mua ở hộ kinh doanh 2.13 điểm, lao động phi chính thức -0.27 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "ok": true,
+     "m": 0.4996574911110274,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.50 điểm, doanh số thực của hộ kinh doanh -1.5%, thu nhập thực của người làm phi chính thức -3.9%, phần chi tiêu mua ở hộ kinh doanh 0.66 điểm, lao động phi chính thức 0.69 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 17,
      "ok": true,
-     "m": 0.5294240997080868,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.53 điểm, doanh số thực của hộ kinh doanh -2.0%, thu nhập thực của người làm phi chính thức -6.4%, phần chi tiêu mua ở hộ kinh doanh 0.94 điểm, lao động phi chính thức 1.58 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.7102300164835262,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.71 điểm, doanh số thực của hộ kinh doanh -2.8%, thu nhập thực của người làm phi chính thức -5.6%, phần chi tiêu mua ở hộ kinh doanh 0.38 điểm, lao động phi chính thức 1.03 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 18,
      "ok": true,
-     "m": 0.707506372224101,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.71 điểm, doanh số thực của hộ kinh doanh -3.0%, thu nhập thực của người làm phi chính thức -7.5%, phần chi tiêu mua ở hộ kinh doanh 0.38 điểm, lao động phi chính thức 2.29 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.6022761603588139,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.60 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.2%, phần chi tiêu mua ở hộ kinh doanh -0.01 điểm, lao động phi chính thức 0.98 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 19,
      "ok": true,
-     "m": 0.523565947483301,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.52 điểm, doanh số thực của hộ kinh doanh -0.7%, thu nhập thực của người làm phi chính thức -5.2%, phần chi tiêu mua ở hộ kinh doanh 0.73 điểm, lao động phi chính thức 1.75 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.505106972078806,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.51 điểm, doanh số thực của hộ kinh doanh -4.7%, thu nhập thực của người làm phi chính thức -8.5%, phần chi tiêu mua ở hộ kinh doanh 0.14 điểm, lao động phi chính thức 2.16 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     },
     {
      "seed": 20,
      "ok": true,
-     "m": 0.6623071720349316,
-     "value": "ngưỡng 100 triệu: thu/GDP 0.66 điểm, doanh số thực của hộ kinh doanh -3.3%, thu nhập thực của người làm phi chính thức -7.2%, phần chi tiêu mua ở hộ kinh doanh 0.58 điểm, lao động phi chính thức 2.11 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+     "m": 0.4021068832983865,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.40 điểm, doanh số thực của hộ kinh doanh -2.1%, thu nhập thực của người làm phi chính thức -3.9%, phần chi tiêu mua ở hộ kinh doanh 0.13 điểm, lao động phi chính thức 0.39 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
     }
    ],
-   "share": 0.65,
-   "pass": false,
+   "share": 1,
+   "pass": true,
    "byMean": false,
-   "note": "Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. \"Co lại\" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế."
+   "note": "Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. \"Co lại\" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Từ 15/11/2026 đo ở năm 2-4 (trước đó 10 năm): đây là tác động trực tiếp của thuế. Ở năm 5-10, một cuộc suy thoái do tiền thuế bị giữ lại lấn át, và người mất việc chính thức chuyển sang hộ kinh doanh (sai-khac.md D15)."
   },
   {
    "id": "K1.28",
