@@ -24,6 +24,7 @@ Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 - U1 bước 2 xong: `@fontsource/be-vietnam-pro` (dependencies), `src/ui/design/fonts.css` (sáu tập con vietnamese/latin × 400/500/600), `src/ui/design/index.ts` nạp tokens.css và fonts.css. Chưa nạp vào `main.tsx`/`app.css`. Kiểm `tabular-nums` làm ở bước 6. Commit: `U1 bước 2` trong git log.
 - U1 bước 3 xong: `src/content/glossary.ts` (34 mục chép nguyên văn từ lời giao, `GLOSSARY` và `term(id)`), `tests/unit/glossary.test.ts`. `npm test` xanh 89/89. Commit: `U1 bước 3` trong git log.
 - U1 bước 4 xong: `src/ui/format.ts` (`money` hậu tố "... đồng", `fmtDelta` tỷ lệ ghi "điểm phần trăm", thêm `fmtPctChange`; không đổi `fmtAxis`, `num`, `monthLabel`), `tests/unit/format.test.ts`. Chữ màn hình cũ đổi theo, là chủ ý. `npm test` xanh 96/96. Commit: `U1 bước 4` trong git log.
+- U1 bước 5a xong: `src/ui/design/components/` Button, SegmentedControl, NumberInput, Slider (+ `util.ts` có `parseViNumber`, `decimalsOf`), `src/ui/design/components.css` (chỉ dùng token), `tests/unit/number-input.test.ts` (tự thêm, logic đọc số). `npm test` xanh 100/100. Commit: `U1 bước 5a` trong git log.
 
 ### Trạng thái lúc này (tối 15/11/2026)
 

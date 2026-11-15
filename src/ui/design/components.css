@@ -1,0 +1,218 @@
+/* Kiểu dáng thành phần hệ thiết kế (U1). Chỉ dùng biến từ tokens.css: không mã màu, cỡ chữ hay khoảng cách đặt tại chỗ.
+   Số px chỉ dùng cho đường kẻ 1px. Chuyển động chỉ dùng --dur-* và --ease (tokens.css tự đưa về 0 khi máy đặt giảm chuyển động). */
+
+.kb-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Nút ---------- */
+.kb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--space-6);
+  padding: 0 var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-m);
+  font: inherit;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+.kb-btn--primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+.kb-btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent) 85%, var(--color-text));
+}
+.kb-btn--secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-line);
+}
+.kb-btn--secondary:hover:not(:disabled) {
+  background: var(--color-raised);
+}
+.kb-btn--text {
+  background: transparent;
+  color: var(--color-accent);
+  padding: 0 var(--space-2);
+}
+.kb-btn--text:hover:not(:disabled) {
+  background: var(--color-raised);
+}
+.kb-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.kb-btn:focus-visible,
+.kb-seg__item:focus-visible,
+.kb-numinput__input:focus-visible,
+.kb-slider__input:focus-visible,
+.kb-tab:focus-visible,
+.kb-term:focus-visible,
+.kb-source__btn:focus-visible,
+.kb-stat--button:focus-visible {
+  outline: calc(var(--space-1) / 2) solid var(--color-accent);
+  outline-offset: calc(var(--space-1) / 2);
+}
+
+/* ---------- Nhóm nút chọn một ---------- */
+.kb-seg {
+  display: inline-flex;
+  padding: calc(var(--space-1) / 2);
+  gap: calc(var(--space-1) / 2);
+  background: var(--color-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+}
+.kb-seg__item {
+  min-height: var(--space-5);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--color-text-2);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.kb-seg__item:hover {
+  color: var(--color-text);
+}
+.kb-seg__item--on {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 0 0 1px var(--color-line);
+}
+
+/* ---------- Ô nhập số và nhãn ---------- */
+.kb-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.kb-field__label {
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+  color: var(--color-text-2);
+}
+.kb-numinput {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.kb-numinput__input {
+  width: calc(var(--space-7) * 2);
+  min-height: var(--space-6);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.kb-numinput__unit {
+  font-size: var(--font-size-3);
+  color: var(--color-text-2);
+}
+
+/* ---------- Thanh kéo ---------- */
+.kb-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: calc(var(--space-7) * 8);
+}
+.kb-slider__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.kb-slider__value {
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+.kb-slider__track {
+  position: relative;
+  height: var(--space-5);
+}
+.kb-slider__input {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.kb-slider__input::-webkit-slider-runnable-track {
+  height: var(--space-1);
+  border-radius: var(--radius-s);
+  background: var(--color-line);
+}
+.kb-slider__input::-moz-range-track {
+  height: var(--space-1);
+  border-radius: var(--radius-s);
+  background: var(--color-line);
+}
+.kb-slider__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  margin-top: calc((var(--space-1) - var(--space-4)) / 2);
+  border-radius: 50%;
+  border: 0;
+  background: var(--color-accent);
+}
+.kb-slider__input::-moz-range-thumb {
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: 50%;
+  border: 0;
+  background: var(--color-accent);
+}
+.kb-slider__mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--space-4) / 2 + (100% - var(--space-4)) * var(--kb-cur));
+  width: calc(var(--space-1) / 2);
+  margin-left: calc(var(--space-1) / -4);
+  background: var(--color-text);
+  pointer-events: none;
+}
+.kb-slider__cur {
+  position: relative;
+  height: var(--line-height-1);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--color-text-2);
+}
+.kb-slider__cur-label {
+  position: absolute;
+  left: calc(var(--space-4) / 2 + (100% - var(--space-4)) * var(--kb-cur));
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
