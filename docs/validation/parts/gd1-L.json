@@ -1,0 +1,679 @@
+{
+ "part": "L",
+ "nSeeds": 5,
+ "stamp": {
+  "commit": "b7ce617",
+  "dirty": false
+ },
+ "checks": [
+  {
+   "id": "K1.1",
+   "claim": "Bốn đẳng thức kế toán đúng mọi tháng",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.2",
+   "claim": "Thay đổi tiền của công chúng khớp các kênh trong sổ cái",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "khớp"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.3",
+   "claim": "GDP theo chi tiêu = GDP theo thu nhập",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "khớp"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.4",
+   "claim": "Có phá sản và gia nhập mà sổ vẫn cân",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "929 phá sản, 910 gia nhập"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "804 phá sản, 817 gia nhập"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "947 phá sản, 978 gia nhập"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "873 phá sản, 892 gia nhập"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "891 phá sản, 872 gia nhập"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.5",
+   "claim": "Nền kinh tế tự ổn định",
+   "threshold": "thất nghiệp 1-15% và lạm phát năm −2% đến 12% trong 95% số tháng",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.4%, lạm phát 0.5%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.5%, lạm phát 0.4%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.2%, lạm phát 0.6%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.4%, lạm phát 0.5%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.3%, lạm phát 0.7%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.6",
+   "claim": "Thất nghiệp và hàng ế cùng có",
+   "threshold": "hơn 90% số tháng",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "100.0%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.7",
+   "claim": "Chu kỳ tự sinh",
+   "threshold": "tự tương quan GDP đã lọc dương ở trễ 1 và 2 quý",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "trễ 1: 0.90, trễ 2: 0.77"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "trễ 1: 0.88, trễ 2: 0.70"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "trễ 1: 0.91, trễ 2: 0.77"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "trễ 1: 0.88, trễ 2: 0.72"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "trễ 1: 0.95, trễ 2: 0.85"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.8",
+   "claim": "Đầu tư biến động hơn GDP, tiêu dùng ít hơn",
+   "threshold": "tỷ số độ lệch chuẩn > 1,5 và < 1",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "đầu tư 5.89, tiêu dùng 0.54"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "đầu tư 6.70, tiêu dùng 0.53"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "đầu tư 5.49, tiêu dùng 0.55"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "đầu tư 6.08, tiêu dùng 0.56"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "đầu tư 6.06, tiêu dùng 0.56"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.9",
+   "claim": "Thất nghiệp ngược chiều chu kỳ (Okun)",
+   "threshold": "tương quan < −0,3",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "-0.95"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "-0.87"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "-0.90"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "-0.83"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "-0.94"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.10",
+   "claim": "Đường Phillips và Beveridge dốc xuống",
+   "threshold": "hai tương quan âm",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "Phillips -0.86, Beveridge -0.23"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "Phillips -0.73, Beveridge -0.22"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "Phillips -0.84, Beveridge -0.05"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "Phillips -0.71, Beveridge -0.19"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "Phillips -0.88, Beveridge -0.29"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.11",
+   "claim": "Tín dụng cùng chiều chu kỳ",
+   "threshold": "tương quan > 0",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "0.36"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "0.41"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "0.40"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "0.49"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "0.43"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.12",
+   "claim": "Lạm phát cùng chiều chu kỳ và trễ",
+   "threshold": "tương quan chéo lớn nhất dương, ở trễ ≥ 1 quý",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "lớn nhất 0.85 ở trễ 1 quý"
+    },
+    {
+     "seed": 2,
+     "ok": false,
+     "value": "lớn nhất 0.68 ở trễ 0 quý"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "lớn nhất 0.80 ở trễ 2 quý"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "lớn nhất 0.60 ở trễ 2 quý"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "lớn nhất 0.79 ở trễ 1 quý"
+    }
+   ],
+   "share": 0.8,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.13",
+   "claim": "Bất bình đẳng tự hình thành",
+   "threshold": "Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30); lệch phải",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": false,
+     "value": "của cải 0.31, thu nhập 0.34; độ lệch 2.83"
+    },
+    {
+     "seed": 2,
+     "ok": false,
+     "value": "của cải 0.28, thu nhập 0.33; độ lệch 2.26"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "của cải 0.30, thu nhập 0.28; độ lệch 2.30"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "của cải 0.31, thu nhập 0.31; độ lệch 3.29"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "của cải 0.33, thu nhập 0.31; độ lệch 4.08"
+    }
+   ],
+   "share": 0.6,
+   "pass": false,
+   "byMean": false
+  },
+  {
+   "id": "K1.14",
+   "claim": "Quy mô doanh nghiệp lệch phải",
+   "threshold": "độ lệch > 1",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "5.91"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "5.12"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "5.87"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "6.03"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "5.63"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.27",
+   "claim": "Kinh tế xấu thì tỷ lệ phi chính thức tăng",
+   "threshold": "tương quan với GDP đã lọc < 0",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "-0.93"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "-0.91"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "-0.93"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "-0.93"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "-0.95"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.30",
+   "claim": "Không doanh nghiệp nào trả dưới lương tối thiểu vùng",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "0"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.32",
+   "claim": "Tỷ lệ lao động phi chính thức ổn định quanh mục tiêu",
+   "threshold": "bình quân 50-70%, trôi dưới 10 điểm",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "bình quân 56.9%, trôi 4.0 điểm"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "bình quân 56.5%, trôi 1.7 điểm"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "bình quân 56.1%, trôi 1.5 điểm"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "bình quân 56.5%, trôi 1.6 điểm"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "bình quân 57.8%, trôi 3.6 điểm"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  }
+ ],
+ "table": [
+  [
+   "seed",
+   "thất nghiệp",
+   "lạm phát",
+   "phi chính thức",
+   "thu/GDP",
+   "tiền mặt",
+   "Gini của cải",
+   "doanh nghiệp",
+   "phá sản/năm",
+   "mới/năm"
+  ],
+  [
+   "1",
+   "6.4%",
+   "0.5%",
+   "56.9%",
+   "14.6%",
+   "13.9%",
+   "0.33",
+   "281",
+   "19.8",
+   "18.9"
+  ],
+  [
+   "2",
+   "6.5%",
+   "0.4%",
+   "56.5%",
+   "14.8%",
+   "13.9%",
+   "0.31",
+   "313",
+   "16.5",
+   "16.3"
+  ],
+  [
+   "3",
+   "6.2%",
+   "0.6%",
+   "56.1%",
+   "14.5%",
+   "13.9%",
+   "0.33",
+   "331",
+   "21.1",
+   "21.6"
+  ],
+  [
+   "4",
+   "6.4%",
+   "0.5%",
+   "56.5%",
+   "14.6%",
+   "13.9%",
+   "0.35",
+   "319",
+   "18.7",
+   "18.7"
+  ],
+  [
+   "5",
+   "6.3%",
+   "0.7%",
+   "57.8%",
+   "14.7%",
+   "14.1%",
+   "0.36",
+   "281",
+   "19.0",
+   "17.5"
+  ]
+ ]
+}
