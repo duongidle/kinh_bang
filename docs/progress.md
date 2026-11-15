@@ -10,7 +10,7 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
 - **Xong và đã commit:** bước 0, 1, 2, 3a, 3b, 3c, 3e, 7 của bảng kế hoạch dưới. `npm test` xanh 69/69 trên main.
 - **Bước 3d (dải tồn kho Lengnick, S38): đã đo, CHƯA NHẬN, chờ Dương quyết.** Bản Sonnet viết dở nằm ở nhánh `thu/3d-dai-ton-kho` (một commit WIP: code engine có, thiếu test và mục F, `npm test` đỏ 2 chỗ). Main KHÔNG có S38. Số đo và lý do: sai-khac.md D11, đoạn "Đo tối 15/11/2026". Tóm tắt: thất nghiệp 6,3% xuống 4,9% chứ không về 2-3%; việc cắt người chỉ đổi lý do sang "không đủ tiền trả lương"; test "bỏ một chính sách" đỏ lại ở 50 hộ seed 3 (nhiễu một seed: 9/10 seed ở 50 hộ và 10/10 ở 500 hộ vẫn dương). Người điều phối đề xuất không đưa S38 vào GĐ1. **Không nhập nhánh này vào main khi Dương chưa quyết.**
-- **Đang làm:** bước 4 (kiểm định đầy đủ) trên main, không có S38. Nếu Dương quyết nhận S38 thì phải chạy lại.
+- **Bước 4 (kiểm định đầy đủ): đã chạy xong 15/11 trên main, mã `b7ce617` (commit cuối chạm src/tests), không có S38; chờ điều phối đọc.** Kịch bản 297s: 1 khẳng định không qua (`thue-nguoi-giau/debt`, 6/10). GĐ1: phần M 67s, X 791s, S 10s, L 187s. Không qua ngoài "đã biết": K1.24 (12/20) và K1.26 (13/20) ở 500 hộ; K1.13 (3/5) ở 5000 hộ. Kết quả: `docs/validation/gd1.md`, `scenarios.md`, `parts/*.json`. Nếu Dương quyết nhận S38 thì phải chạy lại. Chạy từng phần: `KB_PART=M|X|L|S|report npm run validate:gd1`.
 - **Chưa làm:** bước 5 (chốt GĐ1 có điều kiện, báo cáo GĐ0 + GĐ1), 6 (spec GĐ1.5).
 
 **Những thứ phải đưa vào báo cáo cho Dương (chưa báo đủ):**
@@ -23,7 +23,7 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 8. **S38 không giải được thất nghiệp** (D11, đoạn đo tối 15/11): Dương quyết bỏ khỏi GĐ1, hay làm bản khác.
 7. Số đo việc 10 (đã đóng): sau S36 và S37, tăng GTGT lên 20% làm CPI tháng 24 cao hơn đối chứng ở cả hai quy mô: 500 hộ +3,82% (chi lại) và +3,24% (giữ lại), 10/10 seed; 5000 hộ +3,67% và +3,07%, 5/5 seed. Chi lại làm GDP thực năm thứ hai giảm 2,9-4,3% thay vì 5,5-7,4%.
 
-**Kiểm định đầy đủ (bước 4): chưa có kết quả nào trên code hiện tại.** `docs/validation/gd1.md` là bản trưa 14/11, `scenarios.md` là bản đêm 14/11 trên `6490ec6`; cả hai cũ hơn S36, S37, K1.13 mới, S38. Khi chạy: sửa trước lỗi nhỏ ở `stamp()` trong hai file `tests/validation/*.test.ts` (lấy mã commit lúc bắt đầu, không phải lúc xong); ghi log ra file; chạy từng phần (kịch bản trước, rồi GĐ1 ở 500 hộ, rồi 5000 hộ) để chết giữa chừng vẫn giữ được phần đã xong; không sửa `src` hay `tests/validation` trong lúc chạy.
+**Kiểm định đầy đủ (bước 4): đã chạy 15/11 trên `b7ce617`.** Giàn đã sửa: `stamp` lấy mã commit cuối chạm src/tests lúc bắt đầu; `gd1.test.ts` chạy từng phần và ghi `docs/validation/parts/gd1-<phần>.json`.
 
 ### Tóm tắt một dòng
 
@@ -43,7 +43,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Xong 15/11 |
 | 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Đã đo 15/11, chưa nhận, chờ Dương (D11). Code ở nhánh `thu/3d-dai-ton-kho` |
 | 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Đóng 15/11: hết khác dấu sau S36, S37 (số đo ở D13). Đo lại khi làm việc 8 |
-| 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Chưa |
+| 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Đã chạy 15/11 trên `b7ce617`; chờ điều phối đọc |
 | 5 | Điều phối | Chốt GĐ1 có điều kiện: mục còn hỏng ghi "đã biết" trong sai-khac.md kèm nơi sẽ sửa; mục S13 trong game liệt kê các lỗi này. Cập nhật CLAUDE.md để quy tắc kiểm định không chặn GĐ1.5. Viết báo cáo GĐ0 + GĐ1. Chạy chong-va-ngam.md, liệt kê thay đổi `tests/unit` và khẳng định kịch bản kèm lý do | 7 | Chưa |
 | 6 | Điều phối | Spec GĐ1.5 phạm vi tối thiểu chơi được: 3 vai, kịch bản, sandbox, phòng thí nghiệm, biểu đồ, chuỗi nhân quả, onboarding. Bản đồ isometric tĩnh đơn giản; phần "sống" để sau. Chờ Dương duyệt | | Chưa |
 | 7 | Sonnet | Thêm `cozy_japanese_startup_office.json` vào `.gitignore` | | Xong 15/11 |
