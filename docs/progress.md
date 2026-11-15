@@ -48,7 +48,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 | 3a | Sonnet | Việc 9: khai rõ tiền thuế đi đâu | 9 | Xong 15/11 (S37, D14) |
 | 3b | Sonnet | Việc 1: K1.13 tiêu chí mới | 1 | Xong 15/11 (đo nhanh: đạt 3/3 ở 500 hộ, 1/3 ở 5000 hộ; xem D8) |
 | 3c | Sonnet | Việc 4: bản thuế đối xứng làm biến thể Phòng thí nghiệm | 4 | Xong 15/11 |
-| 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Đã đo 15/11, chưa nhận, chờ Dương (D11). Code ở nhánh `thu/3d-dai-ton-kho` |
+| 3d | Sonnet | Việc 2: dải tồn kho Lengnick | 2 | Bỏ khỏi GĐ1 (Dương quyết 15/11), chuyển sang GĐ1 update 1. Số đo ở D11 |
 | 3e | Điều phối | Việc 10: nếu khác dấu 500/5000 hộ tự hết sau bước 2 thì ghi nhận và đóng; còn thì phân tích, tốn nhiều thì chuyển GĐ1 update 1 | 10 | Đóng 15/11: hết khác dấu sau S36, S37 (số đo ở D13). Đo lại khi làm việc 8 |
 | 4 | Sonnet chạy, điều phối đọc | Kiểm định đầy đủ: ghi log ra file, chạy từng phần | 0 | Đã chạy 15/11 trên `b7ce617`; chờ điều phối đọc |
 | 5 | Điều phối | Chốt GĐ1 có điều kiện: mục còn hỏng ghi "đã biết" trong sai-khac.md kèm nơi sẽ sửa; mục S13 trong game liệt kê các lỗi này. Cập nhật CLAUDE.md để quy tắc kiểm định không chặn GĐ1.5. Viết báo cáo GĐ0 + GĐ1. Chạy chong-va-ngam.md, liệt kê thay đổi `tests/unit` và khẳng định kịch bản kèm lý do | 7 | Chưa |
@@ -61,6 +61,7 @@ Số ở cột "Việc cũ" trỏ tới đặc tả trong các mục "VIỆC CHO
 - Việc 5: phân tích độ nhạy, soát nguồn 10 tham số mạnh nhất.
 - Việc 6: lấp 11% GDP danh nghĩa chưa gán lý do. Dòng "phải xong trước khi sang GĐ1.5" trong đặc tả cũ KHÔNG còn hiệu lực; trần 0,15 trong `chot-chan.test.ts` giữ nguyên cho tới lúc đó, và báo cáo GĐ1 phải nêu khoản này.
 - Việc 3: đề xuất tăng năng suất (có thể thuộc GĐ4).
+- Việc 2 (Dương quyết 15/11/2026: bỏ khỏi GĐ1): quy tắc giữ người qua tháng bán chậm. Bản dải tồn kho Lengnick (S38) đã thử và không hợp (sai-khac.md D11, đoạn đo tối 15/11); code thử ở nhánh `thu/3d-dai-ton-kho`. Phải thiết kế lại cùng cách quyết sản lượng.
 
 **GĐ1 là nền kinh tế không tăng trưởng.** Các mục tiêu hiệu chỉnh thô về lạm phát, bội chi/GDP (đi theo tiền, tín dụng, tăng trưởng) chuyển sang GĐ4; ở GĐ1 chỉ báo cáo số đo (gd1.md mục 14).
 

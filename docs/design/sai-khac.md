@@ -444,6 +444,64 @@ Các lựa chọn đã trình (để đối chiếu):
 | Kịch bản `het-han-giam-thue` | mặc định `base` | Gia hạn 8% là giảm thuế so với luật hiện hành: vay bù, giữ chi. Nhánh đối chứng (để thuế về 10%) không kích hoạt |
 | `scripts/vatcpi.ts` | in cả `base` và `keep` | Công cụ chẩn đoán của D13 |
 
+### D15. K1.26 hỏng ở cửa sổ 10 năm; mô hình khuếch đại cú sốc cầu quá mạnh (Dương quyết 15/11/2026)
+
+Lượt kiểm định 15/11 trên `b7ce617`: K1.26 đạt 13/20 seed ở 500 hộ (bản trưa 14/11: 17/20). Chẩn đoán bằng hiệu chạy đôi theo năm, 20 seed.
+
+**Tác động trực tiếp của thuế vẫn đúng.** Ở năm 2-4, mục này đúng 20/20 seed: thu/GDP +0,3 đến +0,9 điểm, doanh số thực hộ kinh doanh −0,8 đến −7,0%.
+
+**Năm 5-10 một cuộc suy thoái do chính thí nghiệm gây ra lấn át.** Seed 6 và 14 (lao động phi chính thức +8 đến +9 điểm), nhánh nộp đủ so với nhánh gốc:
+
+1. Năm 1-4: thuế hộ kinh doanh thu thêm khoảng 0,8% GDP và không được chi ra (`gov.revenueUse = keep`). Giá hàng hộ kinh doanh +3% năm đầu. GDP thực thấp dần tới −4 đến −8%.
+2. Năm 5-6: khu vực chính thức sụp một đợt. Số doanh nghiệp −18% trong năm 5. Việc làm chính thức −35 đến −46%, dư nợ −42%, đầu tư −50 đến −70%.
+3. Năm 6-10: người mất việc chính thức mở hộ kinh doanh hoặc tự làm (số hộ kinh doanh +20 đến +35%). Phần chi tiêu mua ở hộ kinh doanh +14 đến +19 điểm, nên doanh số thực của khu vực này tăng dù tổng tiêu dùng giảm. Thu ngân sách −27 đến −33% ở đáy, nên thu/GDP có seed âm.
+
+Seed đạt (seed 1) cũng suy thoái gần như vậy (GDP thực −17% ở năm 6), chỉ khác là người mua không chuyển sang hộ kinh doanh. Vậy ở cửa sổ 10 năm, đạt hay không là may rủi của đợt sụp.
+
+**Vì sao tụt từ 17/20 xuống 13/20.** Chạy lại 20 seed, mỗi lần gỡ một thay đổi:
+
+| Cấu hình | Đạt 10 năm | Đạt năm 2-4 | GDP thực năm 5-7 | Việc làm chính thức năm 5-7 |
+|---|---|---|---|---|
+| Hiện tại (`keep`) | 13/20 | 20/20 | −6,4% (tới −24,8%) | −10,7% (tới −39,8%) |
+| Lương bám lạm phát kỳ vọng (trước S32) | 18/20 | 19/20 | −3,3% | −4,7% |
+| `firm.taxPassUp` = 0,34 (trước S36) | 16/20 | 16/20 | −3,7% | −5,9% |
+| Chi lại tiền thu thêm (`base`) | 13/20 | 19/20 | −0,3% | +0,3% |
+
+S32 và S36 đều làm suy thoái sâu gần gấp đôi. Chi lại thì suy thoái hết, nhưng ở 10 năm doanh số hộ kinh doanh chỉ giảm 1,5% bình quân và đổi dấu ở 7 seed.
+
+**Dương quyết 15/11/2026:** K1.26 đo ở năm 2-4 (đổi cửa sổ đo, ghi mục F).
+
+**Phát hiện riêng (đã biết, chưa sửa): mô hình khuếch đại cú sốc cầu quá mạnh.** Rút 0,8% GDP khỏi vòng chi tiêu mà GDP thực mất tới 25% ở vài seed. Nguyên nhân: thiếu ổn định tự động. Không có bảo hiểm thất nghiệp hay BHXH đỡ thu nhập khi mất việc, hộ không vay được để giữ tiêu dùng, ngân sách giữ tiền lại. Xử lý ở GĐ2 (BHXH, trợ cấp thất nghiệp) và GĐ3 (tín dụng tiêu dùng, giảm phát nợ). Cho tới lúc đó: mọi kịch bản và thí nghiệm dài hơn khoảng 4 năm có cú sốc cầu đều có thể bị thổi phồng; mục S13 trong game nói rõ điều này. Phần khuếch đại còn liên quan D16.
+
+Script đo: bản tạm của người điều phối (không commit); đo lại được bằng `scripts/pairdiag.ts k126 20 10`.
+
+### D16. Nhánh gốc mặc định có một đợt bùng rồi vỡ quanh năm 10-20 (đo 15/11/2026, CHỜ DƯƠNG)
+
+Dương yêu cầu kiểm tra: cấu hình mặc định, không can thiệp, 40 năm. Bình quân năm:
+
+| | Năm 1 | Năm 10 | Năm 20 | Năm 40 |
+|---|---|---|---|---|
+| **500 hộ, 10 seed** | | | | |
+| Số doanh nghiệp | 40,8 | 41,9 | 23,3 | 22,0 |
+| Việc làm chính thức | 148 | 194 | 150 | 148 |
+| GDP thực (tỷ) | 3,66 | 4,13 | 3,50 | 3,69 |
+| Dư nợ (tỷ) | 8,4 | 19,4 | 15,8 | 13,5 |
+| Sử dụng công suất máy | 81% | 80% | 70% | 72% |
+| Thất nghiệp | 3,8% | 4,1% | 7,7% | 4,1% |
+| **5000 hộ, 5 seed** | | | | |
+| Số doanh nghiệp | 309 | 320 | 324 | 305 |
+| Việc làm chính thức | 1479 | 1829 | 1605 | 1455 |
+| GDP thực (tỷ) | 36,6 | 40,2 | 36,7 | 35,4 |
+| Dư nợ (tỷ) | 84,6 | 178,9 | 158,4 | 132,3 |
+| Sử dụng công suất máy | 81% | 78% | 75% | 69% |
+| Thất nghiệp | 4,1% | 4,4% | 5,9% | 6,0% |
+
+- Không phải co dần suốt 40 năm. Mười năm đầu là một đợt bùng nổ tín dụng (dư nợ hơn gấp đôi, việc làm chính thức +24 đến +30%); năm 10-20 vỡ; sau đó đi ngang quanh mức năm 1.
+- Năm 10 tới năm 40: việc làm chính thức −12 đến −28% ở mọi seed 5000 hộ; GDP thực −5 đến −17%.
+- **Phụ thuộc quy mô:** số doanh nghiệp giảm một nửa chỉ ở 500 hộ (9/10 seed giảm 34-73%); ở 5000 hộ gần như giữ nguyên.
+- **Hệ quả cho kiểm định:** các thí nghiệm chạy đôi tách nhánh ở tháng 120 (`BURN`), đúng đỉnh của đợt bùng nổ, rồi chạy xuyên qua đợt vỡ. Phần khuếch đại ở D15 có thể một phần do cú sốc rơi vào lúc nền kinh tế sắp vỡ sẵn. Chưa đo kết luận nào đổi nếu tách nhánh muộn hơn.
+- Chưa biết nguyên nhân: điều kiện ban đầu (vốn, nợ lúc khởi tạo thấp hơn mức cân bằng) hay hàm đầu tư. Chưa sửa gì. Chờ Dương quyết cách xử lý.
+
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
 Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. **Dương quyết 14/11/2026: chấp nhận như gd0 mục 12, không tự cài hàm toán.** K0.2 ghi là đạt theo nghĩa: trạng thái kinh tế trùng từng bit; mã băm toàn cục có thể lệch giữa hai bản V8 khác nhau ở chữ số cuối của hàm toán.
