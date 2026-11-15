@@ -1,0 +1,1793 @@
+{
+ "part": "X",
+ "nSeeds": 20,
+ "stamp": {
+  "commit": "b7ce617",
+  "dirty": false
+ },
+ "checks": [
+  {
+   "id": "K1.15",
+   "claim": "Chia đều cổ tức làm Gini thu nhập thấp hơn",
+   "threshold": "hiệu chạy đôi < 0 (bình quân 20 năm)",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "Gini thu nhập -0.030, Gini tiền -0.042"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "Gini thu nhập -0.050, Gini tiền -0.057"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "Gini thu nhập -0.045, Gini tiền -0.047"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "Gini thu nhập -0.043, Gini tiền -0.057"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "Gini thu nhập -0.030, Gini tiền -0.028"
+    },
+    {
+     "seed": 6,
+     "ok": false,
+     "value": "Gini thu nhập 0.007, Gini tiền 0.001"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "Gini thu nhập -0.052, Gini tiền -0.057"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "Gini thu nhập -0.040, Gini tiền -0.038"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "Gini thu nhập -0.025, Gini tiền -0.015"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "Gini thu nhập -0.022, Gini tiền -0.021"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "Gini thu nhập -0.000, Gini tiền 0.004"
+    },
+    {
+     "seed": 12,
+     "ok": false,
+     "value": "Gini thu nhập 0.027, Gini tiền 0.028"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "Gini thu nhập -0.022, Gini tiền -0.023"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "Gini thu nhập -0.055, Gini tiền -0.053"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "Gini thu nhập -0.016, Gini tiền -0.030"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "Gini thu nhập -0.017, Gini tiền -0.020"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "Gini thu nhập -0.043, Gini tiền -0.046"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "Gini thu nhập -0.029, Gini tiền -0.044"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "Gini thu nhập -0.032, Gini tiền -0.034"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "Gini thu nhập -0.011, Gini tiền -0.001"
+    }
+   ],
+   "share": 0.9,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.16",
+   "claim": "Chi ngân sách bằng tiền NHNN in: giá tăng bền, sản lượng thực tăng trong ngắn hạn",
+   "threshold": "CPI sau 10 năm cao hơn rõ; GDP thực 2 năm đầu cao hơn; mức tăng GDP thực nhỏ hơn mức tăng giá",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "CPI +38.8%; GDP thực 2 năm đầu 9.7%, năm 9-10 28.2%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "CPI +24.5%; GDP thực 2 năm đầu 5.7%, năm 9-10 18.9%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "CPI +29.3%; GDP thực 2 năm đầu 17.7%, năm 9-10 19.1%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "CPI +30.5%; GDP thực 2 năm đầu 7.3%, năm 9-10 10.3%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "CPI +33.0%; GDP thực 2 năm đầu 11.7%, năm 9-10 22.8%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "CPI +33.0%; GDP thực 2 năm đầu 10.5%, năm 9-10 24.3%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "CPI +38.3%; GDP thực 2 năm đầu 12.3%, năm 9-10 24.0%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "CPI +40.6%; GDP thực 2 năm đầu 14.2%, năm 9-10 39.3%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "CPI +33.1%; GDP thực 2 năm đầu 7.9%, năm 9-10 12.7%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "CPI +29.4%; GDP thực 2 năm đầu 15.0%, năm 9-10 29.4%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "CPI +30.7%; GDP thực 2 năm đầu 9.9%, năm 9-10 16.5%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "CPI +23.5%; GDP thực 2 năm đầu 6.5%, năm 9-10 17.3%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "CPI +30.9%; GDP thực 2 năm đầu 9.4%, năm 9-10 24.0%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "CPI +40.9%; GDP thực 2 năm đầu 7.1%, năm 9-10 11.0%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "CPI +24.6%; GDP thực 2 năm đầu 14.9%, năm 9-10 18.4%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "CPI +30.6%; GDP thực 2 năm đầu 6.4%, năm 9-10 16.5%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "CPI +43.6%; GDP thực 2 năm đầu 7.5%, năm 9-10 35.8%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "CPI +53.9%; GDP thực 2 năm đầu 5.1%, năm 9-10 35.4%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "CPI +33.0%; GDP thực 2 năm đầu 13.7%, năm 9-10 18.8%"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "CPI +34.2%; GDP thực 2 năm đầu 13.3%, năm 9-10 30.3%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false,
+   "note": "Cả hai nhánh tắt quy tắc lãi suất tự động, để chỉ đo tác động của việc in tiền. Ngưỡng gốc đòi mức chênh GDP thu hẹp dần; xem ghi chú ở cuối báo cáo."
+  },
+  {
+   "id": "K1.17",
+   "claim": "In càng nhiều thì giá tăng càng nhiều",
+   "threshold": "mức giá sau 10 năm tăng dần theo ba mức in",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "9.0% < 38.8% < 94.7%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "7.8% < 24.5% < 92.3%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "5.3% < 29.3% < 100.9%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "11.4% < 30.5% < 97.9%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "12.7% < 33.0% < 104.0%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "13.3% < 33.0% < 95.7%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "13.7% < 38.3% < 106.2%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "16.5% < 40.6% < 95.6%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "9.8% < 33.1% < 99.8%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "6.4% < 29.4% < 101.8%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "8.9% < 30.7% < 90.7%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "11.2% < 23.5% < 85.7%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "8.4% < 30.9% < 100.5%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "17.8% < 40.9% < 97.8%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "4.5% < 24.6% < 100.9%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "10.0% < 30.6% < 96.3%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "14.5% < 43.6% < 86.2%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "25.0% < 53.9% < 99.7%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "12.4% < 33.0% < 97.4%"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "15.1% < 34.2% < 110.6%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.18",
+   "claim": "Tiền mới không vào đều: nơi nhận tiền trước lợi hơn người hưởng lương cố định",
+   "threshold": "năm đầu: lợi nhuận thực của doanh nghiệp (nơi Chính phủ mua hàng) tăng nhiều hơn quỹ lương thực của người làm công ăn lương",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 23.6%, quỹ lương 3.3%, thu nhập phi chính thức 3.9%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 18.9%, quỹ lương 2.2%, thu nhập phi chính thức 3.8%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 33.6%, quỹ lương 5.5%, thu nhập phi chính thức 5.8%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 26.6%, quỹ lương 4.4%, thu nhập phi chính thức 3.7%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 39.8%, quỹ lương 5.3%, thu nhập phi chính thức 6.0%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 21.9%, quỹ lương 3.7%, thu nhập phi chính thức 2.8%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 30.3%, quỹ lương 6.1%, thu nhập phi chính thức 7.6%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 51.3%, quỹ lương 7.1%, thu nhập phi chính thức 6.4%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 26.4%, quỹ lương 4.9%, thu nhập phi chính thức 5.3%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 43.0%, quỹ lương 6.2%, thu nhập phi chính thức 7.8%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 31.6%, quỹ lương 4.8%, thu nhập phi chính thức 4.3%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 20.5%, quỹ lương 3.2%, thu nhập phi chính thức 2.0%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 18.2%, quỹ lương 2.6%, thu nhập phi chính thức 4.2%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 26.4%, quỹ lương 6.0%, thu nhập phi chính thức 7.1%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 40.5%, quỹ lương 5.3%, thu nhập phi chính thức 5.3%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 20.8%, quỹ lương 4.4%, thu nhập phi chính thức 4.6%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 23.2%, quỹ lương 4.6%, thu nhập phi chính thức 4.0%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 18.5%, quỹ lương 3.0%, thu nhập phi chính thức 4.5%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 31.5%, quỹ lương 4.4%, thu nhập phi chính thức 5.3%"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "lợi nhuận doanh nghiệp 37.1%, quỹ lương 4.1%, thu nhập phi chính thức 4.2%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false,
+   "note": "Cách đo đổi so với thiết kế: thiết kế so thu nhập của \"nhóm bán hàng cho Chính phủ\" với nhóm còn lại. Trong mô hình, tiền mới vào doanh nghiệp thành lợi nhuận trước, lương đổi chậm, nên so lợi nhuận với quỹ lương."
+  },
+  {
+   "id": "K1.19",
+   "claim": "Tăng lãi suất tái cấp vốn làm giảm tín dụng và giảm lạm phát sau độ trễ",
+   "threshold": "hiệu chạy đôi âm ở quý 4-8",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": false,
+     "m": -0.06636880483472146,
+     "value": "dư nợ -3.5%, lạm phát 0.66 điểm"
+    },
+    {
+     "seed": 2,
+     "ok": false,
+     "m": -0.09759465116130649,
+     "value": "dư nợ -3.6%, lạm phát 0.98 điểm"
+    },
+    {
+     "seed": 3,
+     "ok": false,
+     "m": -0.10768352205457726,
+     "value": "dư nợ 9.8%, lạm phát 1.08 điểm"
+    },
+    {
+     "seed": 4,
+     "ok": false,
+     "m": -0.06716497891573597,
+     "value": "dư nợ -6.1%, lạm phát 0.67 điểm"
+    },
+    {
+     "seed": 5,
+     "ok": false,
+     "m": -0.08993202464189554,
+     "value": "dư nợ -1.3%, lạm phát 0.90 điểm"
+    },
+    {
+     "seed": 6,
+     "ok": false,
+     "m": -0.1111961544716189,
+     "value": "dư nợ -4.7%, lạm phát 1.11 điểm"
+    },
+    {
+     "seed": 7,
+     "ok": false,
+     "m": -0.08233049745239604,
+     "value": "dư nợ 0.4%, lạm phát 0.82 điểm"
+    },
+    {
+     "seed": 8,
+     "ok": false,
+     "m": -0.11875989699178349,
+     "value": "dư nợ 9.5%, lạm phát 1.19 điểm"
+    },
+    {
+     "seed": 9,
+     "ok": false,
+     "m": -0.12890910373855163,
+     "value": "dư nợ -1.3%, lạm phát 1.29 điểm"
+    },
+    {
+     "seed": 10,
+     "ok": false,
+     "m": -0.11701917157530967,
+     "value": "dư nợ 4.7%, lạm phát 1.17 điểm"
+    },
+    {
+     "seed": 11,
+     "ok": false,
+     "m": -0.09384677621173196,
+     "value": "dư nợ -6.8%, lạm phát 0.94 điểm"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "m": 0.0098235897842789,
+     "value": "dư nợ -7.4%, lạm phát -0.10 điểm"
+    },
+    {
+     "seed": 13,
+     "ok": false,
+     "m": -0.008266470753064241,
+     "value": "dư nợ -9.1%, lạm phát 0.08 điểm"
+    },
+    {
+     "seed": 14,
+     "ok": false,
+     "m": -0.12831524497216365,
+     "value": "dư nợ -2.8%, lạm phát 1.28 điểm"
+    },
+    {
+     "seed": 15,
+     "ok": false,
+     "m": -0.08963708278389734,
+     "value": "dư nợ 5.0%, lạm phát 0.90 điểm"
+    },
+    {
+     "seed": 16,
+     "ok": false,
+     "m": -0.0795742427203816,
+     "value": "dư nợ -6.2%, lạm phát 0.80 điểm"
+    },
+    {
+     "seed": 17,
+     "ok": false,
+     "m": -0.13103724419858925,
+     "value": "dư nợ -2.1%, lạm phát 1.31 điểm"
+    },
+    {
+     "seed": 18,
+     "ok": false,
+     "m": -0.11903542596731762,
+     "value": "dư nợ -2.3%, lạm phát 1.19 điểm"
+    },
+    {
+     "seed": 19,
+     "ok": false,
+     "m": -0.14994983674573065,
+     "value": "dư nợ 2.5%, lạm phát 1.50 điểm"
+    },
+    {
+     "seed": 20,
+     "ok": false,
+     "m": -0.11947198669672206,
+     "value": "dư nợ 3.5%, lạm phát 1.19 điểm"
+    }
+   ],
+   "share": 0.05,
+   "pass": false,
+   "byMean": false,
+   "note": "Tăng 6 điểm phần trăm so với mức đang áp dụng; cả hai nhánh tắt quy tắc tự động. Đo dư nợ thay cho vay mới trong tháng, vì vay mới từng tháng rất nhiễu.",
+   "known": "Kênh lãi suất tới cầu còn yếu. Hộ không vay, nên lãi suất chỉ chạm tiêu dùng qua thay thế liên thời gian (exp.saveResponse = 0,35 theo Havránek 2015) và chạm đầu tư. Kênh vay tiêu dùng (thiết kế mục 18) để GĐ3, khi có nhà đất làm tài sản thế chấp. Không nâng tham số để qua mục này."
+  },
+  {
+   "id": "K1.20",
+   "claim": "Room đang chặn thì tín dụng không vượt room, hồ sơ yếu bị loại trước",
+   "threshold": "tăng trưởng dư nợ năm ≤ room; nhóm bị từ chối kém lành mạnh hơn",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -2.5%; chênh độ lành mạnh 0.04"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -1.4%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -13.0%; chênh độ lành mạnh 0.03"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.5%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.6%; chênh độ lành mạnh 0.04"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.2%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -1.0%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.8%; chênh độ lành mạnh 0.03"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -3.4%; chênh độ lành mạnh 0.07"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -7.0%; chênh độ lành mạnh 0.04"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.6%; chênh độ lành mạnh 0.05"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "tăng trưởng cao nhất 0.0%; chênh độ lành mạnh 0.05"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -7.7%; chênh độ lành mạnh 0.05"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "tăng trưởng cao nhất 0.0%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -3.0%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.1%; chênh độ lành mạnh 0.07"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -0.1%; chênh độ lành mạnh 0.06"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "tăng trưởng cao nhất 0.1%; chênh độ lành mạnh 0.05"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -2.0%; chênh độ lành mạnh 0.04"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "tăng trưởng cao nhất -2.2%; chênh độ lành mạnh 0.05"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.21",
+   "claim": "Hộ giữ nhiều tiền mặt hơn thì ngân hàng mất dự trữ, phải nhờ NHNN nhiều hơn",
+   "threshold": "hỗ trợ thanh khoản của NHNN (tái cấp vốn + trái phiếu mua lại) tăng",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +1.7 tỷ"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "tiền mặt +2.1 tỷ, hỗ trợ +1.9 tỷ"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "tiền mặt +2.0 tỷ, hỗ trợ +1.8 tỷ"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +2.1 tỷ"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +1.6 tỷ"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "tiền mặt +2.0 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +1.9 tỷ"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "tiền mặt +1.8 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "tiền mặt +2.0 tỷ, hỗ trợ +1.6 tỷ"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "tiền mặt +2.0 tỷ, hỗ trợ +2.0 tỷ"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "tiền mặt +2.0 tỷ, hỗ trợ +1.9 tỷ"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +2.2 tỷ"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +1.6 tỷ"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "tiền mặt +2.0 tỷ, hỗ trợ +1.9 tỷ"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +1.7 tỷ"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "tiền mặt +1.9 tỷ, hỗ trợ +1.5 tỷ"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.22",
+   "claim": "Biến thể \"ngân hàng là trung gian\" cho tín dụng và sản lượng thấp hơn",
+   "threshold": "hiệu chạy đôi âm trong 3 năm đầu",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "m": 0.2310360756832196,
+     "value": "3 năm đầu: tín dụng -23.1%, đầu tư -46.7%, GDP thực -10.0%; năm 6-10: GDP thực 11.3%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "m": 0.16873846992961183,
+     "value": "3 năm đầu: tín dụng -16.9%, đầu tư -23.9%, GDP thực -4.5%; năm 6-10: GDP thực 1.8%"
+    },
+    {
+     "seed": 3,
+     "ok": false,
+     "m": -0.025887529342953908,
+     "value": "3 năm đầu: tín dụng 0.2%, đầu tư 0.4%, GDP thực 0.3%; năm 6-10: GDP thực 5.1%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "m": 0.15299921972352348,
+     "value": "3 năm đầu: tín dụng -15.3%, đầu tư -32.6%, GDP thực -7.1%; năm 6-10: GDP thực 8.4%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "m": 0.039934075077134756,
+     "value": "3 năm đầu: tín dụng -4.0%, đầu tư -15.2%, GDP thực -2.5%; năm 6-10: GDP thực 0.8%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "m": 0.07761396788330921,
+     "value": "3 năm đầu: tín dụng -7.8%, đầu tư -13.6%, GDP thực -3.1%; năm 6-10: GDP thực 1.0%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "m": 0.19368830795330028,
+     "value": "3 năm đầu: tín dụng -19.4%, đầu tư -29.1%, GDP thực -6.2%; năm 6-10: GDP thực 4.7%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "m": 0.10676520892530539,
+     "value": "3 năm đầu: tín dụng -10.7%, đầu tư -31.3%, GDP thực -4.9%; năm 6-10: GDP thực 10.1%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "m": 0.2938205728267852,
+     "value": "3 năm đầu: tín dụng -29.4%, đầu tư -36.8%, GDP thực -9.7%; năm 6-10: GDP thực 2.2%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "m": 0.11342866937358442,
+     "value": "3 năm đầu: tín dụng -11.3%, đầu tư -22.5%, GDP thực -2.7%; năm 6-10: GDP thực -8.8%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "m": 0.21044829738155757,
+     "value": "3 năm đầu: tín dụng -21.0%, đầu tư -22.5%, GDP thực -5.7%; năm 6-10: GDP thực 5.4%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "m": 0.32242545362031794,
+     "value": "3 năm đầu: tín dụng -32.2%, đầu tư -43.0%, GDP thực -10.9%; năm 6-10: GDP thực 5.9%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "m": 0.21692710763539302,
+     "value": "3 năm đầu: tín dụng -21.7%, đầu tư -47.0%, GDP thực -9.9%; năm 6-10: GDP thực 0.2%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "m": 0.1528256389352236,
+     "value": "3 năm đầu: tín dụng -15.3%, đầu tư -29.3%, GDP thực -6.0%; năm 6-10: GDP thực 0.8%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "m": 0.17404129934320267,
+     "value": "3 năm đầu: tín dụng -17.4%, đầu tư -23.4%, GDP thực -4.9%; năm 6-10: GDP thực 0.9%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "m": 0.2098684254738904,
+     "value": "3 năm đầu: tín dụng -21.0%, đầu tư -30.2%, GDP thực -6.8%; năm 6-10: GDP thực 10.8%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "m": 0.1575739521051822,
+     "value": "3 năm đầu: tín dụng -15.8%, đầu tư -27.8%, GDP thực -5.7%; năm 6-10: GDP thực 7.1%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "m": 0.19072247830010847,
+     "value": "3 năm đầu: tín dụng -19.1%, đầu tư -36.8%, GDP thực -7.9%; năm 6-10: GDP thực 12.7%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "m": 0.06358753099196435,
+     "value": "3 năm đầu: tín dụng -6.4%, đầu tư -14.9%, GDP thực -2.1%; năm 6-10: GDP thực 2.4%"
+    },
+    {
+     "seed": 20,
+     "ok": false,
+     "m": -0.009940057906584698,
+     "value": "3 năm đầu: tín dụng 1.0%, đầu tư -0.6%, GDP thực -0.1%; năm 6-10: GDP thực 4.2%"
+    }
+   ],
+   "share": 0.9,
+   "pass": true,
+   "byMean": false,
+   "note": "Cửa sổ đo đổi từ 10 năm sang 3 năm đầu. Siết tín dụng làm sản lượng thấp hơn rõ trong 3 năm đầu. Sau đó giá giảm theo lượng tiền, nhu cầu thực hồi lại và kinh tế bật lên thành một chu kỳ dài, nên bình quân 10 năm không âm. Số đo năm 6-10 in kèm để thấy điều này."
+  },
+  {
+   "id": "K1.23",
+   "claim": "Tăng chi ngân sách bằng vay nợ làm GDP tăng ngắn hạn và nợ công tăng",
+   "threshold": "số nhân năm đầu > 0; nợ công cao hơn",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "số nhân 1.31; nợ +1.6 tỷ"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "số nhân 1.03; nợ +2.1 tỷ"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "số nhân 2.17; nợ +0.6 tỷ"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "số nhân 1.39; nợ +2.2 tỷ"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "số nhân 2.72; nợ +1.1 tỷ"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "số nhân 1.08; nợ +1.3 tỷ"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "số nhân 1.86; nợ +1.4 tỷ"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "số nhân 1.98; nợ +1.4 tỷ"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "số nhân 1.88; nợ +1.4 tỷ"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "số nhân 1.80; nợ +1.2 tỷ"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "số nhân 1.08; nợ +1.8 tỷ"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "số nhân 0.92; nợ +1.8 tỷ"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "số nhân 1.07; nợ +1.6 tỷ"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "số nhân 1.34; nợ +2.2 tỷ"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "số nhân 2.01; nợ +1.0 tỷ"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "số nhân 1.50; nợ +2.1 tỷ"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "số nhân 1.60; nợ +1.4 tỷ"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "số nhân 1.44; nợ +2.0 tỷ"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "số nhân 1.65; nợ +0.9 tỷ"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "số nhân 1.71; nợ +0.4 tỷ"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.24",
+   "claim": "Tăng GTGT: giá hàng chịu thuế tăng nhưng ít hơn mức thuế; tiêu dùng thực giảm; thu ngân sách tăng",
+   "threshold": "tỷ lệ chuyển vào giá sau 2 năm nằm giữa 0 và 1",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": false,
+     "m": -0.03765094955854886,
+     "value": "chuyển vào giá 1.04; tiêu dùng thực -3.5%; thu GTGT 36.3%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "m": 0.048750241525324034,
+     "value": "chuyển vào giá 0.95; tiêu dùng thực -2.6%; thu GTGT 40.5%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "m": 0.06095392955799661,
+     "value": "chuyển vào giá 0.94; tiêu dùng thực -3.0%; thu GTGT 39.2%"
+    },
+    {
+     "seed": 4,
+     "ok": false,
+     "m": -0.03583227271312883,
+     "value": "chuyển vào giá 1.04; tiêu dùng thực -6.1%; thu GTGT 31.1%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "m": 0.030143242675154003,
+     "value": "chuyển vào giá 0.97; tiêu dùng thực -4.8%; thu GTGT 36.6%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "m": 0.07382513047345729,
+     "value": "chuyển vào giá 0.93; tiêu dùng thực -3.5%; thu GTGT 38.3%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "m": 0.10374801637316122,
+     "value": "chuyển vào giá 0.90; tiêu dùng thực -4.7%; thu GTGT 37.0%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "m": 0.02399136601384877,
+     "value": "chuyển vào giá 0.98; tiêu dùng thực -5.4%; thu GTGT 34.8%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "m": 0.011876998776639947,
+     "value": "chuyển vào giá 0.99; tiêu dùng thực -4.0%; thu GTGT 38.4%"
+    },
+    {
+     "seed": 10,
+     "ok": false,
+     "m": -0.30567016987567586,
+     "value": "chuyển vào giá 1.31; tiêu dùng thực -3.2%; thu GTGT 38.2%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "m": 0.04111661567410352,
+     "value": "chuyển vào giá 0.96; tiêu dùng thực -4.6%; thu GTGT 34.3%"
+    },
+    {
+     "seed": 12,
+     "ok": false,
+     "m": -0.23422482604597628,
+     "value": "chuyển vào giá 1.23; tiêu dùng thực -5.9%; thu GTGT 33.6%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "m": 0.08004045226470546,
+     "value": "chuyển vào giá 0.92; tiêu dùng thực -5.0%; thu GTGT 34.7%"
+    },
+    {
+     "seed": 14,
+     "ok": false,
+     "m": -0.025555129592851777,
+     "value": "chuyển vào giá 1.03; tiêu dùng thực -3.7%; thu GTGT 38.7%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "m": 0.02897598400480783,
+     "value": "chuyển vào giá 0.97; tiêu dùng thực -3.9%; thu GTGT 36.8%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "m": 0.00869124767503393,
+     "value": "chuyển vào giá 0.99; tiêu dùng thực -2.6%; thu GTGT 41.5%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "m": 0.0753774781250035,
+     "value": "chuyển vào giá 0.92; tiêu dùng thực -1.5%; thu GTGT 49.1%"
+    },
+    {
+     "seed": 18,
+     "ok": false,
+     "m": -0.03853773587024745,
+     "value": "chuyển vào giá 1.04; tiêu dùng thực -2.8%; thu GTGT 42.5%"
+    },
+    {
+     "seed": 19,
+     "ok": false,
+     "m": -0.3075075933835716,
+     "value": "chuyển vào giá 1.31; tiêu dùng thực -3.5%; thu GTGT 38.5%"
+    },
+    {
+     "seed": 20,
+     "ok": false,
+     "m": -0.11532889963911108,
+     "value": "chuyển vào giá 1.12; tiêu dùng thực -3.5%; thu GTGT 37.5%"
+    }
+   ],
+   "share": 0.6,
+   "pass": false,
+   "byMean": false,
+   "note": "Tăng từ 10% lên 15%. Đo bằng giá hàng chịu thuế so với hàng cùng loại không chịu GTGT, để loại phần lạm phát chung. Từ 15/11/2026 tăng thuế chuyển trọn vào giá ngay (firm.taxPassUp = 1, đơn giản hoá tạm, sai-khac.md S36). Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế."
+  },
+  {
+   "id": "K1.25",
+   "claim": "Thuế TNCN luỹ tiến làm Gini lương sau thuế thấp hơn trước thuế",
+   "threshold": "hiệu > 0",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0048; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0046; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0048; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0046; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0046; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0048; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0046; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0048; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0046; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0046; theo luật hiện hành: 0.0000"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "giảm trừ 4 triệu: Gini giảm 0.0047; theo luật hiện hành: 0.0000"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false,
+   "note": "Với mức giảm trừ 15,5 triệu của luật hiện hành, gần như không ai trong mô hình phải nộp TNCN từ lương (lương chưa phân tán, GĐ2 mới có kỹ năng), nên hiệu bằng 0. Thí nghiệm hạ mức giảm trừ xuống 4 triệu để kiểm tính chất của biểu thuế. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế."
+  },
+  {
+   "id": "K1.26",
+   "claim": "Bật \"nộp thuế đủ\" làm thu ngân sách tăng và doanh số thực của khu vực phi chính thức co lại",
+   "threshold": "hiệu chạy đôi (10 năm)",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "m": 0.8915814479636908,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.89 điểm, doanh số thực của hộ kinh doanh -4.8%, thu nhập thực của người làm phi chính thức -11.5%, phần chi tiêu mua ở hộ kinh doanh 0.93 điểm, lao động phi chính thức 4.80 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "m": 0.12588952331176462,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.13 điểm, doanh số thực của hộ kinh doanh -0.4%, thu nhập thực của người làm phi chính thức -3.8%, phần chi tiêu mua ở hộ kinh doanh 1.10 điểm, lao động phi chính thức 1.66 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "m": 1.2640278291092044,
+     "value": "ngưỡng 100 triệu: thu/GDP 1.26 điểm, doanh số thực của hộ kinh doanh -3.5%, thu nhập thực của người làm phi chính thức -13.6%, phần chi tiêu mua ở hộ kinh doanh 3.64 điểm, lao động phi chính thức 4.24 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "m": 0.9041474227247881,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.90 điểm, doanh số thực của hộ kinh doanh -2.6%, thu nhập thực của người làm phi chính thức -10.3%, phần chi tiêu mua ở hộ kinh doanh 0.92 điểm, lao động phi chính thức 3.73 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "m": 0.5579866983219772,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.56 điểm, doanh số thực của hộ kinh doanh -4.3%, thu nhập thực của người làm phi chính thức -10.5%, phần chi tiêu mua ở hộ kinh doanh 0.97 điểm, lao động phi chính thức 4.06 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 6,
+     "ok": false,
+     "m": -9.923832446462487,
+     "value": "ngưỡng 100 triệu: thu/GDP -0.64 điểm, doanh số thực của hộ kinh doanh 9.9%, thu nhập thực của người làm phi chính thức -8.2%, phần chi tiêu mua ở hộ kinh doanh 9.69 điểm, lao động phi chính thức 8.09 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "m": 0.2894320650979165,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.29 điểm, doanh số thực của hộ kinh doanh -2.9%, thu nhập thực của người làm phi chính thức -6.6%, phần chi tiêu mua ở hộ kinh doanh 0.34 điểm, lao động phi chính thức 1.80 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "m": 0.6481323358853569,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.65 điểm, doanh số thực của hộ kinh doanh -3.7%, thu nhập thực của người làm phi chính thức -8.8%, phần chi tiêu mua ở hộ kinh doanh 1.00 điểm, lao động phi chính thức 3.15 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "m": 0.46775116541820927,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.47 điểm, doanh số thực của hộ kinh doanh -4.2%, thu nhập thực của người làm phi chính thức -7.9%, phần chi tiêu mua ở hộ kinh doanh 0.41 điểm, lao động phi chính thức 1.25 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 10,
+     "ok": false,
+     "m": -0.6198843069926407,
+     "value": "ngưỡng 100 triệu: thu/GDP -0.62 điểm, doanh số thực của hộ kinh doanh -4.5%, thu nhập thực của người làm phi chính thức -2.9%, phần chi tiêu mua ở hộ kinh doanh -2.34 điểm, lao động phi chính thức -0.32 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 11,
+     "ok": false,
+     "m": -0.2577260785911334,
+     "value": "ngưỡng 100 triệu: thu/GDP -0.26 điểm, doanh số thực của hộ kinh doanh -0.4%, thu nhập thực của người làm phi chính thức -0.1%, phần chi tiêu mua ở hộ kinh doanh -0.42 điểm, lao động phi chính thức -0.91 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 12,
+     "ok": false,
+     "m": -1.0644467426573323,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.43 điểm, doanh số thực của hộ kinh doanh 1.1%, thu nhập thực của người làm phi chính thức -2.1%, phần chi tiêu mua ở hộ kinh doanh 1.18 điểm, lao động phi chính thức -0.24 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 13,
+     "ok": false,
+     "m": -0.45919250998511796,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.03 điểm, doanh số thực của hộ kinh doanh 0.5%, thu nhập thực của người làm phi chính thức -2.0%, phần chi tiêu mua ở hộ kinh doanh 0.49 điểm, lao động phi chính thức 0.10 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 14,
+     "ok": false,
+     "m": -5.300137131846472,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.13 điểm, doanh số thực của hộ kinh doanh 5.3%, thu nhập thực của người làm phi chính thức -14.3%, phần chi tiêu mua ở hộ kinh doanh 9.93 điểm, lao động phi chính thức 9.30 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "m": 0.32973907514181333,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.33 điểm, doanh số thực của hộ kinh doanh -3.1%, thu nhập thực của người làm phi chính thức -6.9%, phần chi tiêu mua ở hộ kinh doanh 0.65 điểm, lao động phi chính thức 2.14 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 16,
+     "ok": false,
+     "m": -4.289018874702211,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.19 điểm, doanh số thực của hộ kinh doanh 4.3%, thu nhập thực của người làm phi chính thức 0.9%, phần chi tiêu mua ở hộ kinh doanh 2.13 điểm, lao động phi chính thức -0.27 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "m": 0.5294240997080868,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.53 điểm, doanh số thực của hộ kinh doanh -2.0%, thu nhập thực của người làm phi chính thức -6.4%, phần chi tiêu mua ở hộ kinh doanh 0.94 điểm, lao động phi chính thức 1.58 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "m": 0.707506372224101,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.71 điểm, doanh số thực của hộ kinh doanh -3.0%, thu nhập thực của người làm phi chính thức -7.5%, phần chi tiêu mua ở hộ kinh doanh 0.38 điểm, lao động phi chính thức 2.29 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "m": 0.523565947483301,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.52 điểm, doanh số thực của hộ kinh doanh -0.7%, thu nhập thực của người làm phi chính thức -5.2%, phần chi tiêu mua ở hộ kinh doanh 0.73 điểm, lao động phi chính thức 1.75 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "m": 0.6623071720349316,
+     "value": "ngưỡng 100 triệu: thu/GDP 0.66 điểm, doanh số thực của hộ kinh doanh -3.3%, thu nhập thực của người làm phi chính thức -7.2%, phần chi tiêu mua ở hộ kinh doanh 0.58 điểm, lao động phi chính thức 2.11 điểm; ngưỡng 1 tỷ hiện hành: thu/GDP 0.00 điểm"
+    }
+   ],
+   "share": 0.65,
+   "pass": false,
+   "byMean": false,
+   "note": "Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. \"Co lại\" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế."
+  },
+  {
+   "id": "K1.28",
+   "claim": "Tắt kỳ vọng lạm phát làm lạm phát sau cú sốc tắt nhanh hơn",
+   "threshold": "lạm phát vượt trội còn lại ở năm thứ hai sau khi cú sốc dừng: thấp hơn khi tắt kỳ vọng",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": false,
+     "m": -0.23530682694863025,
+     "value": "phần lạm phát vượt trội còn lại: bật 67.0%, tắt 90.5%"
+    },
+    {
+     "seed": 2,
+     "ok": false,
+     "m": -0.2789189220287065,
+     "value": "phần lạm phát vượt trội còn lại: bật 73.3%, tắt 101.2%"
+    },
+    {
+     "seed": 3,
+     "ok": false,
+     "m": -0.20432313599769808,
+     "value": "phần lạm phát vượt trội còn lại: bật 21.6%, tắt 42.0%"
+    },
+    {
+     "seed": 4,
+     "ok": false,
+     "m": -0.21026365971750494,
+     "value": "phần lạm phát vượt trội còn lại: bật 115.1%, tắt 136.1%"
+    },
+    {
+     "seed": 5,
+     "ok": false,
+     "m": -0.08460406757102812,
+     "value": "phần lạm phát vượt trội còn lại: bật 57.9%, tắt 66.3%"
+    },
+    {
+     "seed": 6,
+     "ok": false,
+     "m": -0.2815486719076653,
+     "value": "phần lạm phát vượt trội còn lại: bật 68.8%, tắt 96.9%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "m": 0.3350307949858028,
+     "value": "phần lạm phát vượt trội còn lại: bật 79.6%, tắt 46.1%"
+    },
+    {
+     "seed": 8,
+     "ok": false,
+     "m": -0.2567334510517526,
+     "value": "phần lạm phát vượt trội còn lại: bật 62.5%, tắt 88.2%"
+    },
+    {
+     "seed": 9,
+     "ok": false,
+     "m": -0.16373298674122372,
+     "value": "phần lạm phát vượt trội còn lại: bật 87.8%, tắt 104.2%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "m": 0.5398933190916249,
+     "value": "phần lạm phát vượt trội còn lại: bật 38.0%, tắt -16.0%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "m": 0.12137395832589803,
+     "value": "phần lạm phát vượt trội còn lại: bật 81.2%, tắt 69.1%"
+    },
+    {
+     "seed": 12,
+     "ok": false,
+     "m": -1.0659509262475324,
+     "value": "phần lạm phát vượt trội còn lại: bật 152.5%, tắt 259.1%"
+    },
+    {
+     "seed": 13,
+     "ok": false,
+     "m": -0.09629080582993038,
+     "value": "phần lạm phát vượt trội còn lại: bật 47.7%, tắt 57.3%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "m": 0.25245968158075405,
+     "value": "phần lạm phát vượt trội còn lại: bật 158.1%, tắt 132.8%"
+    },
+    {
+     "seed": 15,
+     "ok": false,
+     "m": -0.04587343398746291,
+     "value": "phần lạm phát vượt trội còn lại: bật 34.2%, tắt 38.8%"
+    },
+    {
+     "seed": 16,
+     "ok": false,
+     "m": -0.9727454928317676,
+     "value": "phần lạm phát vượt trội còn lại: bật 152.6%, tắt 249.9%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "m": 0.17911288634592581,
+     "value": "phần lạm phát vượt trội còn lại: bật 110.4%, tắt 92.4%"
+    },
+    {
+     "seed": 18,
+     "ok": false,
+     "m": -0.3887766737750904,
+     "value": "phần lạm phát vượt trội còn lại: bật 175.3%, tắt 214.2%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "m": 0.1739260641901545,
+     "value": "phần lạm phát vượt trội còn lại: bật 47.7%, tắt 30.3%"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "m": 0.08531391631378932,
+     "value": "phần lạm phát vượt trội còn lại: bật 43.3%, tắt 34.8%"
+    }
+   ],
+   "share": 0.35,
+   "pass": false,
+   "byMean": false,
+   "note": "Cú sốc là ba năm chi ngân sách bằng tiền in rồi dừng hẳn. Cách đo đổi từ \"số quý về nửa đỉnh\" sang \"phần lạm phát vượt trội còn lại ở năm thứ hai sau khi dừng\", vì đỉnh từng lần chạy rất nhiễu.",
+   "known": "Đã biết (Dương, 14/11/2026). Lương giờ bám một nửa lạm phát 12 tháng qua, không bám lạm phát kỳ vọng, nên tắt kỳ vọng gần như không đổi độ dai của lạm phát."
+  },
+  {
+   "id": "K1.29",
+   "claim": "Niềm tin làm suy thoái sâu hơn",
+   "threshold": "GDP thực bình quân 2 năm sau cú sốc cầu thấp hơn khi bật niềm tin",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "m": 0.013190728656874984,
+     "value": "bật -10.1%, tắt -8.8%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "m": 0.017436836241525033,
+     "value": "bật -9.0%, tắt -7.3%"
+    },
+    {
+     "seed": 3,
+     "ok": false,
+     "m": -0.04981824306822069,
+     "value": "bật -10.6%, tắt -15.6%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "m": 0.03442498344711298,
+     "value": "bật -16.5%, tắt -13.0%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "m": 0.012911269828929983,
+     "value": "bật -12.1%, tắt -10.8%"
+    },
+    {
+     "seed": 6,
+     "ok": false,
+     "m": -0.019982521458955183,
+     "value": "bật -6.3%, tắt -8.3%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "m": 0.011429842079345054,
+     "value": "bật -10.4%, tắt -9.2%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "m": 0.020724135803152022,
+     "value": "bật -10.9%, tắt -8.8%"
+    },
+    {
+     "seed": 9,
+     "ok": false,
+     "m": -0.004502043233727382,
+     "value": "bật -11.2%, tắt -11.7%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "m": 0.022302941920583907,
+     "value": "bật -10.7%, tắt -8.4%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "m": 0.013077453221522872,
+     "value": "bật -9.3%, tắt -8.0%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "m": 0.0442729155926036,
+     "value": "bật -15.2%, tắt -10.7%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "m": 0.0076075961470594144,
+     "value": "bật -9.7%, tắt -9.0%"
+    },
+    {
+     "seed": 14,
+     "ok": false,
+     "m": -0.002514520613405402,
+     "value": "bật -7.3%, tắt -7.6%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "m": 0.004468592723702813,
+     "value": "bật -8.4%, tắt -7.9%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "m": 0.05509921637474058,
+     "value": "bật -12.0%, tắt -6.5%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "m": 0.010285925716442934,
+     "value": "bật -7.2%, tắt -6.2%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "m": 0.009107339272575565,
+     "value": "bật -6.5%, tắt -5.6%"
+    },
+    {
+     "seed": 19,
+     "ok": false,
+     "m": -0.007532119984476893,
+     "value": "bật -8.2%, tắt -8.9%"
+    },
+    {
+     "seed": 20,
+     "ok": false,
+     "m": -0.02143131197946435,
+     "value": "bật -6.9%, tắt -9.1%"
+    }
+   ],
+   "share": 0.7,
+   "pass": false,
+   "byMean": false,
+   "known": "Đã biết (Dương, 14/11/2026). Hiệu đúng dấu nhưng nhỏ hơn nhiễu giữa các seed."
+  },
+  {
+   "id": "K1.31",
+   "claim": "Nâng mạnh lương tối thiểu: lương nhóm thấp ở doanh nghiệp tăng; việc làm chính thức giảm hoặc tỷ lệ phi chính thức tăng",
+   "threshold": "hiệu chạy đôi đúng dấu (3 năm)",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "lương nhóm thấp 1.0%; việc làm chính thức -3.6%; phi chính thức 1.40 điểm"
+    },
+    {
+     "seed": 2,
+     "ok": false,
+     "value": "lương nhóm thấp 1.2%; việc làm chính thức 1.0%; phi chính thức -0.39 điểm"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "lương nhóm thấp 0.9%; việc làm chính thức -10.3%; phi chính thức 3.84 điểm"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "lương nhóm thấp 1.2%; việc làm chính thức -0.8%; phi chính thức 0.29 điểm"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "lương nhóm thấp 0.2%; việc làm chính thức 0.1%; phi chính thức 0.09 điểm"
+    },
+    {
+     "seed": 6,
+     "ok": false,
+     "value": "lương nhóm thấp 0.7%; việc làm chính thức 3.6%; phi chính thức -1.10 điểm"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "lương nhóm thấp 1.2%; việc làm chính thức -2.7%; phi chính thức 0.49 điểm"
+    },
+    {
+     "seed": 8,
+     "ok": false,
+     "value": "lương nhóm thấp 0.4%; việc làm chính thức 3.0%; phi chính thức -0.86 điểm"
+    },
+    {
+     "seed": 9,
+     "ok": false,
+     "value": "lương nhóm thấp 1.0%; việc làm chính thức 1.3%; phi chính thức -0.22 điểm"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "lương nhóm thấp 0.2%; việc làm chính thức -0.5%; phi chính thức 0.19 điểm"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "lương nhóm thấp 0.4%; việc làm chính thức 0.4%; phi chính thức 0.09 điểm"
+    },
+    {
+     "seed": 12,
+     "ok": false,
+     "value": "lương nhóm thấp -0.2%; việc làm chính thức -4.8%; phi chính thức 1.76 điểm"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "lương nhóm thấp 0.6%; việc làm chính thức -4.4%; phi chính thức 1.59 điểm"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "lương nhóm thấp 1.5%; việc làm chính thức -0.6%; phi chính thức 0.42 điểm"
+    },
+    {
+     "seed": 15,
+     "ok": false,
+     "value": "lương nhóm thấp 0.4%; việc làm chính thức 0.9%; phi chính thức -0.38 điểm"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "lương nhóm thấp 0.6%; việc làm chính thức -1.3%; phi chính thức 0.60 điểm"
+    },
+    {
+     "seed": 17,
+     "ok": false,
+     "value": "lương nhóm thấp 0.6%; việc làm chính thức 1.7%; phi chính thức -0.56 điểm"
+    },
+    {
+     "seed": 18,
+     "ok": false,
+     "value": "lương nhóm thấp 0.3%; việc làm chính thức 2.2%; phi chính thức -0.70 điểm"
+    },
+    {
+     "seed": 19,
+     "ok": false,
+     "value": "lương nhóm thấp 0.6%; việc làm chính thức 4.9%; phi chính thức -1.30 điểm"
+    },
+    {
+     "seed": 20,
+     "ok": false,
+     "value": "lương nhóm thấp 0.6%; việc làm chính thức 3.4%; phi chính thức -0.95 điểm"
+    }
+   ],
+   "share": 0.5,
+   "pass": false,
+   "byMean": false,
+   "note": "Sàn hiện hành thấp hơn nhiều so với lương đang trả nên nâng 30% không chạm ai. Thí nghiệm nâng sàn lên sát lương bình quân của doanh nghiệp (và ít nhất 30%).",
+   "known": "Chuyển sang GĐ2 (Dương, 14/11/2026). Lao động ở GĐ1 đồng nhất nên lương các doanh nghiệp tụm sát nhau, sàn lương không tách ra được một nhóm lương thấp. Kiểm lại khi có kỹ năng."
+  }
+ ]
+}
