@@ -2,7 +2,7 @@
  "part": "L",
  "nSeeds": 5,
  "stamp": {
-  "commit": "b7ce617",
+  "commit": "dccfcc0",
   "dirty": false
  },
  "checks": [
@@ -459,7 +459,8 @@
    ],
    "share": 0.6,
    "pass": false,
-   "byMean": false
+   "byMean": false,
+   "known": "Đã biết (Dương, 15/11/2026). Ở 5000 hộ Gini của cải ròng không cao hơn Gini thu nhập ở mọi seed (lượt 15/11: 3/5 seed đạt; ở 500 hộ 20/20). Thiếu cơ chế tích tụ của cải: chủ tái đầu tư cổ tức, mua bán cổ phần, sở hữu tập trung. Sửa ở GĐ3 và GĐ4 (sai-khac.md D8). Kết quả phụ thuộc quy mô."
   },
   {
    "id": "K1.14",
