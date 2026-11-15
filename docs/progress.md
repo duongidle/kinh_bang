@@ -13,6 +13,13 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 - **Bước 4 (kiểm định đầy đủ): đã chạy xong 15/11 trên main, mã `b7ce617` (commit cuối chạm src/tests), không có S38; chờ điều phối đọc.** Kịch bản 297s: 1 khẳng định không qua (`thue-nguoi-giau/debt`, 6/10). GĐ1: phần M 67s, X 791s, S 10s, L 187s. Không qua ngoài "đã biết": K1.24 (12/20) và K1.26 (13/20) ở 500 hộ; K1.13 (3/5) ở 5000 hộ. Kết quả: `docs/validation/gd1.md`, `scenarios.md`, `parts/*.json`. Nếu Dương quyết nhận S38 thì phải chạy lại. Chạy từng phần: `KB_PART=M|X|L|S|report npm run validate:gd1`.
 - **Chưa làm:** bước 5 (chốt GĐ1 có điều kiện, báo cáo GĐ0 + GĐ1), 6 (spec GĐ1.5).
 
+**Kết quả bước 4 (tối 15/11/2026, code `b7ce617`, main không có S38). Người điều phối đã review diff giàn chạy: chỉ đổi hai file `tests/validation/*.test.ts`, không đổi ngưỡng hay cách đo. BƯỚC 5 CHỜ DƯƠNG QUYẾT bốn mục hỏng dưới đây; chưa mục nào được gắn "đã biết".**
+- **K1.24** 12/20 (500 hộ). 8 seed hỏng đều vì tỷ lệ chuyển thuế sau 2 năm TRÊN 1 (1,03 đến 1,31); 12 seed đạt ở 0,90-0,99. Đúng như dự báo sau S36. Cần Dương duyệt ngưỡng mới, hoặc gắn "đã biết" tới việc 8.
+- **K1.26** 13/20 (500 hộ), bản trưa 14/11 là 17/20. MỚI, chưa chẩn đoán. 7 seed hỏng: 3 seed thu/GDP giảm (6, 10, 11), 5 seed doanh số thực hộ kinh doanh tăng (6, 12, 13, 14, 16). Seed 6 và 14 có lao động phi chính thức +8 đến +9 điểm. Thay đổi từ trưa 14/11 có thể liên quan: S31/S36 (chuyển thuế), S32 (lương), S34.
+- **K1.13** ở 5000 hộ 3/5 (500 hộ 20/20). Đúng dự báo: thiếu cơ chế tích tụ, sửa ở GĐ3/GĐ4. Kết quả phụ thuộc quy mô.
+- **Kịch bản `thue-nguoi-giau`, nhánh trả nợ**: "doanh nghiệp đầu tư ít hẳn đi" 6/10. Các khẳng định khác của mọi kịch bản qua. Lời giải thích phải viết lại theo số đo hoặc bỏ khẳng định: Dương duyệt.
+- Đã biết, vẫn hỏng: K1.19 1/20, K1.28 7/20, K1.29 14/20, K1.31 10/20. Kế toán qua hết ở ba quy mô. K1.12 ở 5000 hộ qua 4/5.
+
 **Những thứ phải đưa vào báo cáo cho Dương (chưa báo đủ):**
 1. **K1.24 nhiều khả năng hỏng lại** ở khoảng một nửa số seed: nó đòi tỷ lệ chuyển thuế sau 2 năm dưới 1, mà S36 cho chuyển trọn (quanh 1). Chưa đổi ngưỡng; chờ số đo bước 4. Đổi ngưỡng cần Dương duyệt.
 2. **K1.13 tiêu chí mới hỏng ở 5000 hộ** theo đo nhanh 3 seed (Gini của cải 0,28-0,31 so với Gini thu nhập 0,28-0,34; đạt 1/3); ở 500 hộ đạt 3/3 (0,52-0,54 so với 0,31-0,36). K1.13 đã ra khỏi danh sách "đã biết", nên bước 4 sẽ hiện nó là hỏng thật nếu đúng vậy. Bước 5 phải ghi lại là "đã biết, thiếu cơ chế tích tụ, sửa ở GĐ3/GĐ4" và báo Dương.
