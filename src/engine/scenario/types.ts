@@ -16,6 +16,11 @@ export interface Ctx {
   t0: number;
   /** Tháng hiện tại (số tháng đã chạy xong). */
   t1: number;
+  /**
+   * Chỉ có ở kịch bản có nhiều nhánh: thế giới của các nhánh KHÁC, cùng seed, cùng trạng thái xuất phát, khoá là mã nhánh.
+   * Không gồm nhánh đang đo (đó là `w`). Dùng cho khẳng định so nhánh với nhánh.
+   */
+  others?: Record<string, World>;
 }
 
 export interface Step extends Intervention {

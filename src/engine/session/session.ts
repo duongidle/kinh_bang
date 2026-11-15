@@ -580,9 +580,14 @@ export class Session {
     const months = def.months;
     if (!this.optionsCache) {
       const control = this.branch(def.control !== 'shock', []);
-      const rows = def.options.map((o) => {
-        const w = this.branch(true, [...def.demo, ...o.steps]);
-        const c: Ctx = { eng: this.eng, w, base: control, t0: this.t0, t1: this.t0 + months };
+      const worlds = def.options.map((o) => this.branch(true, [...def.demo, ...o.steps]));
+      const rows = def.options.map((o, i) => {
+        const w = worlds[i];
+        const others: Record<string, World> = {};
+        def.options!.forEach((x, k) => {
+          if (k !== i) others[x.id] = worlds[k];
+        });
+        const c: Ctx = { eng: this.eng, w, base: control, t0: this.t0, t1: this.t0 + months, others };
         return {
           id: o.id,
           label: o.label,

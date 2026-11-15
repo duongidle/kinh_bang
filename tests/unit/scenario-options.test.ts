@@ -1,6 +1,7 @@
 // Phân rã ba chỉ số của Chính phủ và tiền lương, người bán chuyển một phần thuế vào giá, lương bám lạm phát,
 // và bảng so sánh song song các lựa chọn của kịch bản.
 import { describe, expect, it } from 'vitest';
+import { lowerThanOptions } from '@/content/scenarios';
 import { contributions } from '@/engine/causal/causal';
 import { gd1Engine } from '@/engine/modules/gd1/index';
 import type { ScenarioDef } from '@/engine/scenario/types';
@@ -140,5 +141,58 @@ describe('so sánh song song các lựa chọn', () => {
     const s = new Session([{ ...def, options: undefined }]);
     s.handle({ type: 'init', scale: 'S', seed: 6, scenario: def.id });
     expect(() => s.scenarioOptions()).toThrow(/không có nhiều lựa chọn/);
+  });
+});
+
+describe('khẳng định so nhánh với nhánh (lowerThanOptions)', () => {
+  const base = {
+    id: 'thu-so-nhanh',
+    title: 'Thử so nhánh',
+    role: 'fiscal' as const,
+    scale: 'S' as const,
+    question: '',
+    intro: '',
+    prereq: [],
+    warmup: 12,
+    months: 24,
+    goals: [],
+    predict: [],
+    demo: [],
+    compare: [],
+    claims: [],
+    explanation: '',
+    simplifications: [],
+  };
+  const withClaims = (a: ReturnType<typeof lowerThanOptions>, b: ReturnType<typeof lowerThanOptions>): ScenarioDef => ({
+    ...base,
+    options: [
+      { id: 'mua', label: 'Mua hàng', note: '', steps: [{ at: 6, laws: { 'gov.purchase.share': 0.15 } }], claims: [a] },
+      { id: 'khong', label: 'Không chi', note: '', steps: [], claims: [b] },
+    ],
+  });
+
+  it('có others thì so đúng: nhánh này thấp hơn nhánh kia thì nhánh kia không thấp hơn nhánh này; detail in mã nhánh được so', () => {
+    const def = withClaims(lowerThanOptions('mua < khong', 'gdp.real', 12, 24, ['khong']), lowerThanOptions('khong < mua', 'gdp.real', 12, 24, ['mua']));
+    const s = new Session([def]);
+    s.handle({ type: 'init', scale: 'S', seed: 6, scenario: def.id });
+    const r = s.scenarioOptions();
+    const mua = r.rows[0].claims[0];
+    const khong = r.rows[1].claims[0];
+    expect(mua.ok).not.toBe(khong.ok);
+    expect(mua.detail).toMatch(/khong/);
+    expect(khong.detail).toMatch(/mua/);
+    expect(mua.detail).toMatch(/%/);
+  });
+
+  it('thiếu nhánh nêu tên, hoặc thiếu others: ok là false và detail nói rõ, không ném lỗi', () => {
+    const def = withClaims(lowerThanOptions('thiếu nhánh', 'gdp.real', 12, 24, ['khong', 'ma-quai']), lowerThanOptions('ok', 'gdp.real', 12, 24, ['mua']));
+    const s = new Session([def]);
+    s.handle({ type: 'init', scale: 'S', seed: 6, scenario: def.id });
+    const r = s.scenarioOptions();
+    expect(r.rows[0].claims[0].ok).toBe(false);
+    expect(r.rows[0].claims[0].detail).toMatch(/ma-quai/);
+    const noOthers = lowerThanOptions('x', 'gdp.real', 12, 24, ['khong']).test({ eng: s.eng, w: s.w, base: s.w, t0: 0, t1: 24 });
+    expect(noOthers.ok).toBe(false);
+    expect(noOthers.detail).toMatch(/thiếu/);
   });
 });
