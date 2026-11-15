@@ -6,7 +6,7 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
-### U1 (đang làm, Dương bảo bắt đầu 15/11/2026; Opus điều phối, Sonnet code)
+### U1 (XONG CODE tối 15/11/2026, đã báo Dương, ĐANG DỪNG; chưa sang U2 khi Dương chưa bảo)
 
 Phạm vi: chỉ U1 (spec gd1-5.md mục 3, mục 11). Xong U1 thì soát, báo Dương, rồi DỪNG; không tự sang U2. Lời giao đầy đủ có sáu bước: (1) token + test tương phản, (2) phông, (3) bảng thuật ngữ `src/content/glossary.ts`, (4) `format.ts` theo mục 3.5, (5) thành phần `src/ui/design/components/`, (6) trang xem thử `?design` chỉ bản dev.
 
@@ -29,10 +29,19 @@ Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 - U1 bước 6 XONG CODE NHƯNG ĐANG DỪNG CHỜ NGƯỜI ĐIỀU PHỐI: `src/ui/design/Preview.tsx` + `preview.css`, `main.tsx` thêm đúng đoạn `?design` (dev), tsc/eslint/build qua, `dist/` không có chuỗi trang xem thử. **Kiểm `tabular-nums` KHÔNG ĐẠT**: Be Vietnam Pro 5.3.0 đã nạp nhưng `font-variant-numeric: tabular-nums` không đổi gì; "1111" = 30,813 px, "8888" = 50,734 px ở đậm 400 (bằng đúng số tỷ lệ). Theo lời giao: dừng, không đổi phông. Đã xem bằng trình duyệt ở Sáng (theo máy) và Tối, console không lỗi. Commit: `U1 bước 6` trong git log.
 
 **Review của người điều phối (tối 15/11, tới `6cf4adb`):** diff chỉ chạm `src/ui/design/`, `src/ui/format.ts`, `src/ui/main.tsx` (đúng đoạn `?design`), `src/content/glossary.ts`, `package.json`, bốn test mới; không chạm engine, config, scenarios, notes, tests cũ. 34 mục thuật ngữ khớp nguyên văn lời giao (so bằng script). CSS thành phần không có màu, cỡ chữ đặt tại chỗ. `npm test` 100/100.
-- **CHẶN, CHỜ DƯƠNG: Be Vietnam Pro không có số đều bề rộng.** Người điều phối đọc thẳng file phông của gói 5.3.0: bảng tính năng chỉ có `ccmp dnom frac liga locl numr`, không có `tnum`. Spec 3.2 đòi `tabular-nums`; mục 12 chọn Be Vietnam Pro. Hai mục đụng nhau, đổi phông là quyết định của Dương. Đã kiểm phương án: Inter 5.3.0 có `tnum` ở cả tập con latin và vietnamese.
+- **[ĐÃ GỠ, xem dòng soát cuối khối] Be Vietnam Pro không có số đều bề rộng.** Người điều phối đọc thẳng file phông của gói 5.3.0: bảng tính năng chỉ có `ccmp dnom frac liga locl numr`, không có `tnum`. Spec 3.2 đòi `tabular-nums`; mục 12 chọn Be Vietnam Pro. Hai mục đụng nhau, đổi phông là quyết định của Dương. Đã kiểm phương án: Inter 5.3.0 có `tnum` ở cả tập con latin và vietnamese.
 - Việc nhỏ người điều phối sẽ giao sau khi Dương quyết: `fonts.css` tự khai `@font-face` có `unicode-range` (file tập con của gói không có `unicode-range`, nên trình duyệt có thể tải cả hai file cho mọi chữ); sửa chữ "khi focus bằng bàn phím" trên trang xem thử. Người điều phối chưa tự mở `?design` bằng trình duyệt; Sonnet đã xem một phần (xem báo cáo bước 6), chưa xem Hộp thoại, Ngăn bên, Tab, Tooltip, Thẻ nguồn, Thanh kéo, Ô nhập số, chưa thử bàn phím.
 - U1 bước 7a xong: thêm `@fontsource/inter`; `fonts.css` tự khai 12 `@font-face` (Be Vietnam Pro và Inter × 400/500/600 × vietnamese/latin, woff2, `unicode-range` chép từ `400.css` của gói); token `--font-num`; `.kb-num` dùng Inter và `tabular-nums` (StatTile tách mức đổi khỏi cụm "so với 12 tháng trước", NumberInput gắn `.kb-num` cho ô nhập và đơn vị). Kiểm tnum Inter ở 20px: "1111" và "8888" bằng nhau ở cả ba độ đậm (400: 51,875; 500: 51,836; 600: 51,758); Be Vietnam Pro để đối chiếu vẫn lệch (400: 30,805 và 50,727). Dist với design layer nạp thử có đúng 12 woff2. `npm test` xanh 100/100. Commit: `U1 bước 7a` trong git log.
 - U1 bước 7b xong: Preview.tsx đổi câu chú thích thành "Chú thích hiện khi rê chuột hoặc khi chọn bằng bàn phím." Commit: `U1 bước 7b` trong git log.
+
+**Soát U1 của người điều phối (tối 15/11, tới `4a225d7`):**
+- Dương quyết (15/11): đã kiểm bản Be Vietnam Pro gốc v1.002 (Google Fonts và kho tác giả, cả TTF, OTF) và file nguồn `.glyphs`: không có `tnum`. Vì vậy dùng hai phông, Inter cho phần hiển thị số. Đã ghi vào gd1-5.md mục 12 và 3.2 (`213afb7`).
+- Diff bước 7 đúng lời giao. `npm test` 100/100, `tsc` qua, `eslint` 0 lỗi (1 cảnh báo có sẵn ở `src/engine/core/rng.ts:45`, không thuộc U1), `npm run build` qua, `dist/` không chứa trang xem thử.
+- Người điều phối tự mở `?design` bằng Chrome: Sáng và Tối đúng, console không lỗi. Hộp thoại mở bằng nút và đóng bằng phím Esc thật, mở lại được. Ngăn bên trái có nút "Quay lại". Thanh kéo có vạch "Hiện hành". Chú thích thuật ngữ hiện khi chọn bằng bàn phím, lấy chữ từ bảng. Thẻ nguồn mở ra, Esc đóng, không có mức xác minh. Tab và nhóm nút chọn một đổi lựa chọn bằng phím mũi tên (thử bằng sự kiện phím giả lập, chưa thử tay).
+- App ở 50 hộ mở được sau khi đổi `format.ts`: tiền hiện "triệu đồng", "tỷ đồng", vừa ô, console không lỗi.
+- **Chưa kiểm:** phím trên ô nhập số và thanh kéo; `prefers-reduced-motion` bằng trình duyệt (chỉ kiểm qua token về 0ms); màn hình hẹp (thuộc U6); app ở 5.000 hộ, lưu, tải ván, offline sau khi đổi `format.ts` (U1 không đụng các đường đó ngoài chữ số).
+- Ghi nhận nhỏ, để U2: mũi tên ▲▼ của StatTile nằm ngoài vùng ký tự của hai phông nên dùng phông hệ thống; chữ giao diện cũ còn "cậu" (đã biết, đổi ở U2).
+- Ảnh chụp: thư mục scratchpad của phiên, `shots/opus-*.jpg` (không lưu trong kho).
 
 ### Trạng thái lúc này (tối 15/11/2026)
 
