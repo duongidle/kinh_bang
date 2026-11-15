@@ -104,6 +104,10 @@ describe('thế giới đối chứng của kịch bản', () => {
     question: '',
     intro: '',
     prereq: [],
+    // Người điều phối quyết 15/11/2026 (CHỜ DƯƠNG SOÁT): test này kiểm cơ chế thế giới đối chứng của Session, không kiểm kinh tế.
+    // Khai prewarm 0 để nó chạy đúng thế giới như trước khi có chạy trước 240 tháng (trùng từng bit), giữ ngưỡng 0,01 và seed.
+    // Với chạy trước 240 tháng, ở 50 hộ chênh CPI tháng 24 là 0,0018 (seed 4), 0,0556 / 0,0303 / 0,0314 (seed 1 / 2 / 3).
+    prewarm: 0,
     warmup: 12,
     months: 24,
     shocks: [{ at: 0, laws: { 'vat.rate.standard': 0.2 }, label: 'Tăng GTGT' }],
