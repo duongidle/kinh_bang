@@ -60,9 +60,9 @@ export function StatTile({ label, value, unit, delta12, deltaKind = 'abs', goodW
       <span className="kb-stat__label">{label}</span>
       <span className="kb-stat__value kb-num">{valueText}</span>
       {hasDelta && (
-        <span className={cx('kb-stat__delta', 'kb-num', `kb-stat__delta--${tone}`)}>
+        <span className={cx('kb-stat__delta', `kb-stat__delta--${tone}`)}>
           {arrow && <span aria-hidden="true">{arrow}</span>}
-          <span>{deltaText}</span>
+          <span className="kb-num">{deltaText}</span>
           <span className="kb-stat__vs"> so với 12 tháng trước</span>
         </span>
       )}

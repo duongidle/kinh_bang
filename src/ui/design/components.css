@@ -2,6 +2,7 @@
    Số px chỉ dùng cho đường kẻ 1px. Chuyển động chỉ dùng --dur-* và --ease (tokens.css tự đưa về 0 khi máy đặt giảm chuyển động). */
 
 .kb-num {
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
 }
 
@@ -122,10 +123,8 @@
   border-radius: var(--radius-m);
   background: var(--color-surface);
   color: var(--color-text);
-  font-family: var(--font-sans);
   font-size: var(--font-size-3);
   line-height: var(--line-height-3);
-  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 .kb-numinput__unit {

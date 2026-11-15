@@ -123,6 +123,7 @@ export const constants: Record<string, string> = {
   '--font-weight-medium': '500',
   '--font-weight-semibold': '600',
   '--font-sans': "'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+  '--font-num': "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
   '--dur-fast': '120ms',
   '--dur-mid': '200ms',
   '--dur-slow': '320ms',

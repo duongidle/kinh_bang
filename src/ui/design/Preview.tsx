@@ -65,52 +65,74 @@ function Swatch({ k, resolved }: { k: keyof ThemeColors; resolved: 'light' | 'da
   );
 }
 
-/** Đo bề rộng "1111" và "8888" với Be Vietnam Pro và font-variant-numeric: tabular-nums. */
+/** Đo bề rộng "1111" và "8888" ở ba độ đậm: Inter (lớp kb-num) là phép đo chính, Be Vietnam Pro để đối chiếu. */
 function TabularCheck() {
-  const a = useRef<HTMLSpanElement>(null);
-  const b = useRef<HTMLSpanElement>(null);
-  const [res, setRes] = useState<string>('Đang đo…');
+  const refs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [res, setRes] = useState<string[]>(['Đang đo…']);
   useEffect(() => {
     let dead = false;
     (async () => {
       try {
-        await Promise.all(['400', '500', '600'].map((w) => document.fonts.load(`${w} 16px "Be Vietnam Pro"`, '18')));
+        const fams = ['Inter', 'Be Vietnam Pro'];
+        await Promise.all(fams.flatMap((f) => ['400', '500', '600'].map((w) => document.fonts.load(`${w} 20px "${f}"`, '18'))));
         await document.fonts.ready;
-        if (dead || !a.current || !b.current) return;
-        const loaded = document.fonts.check('400 16px "Be Vietnam Pro"');
-        const out: string[] = [];
+        const [ia, ib, ba, bb] = refs.current;
+        if (dead || !ia || !ib || !ba || !bb) return;
+        const lines: string[] = [];
         let ok = true;
-        for (const w of ['400', '500', '600']) {
-          for (const el of [a.current, b.current]) el.style.fontWeight = w;
-          const wa = a.current.getBoundingClientRect().width;
-          const wb = b.current.getBoundingClientRect().width;
-          // đối chứng: cùng chuỗi nhưng số tỷ lệ (không tabular)
-          for (const el of [a.current, b.current]) el.style.fontVariantNumeric = 'proportional-nums';
-          const pa = a.current.getBoundingClientRect().width;
-          const pb = b.current.getBoundingClientRect().width;
-          for (const el of [a.current, b.current]) el.style.fontVariantNumeric = 'tabular-nums';
-          if (Math.abs(wa - wb) > 0.01) ok = false;
-          out.push(`đậm ${w}: "1111" = ${wa.toFixed(3)}, "8888" = ${wb.toFixed(3)} (số tỷ lệ: ${pa.toFixed(3)} và ${pb.toFixed(3)})`);
+        const pairs: [string, HTMLSpanElement, HTMLSpanElement][] = [
+          ['Inter', ia, ib],
+          ['Be Vietnam Pro', ba, bb],
+        ];
+        for (const [name, x, y] of pairs) {
+          const loaded = document.fonts.check(`400 20px "${name}"`, '18');
+          const parts: string[] = [];
+          for (const w of ['400', '500', '600']) {
+            x.style.fontWeight = w;
+            y.style.fontWeight = w;
+            const wx = x.getBoundingClientRect().width;
+            const wy = y.getBoundingClientRect().width;
+            if (name === 'Inter' && Math.abs(wx - wy) > 0.01) ok = false;
+            parts.push(`đậm ${w}: "1111" = ${wx.toFixed(3)}, "8888" = ${wy.toFixed(3)}`);
+          }
+          if (name === 'Inter' && !loaded) ok = false;
+          lines.push(`${name}${loaded ? '' : ' (CHƯA NẠP)'}: ${parts.join('; ')}`);
         }
-        const text = `${loaded ? 'Phông đã nạp' : 'PHÔNG CHƯA NẠP (đang dùng phông dự phòng)'}. ${ok ? 'Đều: hai chuỗi bằng nhau.' : 'KHÔNG đều: hai chuỗi khác nhau.'} ${out.join('; ')}`;
-        document.documentElement.setAttribute('data-tabular-result', `${loaded && ok ? 'ok' : 'fail'}: ${out.join(' | ')}`);
-        setRes(text);
+        document.documentElement.setAttribute('data-tabular-result', `${ok ? 'ok' : 'fail'} | ${lines.join(' | ')}`);
+        setRes([ok ? 'Đạt: Inter có hai chuỗi bằng nhau ở cả ba độ đậm.' : 'KHÔNG đạt: Inter có hai chuỗi khác nhau hoặc chưa nạp.', ...lines]);
       } catch (e) {
-        setRes(`Lỗi khi đo: ${String(e)}`);
+        setRes([`Lỗi khi đo: ${String(e)}`]);
       }
     })();
     return () => {
       dead = true;
     };
   }, []);
+  const set = (i: number) => (el: HTMLSpanElement | null) => {
+    refs.current[i] = el;
+  };
   return (
     <div className="kb-pv__col">
       <div className="kb-pv__tab-measure">
-        <span ref={a}>1111</span> <span ref={b}>8888</span>
+        <span className="kb-num" ref={set(0)}>
+          1111
+        </span>{' '}
+        <span className="kb-num" ref={set(1)}>
+          8888
+        </span>
+        {'   '}
+        <span style={{ fontFamily: 'var(--font-sans)' }} ref={set(2)}>
+          1111
+        </span>{' '}
+        <span style={{ fontFamily: 'var(--font-sans)' }} ref={set(3)}>
+          8888
+        </span>
       </div>
-      <p className="kb-pv__note" data-testid="tabular-result">
-        {res}
-      </p>
+      {res.map((l, i) => (
+        <p key={i} className="kb-pv__note">
+          {l}
+        </p>
+      ))}
     </div>
   );
 }

@@ -49,7 +49,7 @@ export function NumberInput({ value, onChange, unit, label, min, max, step = 1 }
       <span className="kb-numinput">
         <input
           id={id}
-          className="kb-numinput__input"
+          className="kb-numinput__input kb-num"
           type="text"
           inputMode="decimal"
           aria-describedby={`${id}-unit`}
@@ -59,7 +59,7 @@ export function NumberInput({ value, onChange, unit, label, min, max, step = 1 }
           onBlur={commit}
           onKeyDown={onKey}
         />
-        <span id={`${id}-unit`} className="kb-numinput__unit">
+        <span id={`${id}-unit`} className="kb-numinput__unit kb-num">
           {unit}
         </span>
       </span>
