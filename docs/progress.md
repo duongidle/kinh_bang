@@ -21,6 +21,7 @@ Quyết định của người điều phối (tự quyết theo spec mục 13, 
 Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 
 - U1 bước 1 xong: `src/ui/design/tokens.ts` + `tokens.css` (20 màu hai theme, khoảng cách, bo góc, cỡ chữ, chuyển động) và `tests/unit/design-tokens.test.ts` (tương phản ≥ 4,5:1 mọi cặp, so khớp ts với css). `npm test` xanh 84/84. Commit: `U1 bước 1` trong git log.
+- U1 bước 2 xong: `@fontsource/be-vietnam-pro` (dependencies), `src/ui/design/fonts.css` (sáu tập con vietnamese/latin × 400/500/600), `src/ui/design/index.ts` nạp tokens.css và fonts.css. Chưa nạp vào `main.tsx`/`app.css`. Kiểm `tabular-nums` làm ở bước 6. Commit: `U1 bước 2` trong git log.
 
 ### Trạng thái lúc này (tối 15/11/2026)
 
