@@ -6,10 +6,10 @@ export const num = (x: number, d = 0) => (Number.isFinite(x) ? cache[d].format(x
 export function money(x: number): string {
   if (!Number.isFinite(x)) return '–';
   const a = Math.abs(x);
-  if (a >= 1e12) return `${num(x / 1e12, 2)} nghìn tỷ`;
-  if (a >= 1e9) return `${num(x / 1e9, a >= 1e11 ? 0 : 1)} tỷ`;
-  if (a >= 1e6) return `${num(x / 1e6, a >= 1e8 ? 0 : 1)} triệu`;
-  return `${num(x)} đ`;
+  if (a >= 1e12) return `${num(x / 1e12, 2)} nghìn tỷ đồng`;
+  if (a >= 1e9) return `${num(x / 1e9, a >= 1e11 ? 0 : 1)} tỷ đồng`;
+  if (a >= 1e6) return `${num(x / 1e6, a >= 1e8 ? 0 : 1)} triệu đồng`;
+  return `${num(x)} đồng`;
 }
 
 /** Hiện một giá trị theo đơn vị của chỉ số hoặc luật. */
@@ -28,8 +28,16 @@ export function fmtDelta(d: number, unit: string): string {
   const sign = d > 0 ? '+' : d < 0 ? '−' : '';
   const a = Math.abs(d);
   if (unit === 'đồng') return sign + money(a);
-  if (unit === '%' || unit === 'tỷ lệ' || unit === '%/năm') return `${sign}${num(a * 100, 2)} điểm`;
+  if (unit === '%' || unit === 'tỷ lệ' || unit === '%/năm') return `${sign}${num(a * 100, 2)} điểm phần trăm`;
   return sign + num(a, a < 10 ? 2 : a < 100 ? 1 : 0);
+}
+
+/** Mức đổi tương đối (0,025 = +2,5%). Có dấu, một chữ số thập phân. Hiệu của hai tỷ lệ thì dùng fmtDelta (điểm phần trăm). */
+export function fmtPctChange(rel: number): string {
+  if (!Number.isFinite(rel)) return '–';
+  const p = Math.round(Math.abs(rel) * 1000) / 10;
+  const sign = p === 0 ? '' : rel > 0 ? '+' : '−';
+  return `${sign}${num(p, 1)}%`;
 }
 
 // Năm bắt đầu lấy từ engine (tin tick), không đoán.
