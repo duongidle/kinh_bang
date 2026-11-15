@@ -401,7 +401,7 @@ export function Preview() {
       </Section>
 
       <Section title="Chú thích khi rê chuột">
-        <Tooltip content="Chú thích hiện khi rê chuột hoặc khi focus bằng bàn phím.">
+        <Tooltip content="Chú thích hiện khi rê chuột hoặc khi chọn bằng bàn phím.">
           <Button variant="secondary">Rê chuột vào đây</Button>
         </Tooltip>
       </Section>
