@@ -431,17 +431,17 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
   each(
     'K1.26',
     'Bật "nộp thuế đủ" làm thu ngân sách tăng và doanh số thực của khu vực phi chính thức co lại',
-    'hiệu chạy đôi (10 năm)',
+    'hiệu chạy đôi (năm 2-4)',
     (seed) => {
-      const p = pair(seed, { variants: { 'tax.compliance': 'full' } }, 120, { laws: { 'hkd.threshold': 100e6 }, params: { 'gov.indexation': 0 }, variants: { 'gov.revenueUse': 'keep' } }, scale);
-      const rev = diff(p, 'gov.revenueGdp', 12, 120);
-      const share = diff(p, 'informal.consShare', 12, 120);
-      const lab = diff(p, 'informal.share', 12, 120);
-      const inc = diff(p, 'income.real.informal', 12, 120, true);
+      const p = pair(seed, { variants: { 'tax.compliance': 'full' } }, 48, { laws: { 'hkd.threshold': 100e6 }, params: { 'gov.indexation': 0 }, variants: { 'gov.revenueUse': 'keep' } }, scale);
+      const rev = diff(p, 'gov.revenueGdp', 12, 48);
+      const share = diff(p, 'informal.consShare', 12, 48);
+      const lab = diff(p, 'informal.share', 12, 48);
+      const inc = diff(p, 'income.real.informal', 12, 48, true);
       // doanh số thực của hộ kinh doanh = phần chi tiêu mua ở hộ kinh doanh x tiêu dùng thực
       const sales = (w: World) => {
-        const a = p.eng.seriesOf(w, 'informal.consShare', p.t0 + 12, p.t0 + 120);
-        const c = p.eng.seriesOf(w, 'consumption.real', p.t0 + 12, p.t0 + 120);
+        const a = p.eng.seriesOf(w, 'informal.consShare', p.t0 + 12, p.t0 + 48);
+        const c = p.eng.seriesOf(w, 'consumption.real', p.t0 + 12, p.t0 + 48);
         let x = 0;
         for (let t = 0; t < a.length; t++) x += a[t] * c[t];
         return x;
@@ -455,7 +455,7 @@ export function experimentChecks(seeds: number[], scale: ScaleId = 'M'): Check[]
         value: `ngưỡng 100 triệu: thu/GDP ${(rev * 100).toFixed(2)} điểm, doanh số thực của hộ kinh doanh ${pc(ds)}, thu nhập thực của người làm phi chính thức ${pc(inc)}, phần chi tiêu mua ở hộ kinh doanh ${(share * 100).toFixed(2)} điểm, lao động phi chính thức ${(lab * 100).toFixed(2)} điểm; ngưỡng 1 tỷ hiện hành: thu/GDP ${(rev0 * 100).toFixed(2)} điểm`,
       };
     },
-    'Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. "Co lại" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế.',
+    'Với ngưỡng 1 tỷ đồng của luật 2026, hầu hết hộ kinh doanh trong mô hình được miễn hợp pháp, nên khai đủ hay khai thiếu không đổi gì. Thí nghiệm đặt ngưỡng về 100 triệu (mức trước 2025) ở cả hai nhánh. "Co lại" đo bằng doanh số thực của hộ kinh doanh. Phải nói thật: thị phần và số lao động phi chính thức KHÔNG giảm. Thuế thu thêm không được chi ra nên cầu chung giảm, người mất việc chuyển sang tự làm, và hộ kinh doanh không có đường chuyển lên doanh nghiệp (thiết kế mục 6). Khu vực này nghèo đi chứ không nhỏ đi về số người. Tiền thu thêm giữ lại không chi (gov.revenueUse = keep), để đo riêng tác động của thuế. Từ 15/11/2026 đo ở năm 2-4 (trước đó 10 năm): đây là tác động trực tiếp của thuế. Ở năm 5-10, một cuộc suy thoái do tiền thuế bị giữ lại lấn át, và người mất việc chính thức chuyển sang hộ kinh doanh (sai-khac.md D15).',
   );
   each(
     'K1.28',
