@@ -43,6 +43,28 @@ Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 - Ghi nhận nhỏ, để U2: mũi tên ▲▼ của StatTile nằm ngoài vùng ký tự của hai phông nên dùng phông hệ thống; chữ giao diện cũ còn "cậu" (đã biết, đổi ở U2).
 - Ảnh chụp: thư mục scratchpad của phiên, `shots/opus-*.jpg` (không lưu trong kho).
 
+**Điều kiện ban đầu: engine có gì, thiếu gì** (Dương hỏi 15/11/2026; người điều phối đọc code, chưa đổi gì; CHỜ DƯƠNG quyết phần thiếu). Phần đã có ghi vào U2 (gd1-5.md mục 4.4).
+
+Đã có, dùng được ngay qua giao thức:
+- Quy mô 50/500/5.000 hộ, hạt giống.
+- Luật lúc đầu (`init.setup.laws`), áp ở tháng 0 SAU khi dựng nền kinh tế theo luật hiện hành. Không kích hoạt `gov.revenueUse`. Ván lưu giữ.
+- Biến thể quy tắc (`init.setup.variants`), gắn nhãn "đã sửa quy luật".
+
+Engine có nhưng giao thức hoặc Session chưa nối (đổi `session.ts`, giao thức tăng phiên bản; chạm khởi tạo World, nên theo spec mục 10 phải Dương duyệt):
+1. **Luật áp TRƯỚC khi dựng nền kinh tế.** `Engine.newWorld` nhận `laws` (ghi `lawOverrides` từ tháng 0, "Điều kiện ban đầu"), nhưng `Session.init` không truyền. Hệ quả hiện nay: giá, lãi vay, số công chức lúc dựng tính theo luật mặc định, rồi tháng đầu mới chỉnh. Công: nhỏ, khoảng nửa ngày Sonnet kèm test mã băm.
+2. **Tham số khởi tạo `init.*`** (của cải ban đầu theo tháng thu nhập, xuất phát bình đẳng hay theo thu nhập, thất nghiệp lúc đầu, phần lao động chính thức, cỡ doanh nghiệp, phần doanh nghiệp nhà nước, phần người tự làm). `newWorld` nhận `params` trước khi dựng, Session không truyền; `setup.params` áp sau khi dựng nên vô tác dụng với nhóm này. Công: chung với việc 1. Cần thêm: đổi tham số thì gắn nhãn "ngoài vùng đã kiểm định" (hiện `setParam` không gắn nhãn gì, xem phát hiện bên dưới).
+3. **Số hộ bất kỳ.** `newWorld` nhận `nHouseholds`, số doanh nghiệp và ngân hàng suy theo công thức. Giao thức chỉ có ba mức. Ngoài 500 và 5.000 hộ chưa kiểm định. Công: nhỏ, nửa ngày, kèm nhãn "ngoài vùng".
+4. **Năm bắt đầu** (chọn bộ luật của năm đó). `newWorld` nhận `startYear`; luật có phiên bản từ 2000 tới 2027. Giao thức chỉ cho kịch bản đặt năm. Công: nhỏ, nửa ngày. Năm cũ chỉ đổi luật, không đổi cấu trúc kinh tế.
+
+Thiếu hẳn, cần cơ chế mới:
+5. **Hình dạng phân phối tài sản** (ví dụ chọn mức chênh lệch, một nhóm giàu). Hiện chỉ có hai kiểu: chia đều, hoặc theo thu nhập. Thêm kiểu khác phải viết ở `init.ts`, cần nguồn. Công: vừa, 1-2 ngày. **Vướng làm nóng:** ván tự do sẽ chạy trước 240 tháng (U5), mô hình tự sinh lại phân phối, nên phân phối đặt lúc dựng có thể mất gần hết khi người chơi vào ván. Phải đo trước. Nếu muốn phân phối có hiệu lực lúc nhận ván thì là "chia lại của cải lúc nhận ván": giao dịch qua sổ cái, có mã lý do, cơ chế mới. Công: 2-3 ngày, và phải thiết kế rồi Dương duyệt.
+6. **Cơ cấu đặt cứng trong `init.ts`**: số ngân hàng theo quy mô, tỷ lệ doanh nghiệp và hộ kinh doanh trên số hộ, `HKD_MIX` chia hộ kinh doanh theo ngành. Biến thành tham số, giữ mặc định cũ để mã băm không đổi. Công: nửa ngày đến một ngày.
+7. **Dân số theo tuổi, kỹ năng, người phụ thuộc**: trường có sẵn, hành vi là GĐ2. Không làm ở GĐ1.5.
+
+Gộp 1-4 và 6: khoảng 2-3 ngày Sonnet cộng review. Thêm 5: thêm 2-3 ngày và một vòng thiết kế.
+
+Phát hiện khi đọc code (chưa sửa, ngoài phạm vi): `Session.setParam` đổi tham số hành vi mà không gắn `meta.modified`, nên đổi tham số giữa ván không bật dải "đã sửa quy luật"; chỉ đổi biến thể quy tắc mới bật. Phải xem Phòng thí nghiệm hiện có cho đổi tham số không, trước khi kết luận là lỗi. Xem ở U2 khi rà chức năng.
+
 ### Trạng thái lúc này (tối 15/11/2026)
 
 - **BÀN GIAO (Dương quyết tối 15/11/2026): từ GĐ1.5, Opus điều phối, Sonnet code. Fable không làm tiếp.** Opus bắt đầu từ U1 và CHỜ DƯƠNG BẢO mới giao (Dương đã cho tạm dừng sau khi push). Đọc trước: `docs/design/gd1-5.md` (spec đã duyệt; mục 13 "Lưu ý cho người điều phối" nói cách review và khi nào được tự quyết), `docs/validation/chot-gd1.md`, CLAUDE.md mục "Ai làm gì".
