@@ -22,6 +22,10 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 - **Kịch bản `thue-nguoi-giau`, nhánh trả nợ**: "doanh nghiệp đầu tư ít hẳn đi" 6/10. Các khẳng định khác của mọi kịch bản qua. Lời giải thích phải viết lại theo số đo hoặc bỏ khẳng định: Dương duyệt.
 - Đã biết, vẫn hỏng: K1.19 1/20, K1.28 7/20, K1.29 14/20, K1.31 10/20. Kế toán qua hết ở ba quy mô. K1.12 ở 5000 hộ qua 4/5.
 
+**Tối 15/11, người điều phối đã review diff của Sonnet tới `e962f81` (đúng lời giao, không nâng trần nào) và đo D16.** Kiểm định trên `dccfcc0`: không còn mục hỏng ngoài "đã biết"; mọi khẳng định kịch bản qua (`thue-nguoi-giau/debt` đầu tư 8/10, không có lề). Sau đó người điều phối sửa một câu trong `src/content/notes.ts` (mục `cu-soc-khuech-dai`, số 25% thành 5%/13% kèm điều kiện); chỉ là chữ hiển thị, engine không đổi, nên báo cáo kiểm định ghi `dccfcc0` vẫn dùng được dù mã "commit cuối chạm src" đã khác.
+
+**CHỜ DƯƠNG (D16):** (a) duyệt hướng làm nóng sẵn cho game; (b) dời điểm tách nhánh của kiểm định và kịch bản sang tháng 240 ngay khi chốt GĐ1, hay để GĐ1.5. Bước 5 chưa làm. Khi làm bước 5 phải rà: ghi chú K1.22 trong gd1-lib.ts, ghi chú K1.26 (câu "số lao động phi chính thức KHÔNG giảm" không đúng ở 3 seed trong cửa sổ năm 2-4), kịch bản "Hai tay lái" và các kịch bản dài.
+
 **Những thứ phải đưa vào báo cáo cho Dương (chưa báo đủ):**
 1. **K1.24 nhiều khả năng hỏng lại** ở khoảng một nửa số seed: nó đòi tỷ lệ chuyển thuế sau 2 năm dưới 1, mà S36 cho chuyển trọn (quanh 1). Chưa đổi ngưỡng; chờ số đo bước 4. Đổi ngưỡng cần Dương duyệt.
 2. **K1.13 tiêu chí mới hỏng ở 5000 hộ** theo đo nhanh 3 seed (Gini của cải 0,28-0,31 so với Gini thu nhập 0,28-0,34; đạt 1/3); ở 500 hộ đạt 3/3 (0,52-0,54 so với 0,31-0,36). K1.13 đã ra khỏi danh sách "đã biết", nên bước 4 sẽ hiện nó là hỏng thật nếu đúng vậy. Bước 5 phải ghi lại là "đã biết, thiếu cơ chế tích tụ, sửa ở GĐ3/GĐ4" và báo Dương.

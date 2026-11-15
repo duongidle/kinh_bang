@@ -111,6 +111,8 @@ Giữ nguyên, không sửa. Số đo (8 seed, `scripts/k119.ts`, khi còn dùng
 
 ### D3. K1.22: cú bật lại có thể bị phóng đại
 
+**Cập nhật 15/11/2026:** đã đo. Tách nhánh ở tháng 240 thì GDP thực năm 6-10 chỉ còn +0,5% (tách ở 120: +4,4%). Phần lớn cú bật lại là do giai đoạn khởi động. Xem D16.
+
 Giữ cách đo 3 năm đầu. Sau năm thứ năm nhánh siết tín dụng có GDP cao hơn nhánh gốc 2-6%. Mô hình thiếu cơ chế giảm phát nợ (giá giảm làm nợ thực nặng lên, doanh nghiệp vỡ nợ, ngân hàng mất vốn, tín dụng co tiếp), nên giá giảm chỉ có mặt lợi. Cơ chế này **đưa vào GĐ3**.
 
 ### D4. K1.26: giữ cách đo doanh số thực
@@ -471,7 +473,7 @@ S32 và S36 đều làm suy thoái sâu gần gấp đôi. Chi lại thì suy th
 
 **Dương quyết 15/11/2026:** K1.26 đo ở năm 2-4 (đổi cửa sổ đo, ghi mục F).
 
-**Phát hiện riêng (đã biết, chưa sửa): mô hình khuếch đại cú sốc cầu quá mạnh.** Rút 0,8% GDP khỏi vòng chi tiêu mà GDP thực mất tới 25% ở vài seed. Nguyên nhân: thiếu ổn định tự động. Không có bảo hiểm thất nghiệp hay BHXH đỡ thu nhập khi mất việc, hộ không vay được để giữ tiêu dùng, ngân sách giữ tiền lại. Xử lý ở GĐ2 (BHXH, trợ cấp thất nghiệp) và GĐ3 (tín dụng tiêu dùng, giảm phát nợ). Cho tới lúc đó: mọi kịch bản và thí nghiệm dài hơn khoảng 4 năm có cú sốc cầu đều có thể bị thổi phồng; mục S13 trong game nói rõ điều này. Phần khuếch đại còn liên quan D16.
+**Phát hiện riêng (đã biết, chưa sửa): mô hình khuếch đại cú sốc cầu quá mạnh.** Rút 0,8% GDP khỏi vòng chi tiêu mà GDP thực mất tới 25% ở vài seed. **(Sửa theo D16: con số 25% là khi cú sốc rơi vào đỉnh của giai đoạn khởi động; ở trạng thái thường là bình quân 4,9%, sâu nhất 12,8%.)** Nguyên nhân: thiếu ổn định tự động. Không có bảo hiểm thất nghiệp hay BHXH đỡ thu nhập khi mất việc, hộ không vay được để giữ tiêu dùng, ngân sách giữ tiền lại. Xử lý ở GĐ2 (BHXH, trợ cấp thất nghiệp) và GĐ3 (tín dụng tiêu dùng, giảm phát nợ). Cho tới lúc đó: mọi kịch bản và thí nghiệm dài hơn khoảng 4 năm có cú sốc cầu đều có thể bị thổi phồng; mục S13 trong game nói rõ điều này. Phần khuếch đại còn liên quan D16.
 
 Script đo: bản tạm của người điều phối (không commit); đo lại được bằng `scripts/pairdiag.ts k126 20 10`.
 
@@ -500,7 +502,40 @@ Dương yêu cầu kiểm tra: cấu hình mặc định, không can thiệp, 40
 - Năm 10 tới năm 40: việc làm chính thức −12 đến −28% ở mọi seed 5000 hộ; GDP thực −5 đến −17%.
 - **Phụ thuộc quy mô:** số doanh nghiệp giảm một nửa chỉ ở 500 hộ (9/10 seed giảm 34-73%); ở 5000 hộ gần như giữ nguyên.
 - **Hệ quả cho kiểm định:** các thí nghiệm chạy đôi tách nhánh ở tháng 120 (`BURN`), đúng đỉnh của đợt bùng nổ, rồi chạy xuyên qua đợt vỡ. Phần khuếch đại ở D15 có thể một phần do cú sốc rơi vào lúc nền kinh tế sắp vỡ sẵn. Chưa đo kết luận nào đổi nếu tách nhánh muộn hơn.
-- Chưa biết nguyên nhân: điều kiện ban đầu (vốn, nợ lúc khởi tạo thấp hơn mức cân bằng) hay hàm đầu tư. Chưa sửa gì. Chờ Dương quyết cách xử lý.
+- Chưa biết nguyên nhân sâu: điều kiện ban đầu (vốn, nợ lúc khởi tạo thấp hơn mức cân bằng) hay hàm đầu tư. Chưa sửa gì.
+
+**Dương quyết 15/11/2026: ghi "đã biết"; đo thêm 80 năm và đo thử tách nhánh ở tháng 240 (chỉ đo, không đổi kiểm định).**
+
+**Chạy 80 năm: đây là giai đoạn khởi động, không phải chu kỳ.** Bình quân năm:
+
+| | Năm 1 | Năm 10 | Năm 20 | Năm 40 | Năm 60 | Năm 80 |
+|---|---|---|---|---|---|---|
+| 500 hộ (10 seed): việc làm chính thức | 148 | 194 | 150 | 148 | 152 | 152 |
+| 500 hộ: GDP thực (tỷ) | 3,66 | 4,13 | 3,50 | 3,69 | 3,65 | 3,63 |
+| 500 hộ: số doanh nghiệp | 40,8 | 41,9 | 23,3 | 22,0 | 23,9 | 23,5 |
+| 5000 hộ (5 seed): việc làm chính thức | 1479 | 1829 | 1605 | 1455 | 1366 | 1450 |
+| 5000 hộ: GDP thực (tỷ) | 36,6 | 40,2 | 36,7 | 35,4 | 33,2 | 35,2 |
+| 5000 hộ: số doanh nghiệp | 309 | 320 | 324 | 305 | 317 | 343 |
+
+Từ năm 20, GDP thực dao động khoảng ±5% quanh một mức; đợt vỡ không lặp lại. Hai thứ trôi chậm: số hộ kinh doanh tăng dần (500 hộ: 95 lên 138 sau 80 năm; 5000 hộ: 945 lên 1245), sử dụng công suất máy ở 67-72%.
+
+**Tách nhánh ở tháng 240 thay cho 120 (500 hộ, 20 seed, script tạm của người điều phối gọi `pair(..., at)` của gd1-lib):**
+
+| Mục | Tách ở 120 | Tách ở 240 |
+|---|---|---|
+| K1.22 | 18/20; tín dụng −15,3%, GDP thực −5,5% (3 năm đầu); GDP thực năm 6-10 **+4,4%** | 20/20; −13,8%, −4,7%; năm 6-10 **+0,5%** (−10,7 đến +12,3) |
+| K1.24 (trần 1,39) | 20/20; tỷ lệ chuyển 1,03 (0,90 đến 1,31) | 20/20; 1,01 (0,66 đến 1,23) |
+| K1.26, năm 2-4 | 20/20 | 19/20 |
+| K1.26, nếu đo 10 năm | 13/20 | 20/20 |
+| K1.26: GDP thực năm 5-7 | −6,4% (tới −24,8%) | −4,9% (tới −12,8%) |
+| K1.26: việc làm chính thức năm 5-7 | −10,7% (tới −39,8%) | −7,9% (tới −20,0%) |
+| K1.26: phần mua ở hộ kinh doanh năm 8-10 | +2,8 điểm (tới +18,6) | +1,2 điểm (tới +2,9) |
+
+Không mục nào đổi qua/không qua. Hai kết luận đã báo phải sửa:
+1. **D15:** mức khuếch đại "tới 25% GDP" là của trạng thái sắp vỡ. Ở trạng thái thường, rút 0,8% GDP làm GDP thực năm 5-7 thấp hơn bình quân 4,9%, sâu nhất 12,8%. Mô hình vẫn khuếch đại quá mạnh, nhưng ít hơn đã báo. Việc khu vực chính thức sụp và người chuyển hàng loạt sang hộ kinh doanh gần như không còn.
+2. **D3 và ghi chú K1.22:** cú bật lại ở năm 6-10 phần lớn là do nhánh gốc đang vỡ. Tách ở 240 thì chỉ còn +0,5%. Ghi chú K1.22 trong gd1-lib.ts ("bật lên thành một chu kỳ dài") và kịch bản dựa trên nó cần rà lại khi dời điểm tách nhánh.
+
+**Đề xuất "làm nóng sẵn" (CHỜ DƯƠNG DUYỆT, đưa vào spec GĐ1.5):** (1) ván mới bắt đầu từ trạng thái tháng 240, người chơi vẫn thấy năm bắt đầu 2026; (2) tính lúc tạo ván (khoảng 1 giây ở 500 hộ, 20 giây ở 5000 hộ), lưu IndexedDB theo quy mô, seed, phiên bản engine; không đóng gói file trạng thái; (3) làm nóng bằng luật đứng yên ở phiên bản 2026 rồi đặt lại đồng hồ, luật có ngày hiệu lực không kích hoạt trong lúc làm nóng, chuỗi nhân quả và biểu đồ bắt đầu sạch; (4) kiểm định và kịch bản dời điểm tách nhánh sang tháng 240: đổi cách đo của mọi thí nghiệm chạy đôi, cần Dương duyệt riêng và chạy lại toàn bộ.
 
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
