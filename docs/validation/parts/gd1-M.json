@@ -1,0 +1,2135 @@
+{
+ "part": "M",
+ "nSeeds": 20,
+ "stamp": {
+  "commit": "b7ce617",
+  "dirty": false
+ },
+ "checks": [
+  {
+   "id": "K1.1",
+   "claim": "Bốn đẳng thức kế toán đúng mọi tháng",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "đúng mọi tháng"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.2",
+   "claim": "Thay đổi tiền của công chúng khớp các kênh trong sổ cái",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "khớp"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.3",
+   "claim": "GDP theo chi tiêu = GDP theo thu nhập",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "khớp"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "khớp"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.4",
+   "claim": "Có phá sản và gia nhập mà sổ vẫn cân",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "121 phá sản, 102 gia nhập"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "118 phá sản, 106 gia nhập"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "128 phá sản, 110 gia nhập"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "133 phá sản, 122 gia nhập"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "123 phá sản, 106 gia nhập"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "132 phá sản, 107 gia nhập"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "140 phá sản, 112 gia nhập"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "117 phá sản, 112 gia nhập"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "114 phá sản, 93 gia nhập"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "139 phá sản, 118 gia nhập"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "115 phá sản, 99 gia nhập"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "129 phá sản, 115 gia nhập"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "138 phá sản, 111 gia nhập"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "145 phá sản, 130 gia nhập"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "134 phá sản, 116 gia nhập"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "105 phá sản, 92 gia nhập"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "158 phá sản, 146 gia nhập"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "153 phá sản, 129 gia nhập"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "139 phá sản, 121 gia nhập"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "124 phá sản, 113 gia nhập"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.5",
+   "claim": "Nền kinh tế tự ổn định",
+   "threshold": "thất nghiệp 1-15% và lạm phát năm −2% đến 12% trong 95% số tháng",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "99.2% số tháng; thất nghiệp 6.0%, lạm phát 0.7%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 5.8%, lạm phát 1.0%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "99.7% số tháng; thất nghiệp 6.0%, lạm phát 0.8%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "99.2% số tháng; thất nghiệp 5.8%, lạm phát 1.1%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.1%, lạm phát 1.0%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "99.2% số tháng; thất nghiệp 7.2%, lạm phát 0.2%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "98.9% số tháng; thất nghiệp 7.1%, lạm phát 0.1%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 5.7%, lạm phát 1.1%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.2%, lạm phát 0.7%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "99.4% số tháng; thất nghiệp 6.5%, lạm phát 0.7%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.3%, lạm phát 0.7%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "99.7% số tháng; thất nghiệp 6.6%, lạm phát 0.8%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "99.7% số tháng; thất nghiệp 6.8%, lạm phát 0.4%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "98.3% số tháng; thất nghiệp 5.5%, lạm phát 1.1%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 6.3%, lạm phát 0.8%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "99.7% số tháng; thất nghiệp 5.6%, lạm phát 1.0%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "99.7% số tháng; thất nghiệp 5.3%, lạm phát 1.5%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 5.7%, lạm phát 1.2%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 5.9%, lạm phát 1.2%"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "100.0% số tháng; thất nghiệp 7.0%, lạm phát 0.3%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.6",
+   "claim": "Thất nghiệp và hàng ế cùng có",
+   "threshold": "hơn 90% số tháng",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "100.0%"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "100.0%"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.7",
+   "claim": "Chu kỳ tự sinh",
+   "threshold": "tự tương quan GDP đã lọc dương ở trễ 1 và 2 quý",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "trễ 1: 0.83, trễ 2: 0.62"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "trễ 1: 0.83, trễ 2: 0.61"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "trễ 1: 0.81, trễ 2: 0.55"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "trễ 1: 0.80, trễ 2: 0.66"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "trễ 1: 0.76, trễ 2: 0.55"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "trễ 1: 0.78, trễ 2: 0.57"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "trễ 1: 0.79, trễ 2: 0.59"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "trễ 1: 0.68, trễ 2: 0.44"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "trễ 1: 0.67, trễ 2: 0.37"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "trễ 1: 0.82, trễ 2: 0.65"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "trễ 1: 0.73, trễ 2: 0.51"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "trễ 1: 0.79, trễ 2: 0.57"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "trễ 1: 0.75, trễ 2: 0.40"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "trễ 1: 0.76, trễ 2: 0.55"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "trễ 1: 0.72, trễ 2: 0.38"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "trễ 1: 0.71, trễ 2: 0.45"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "trễ 1: 0.71, trễ 2: 0.45"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "trễ 1: 0.66, trễ 2: 0.36"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "trễ 1: 0.81, trễ 2: 0.59"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "trễ 1: 0.67, trễ 2: 0.34"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.8",
+   "claim": "Đầu tư biến động hơn GDP, tiêu dùng ít hơn",
+   "threshold": "tỷ số độ lệch chuẩn > 1,5 và < 1",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "đầu tư 8.84, tiêu dùng 0.70"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "đầu tư 9.37, tiêu dùng 0.74"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "đầu tư 8.96, tiêu dùng 0.60"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "đầu tư 10.60, tiêu dùng 0.76"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "đầu tư 8.13, tiêu dùng 0.54"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "đầu tư 9.01, tiêu dùng 0.58"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "đầu tư 9.27, tiêu dùng 0.58"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "đầu tư 8.99, tiêu dùng 0.68"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "đầu tư 8.71, tiêu dùng 0.55"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "đầu tư 9.47, tiêu dùng 0.63"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "đầu tư 8.84, tiêu dùng 0.69"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "đầu tư 8.72, tiêu dùng 0.62"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "đầu tư 12.15, tiêu dùng 0.53"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "đầu tư 10.30, tiêu dùng 0.78"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "đầu tư 9.34, tiêu dùng 0.59"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "đầu tư 9.23, tiêu dùng 0.72"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "đầu tư 10.76, tiêu dùng 0.72"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "đầu tư 9.87, tiêu dùng 0.74"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "đầu tư 9.07, tiêu dùng 0.63"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "đầu tư 10.49, tiêu dùng 0.52"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.9",
+   "claim": "Thất nghiệp ngược chiều chu kỳ (Okun)",
+   "threshold": "tương quan < −0,3",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "-0.90"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "-0.82"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "-0.86"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "-0.54"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "-0.86"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "-0.83"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "-0.84"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "-0.79"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "-0.85"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "-0.83"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "-0.87"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "-0.82"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "-0.82"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "-0.78"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "-0.78"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "-0.80"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "-0.80"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "-0.75"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "-0.88"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "-0.82"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.10",
+   "claim": "Đường Phillips và Beveridge dốc xuống",
+   "threshold": "hai tương quan âm",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "Phillips -0.54, Beveridge -0.26"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "Phillips -0.70, Beveridge -0.25"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "Phillips -0.74, Beveridge -0.46"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "Phillips -0.34, Beveridge -0.43"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "Phillips -0.55, Beveridge -0.74"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "Phillips -0.62, Beveridge -0.11"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "Phillips -0.53, Beveridge -0.06"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "Phillips -0.57, Beveridge -0.59"
+    },
+    {
+     "seed": 9,
+     "ok": false,
+     "value": "Phillips -0.69, Beveridge 0.04"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "Phillips -0.63, Beveridge -0.36"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "Phillips -0.74, Beveridge -0.31"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "Phillips -0.63, Beveridge -0.38"
+    },
+    {
+     "seed": 13,
+     "ok": false,
+     "value": "Phillips -0.64, Beveridge 0.18"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "Phillips -0.55, Beveridge -0.60"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "Phillips -0.62, Beveridge -0.36"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "Phillips -0.51, Beveridge -0.28"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "Phillips -0.59, Beveridge -0.51"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "Phillips -0.50, Beveridge -0.76"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "Phillips -0.70, Beveridge -0.49"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "Phillips -0.57, Beveridge -0.42"
+    }
+   ],
+   "share": 0.9,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.11",
+   "claim": "Tín dụng cùng chiều chu kỳ",
+   "threshold": "tương quan > 0",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "0.67"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "0.65"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "0.69"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "0.65"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "0.65"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "0.62"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "0.65"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "0.60"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "0.68"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "0.70"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "0.71"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "0.59"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "0.63"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "0.57"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "0.70"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "0.58"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "0.65"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "0.64"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "0.65"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "0.59"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.12",
+   "claim": "Lạm phát cùng chiều chu kỳ và trễ",
+   "threshold": "tương quan chéo lớn nhất dương, ở trễ ≥ 1 quý",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "lớn nhất 0.51 ở trễ 1 quý"
+    },
+    {
+     "seed": 2,
+     "ok": false,
+     "value": "lớn nhất 0.67 ở trễ 0 quý"
+    },
+    {
+     "seed": 3,
+     "ok": false,
+     "value": "lớn nhất 0.74 ở trễ 0 quý"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "lớn nhất 0.23 ở trễ 1 quý"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "lớn nhất 0.64 ở trễ 1 quý"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "lớn nhất 0.65 ở trễ 1 quý"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "lớn nhất 0.54 ở trễ 1 quý"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "lớn nhất 0.61 ở trễ 1 quý"
+    },
+    {
+     "seed": 9,
+     "ok": false,
+     "value": "lớn nhất 0.65 ở trễ 0 quý"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "lớn nhất 0.69 ở trễ 1 quý"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "lớn nhất 0.72 ở trễ 1 quý"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "lớn nhất 0.61 ở trễ 1 quý"
+    },
+    {
+     "seed": 13,
+     "ok": false,
+     "value": "lớn nhất 0.70 ở trễ 0 quý"
+    },
+    {
+     "seed": 14,
+     "ok": false,
+     "value": "lớn nhất 0.56 ở trễ 0 quý"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "lớn nhất 0.68 ở trễ 1 quý"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "lớn nhất 0.61 ở trễ 1 quý"
+    },
+    {
+     "seed": 17,
+     "ok": false,
+     "value": "lớn nhất 0.55 ở trễ 0 quý"
+    },
+    {
+     "seed": 18,
+     "ok": false,
+     "value": "lớn nhất 0.61 ở trễ 0 quý"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "lớn nhất 0.74 ở trễ 1 quý"
+    },
+    {
+     "seed": 20,
+     "ok": false,
+     "value": "lớn nhất 0.69 ở trễ 0 quý"
+    }
+   ],
+   "share": 0.6,
+   "pass": false,
+   "byMean": false,
+   "infoOnly": "Chỉ xét ở 5000 hộ: ở 500 hộ đỉnh tương quan nhảy giữa cùng quý và trễ một quý vì ít doanh nghiệp (sai-khac.md D6)."
+  },
+  {
+   "id": "K1.13",
+   "claim": "Bất bình đẳng tự hình thành",
+   "threshold": "Gini của cải ròng > Gini thu nhập sau thuế (bình quân 12 tháng cuối năm 30); lệch phải",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "của cải 0.52, thu nhập 0.36; độ lệch 3.40"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "của cải 0.54, thu nhập 0.32; độ lệch 3.66"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "của cải 0.52, thu nhập 0.31; độ lệch 3.65"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "của cải 0.58, thu nhập 0.37; độ lệch 3.55"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "của cải 0.54, thu nhập 0.38; độ lệch 3.18"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "của cải 0.46, thu nhập 0.41; độ lệch 4.36"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "của cải 0.48, thu nhập 0.37; độ lệch 4.37"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "của cải 0.48, thu nhập 0.34; độ lệch 4.30"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "của cải 0.47, thu nhập 0.33; độ lệch 3.79"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "của cải 0.48, thu nhập 0.32; độ lệch 4.78"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "của cải 0.51, thu nhập 0.32; độ lệch 3.95"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "của cải 0.51, thu nhập 0.31; độ lệch 3.79"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "của cải 0.42, thu nhập 0.40; độ lệch 4.66"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "của cải 0.55, thu nhập 0.31; độ lệch 3.72"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "của cải 0.48, thu nhập 0.28; độ lệch 4.09"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "của cải 0.54, thu nhập 0.34; độ lệch 3.27"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "của cải 0.56, thu nhập 0.41; độ lệch 3.78"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "của cải 0.50, thu nhập 0.28; độ lệch 4.22"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "của cải 0.52, thu nhập 0.36; độ lệch 3.82"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "của cải 0.39, thu nhập 0.31; độ lệch 2.19"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.14",
+   "claim": "Quy mô doanh nghiệp lệch phải",
+   "threshold": "độ lệch > 1",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "2.88"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "2.88"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "2.43"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "2.62"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "2.84"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "2.27"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "2.53"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "4.09"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "2.80"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "2.84"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "2.83"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "2.21"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "2.65"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "2.78"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "3.04"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "3.02"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "2.99"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "3.48"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "2.88"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "2.81"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.27",
+   "claim": "Kinh tế xấu thì tỷ lệ phi chính thức tăng",
+   "threshold": "tương quan với GDP đã lọc < 0",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "-0.97"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "-0.95"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "-0.94"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "-0.95"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "-0.97"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "-0.94"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "-0.94"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "-0.95"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "-0.97"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "-0.94"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "-0.97"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "-0.95"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "-0.96"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "-0.94"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.30",
+   "claim": "Không doanh nghiệp nào trả dưới lương tối thiểu vùng",
+   "threshold": "tuyệt đối",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "0"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "0"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  },
+  {
+   "id": "K1.32",
+   "claim": "Tỷ lệ lao động phi chính thức ổn định quanh mục tiêu",
+   "threshold": "bình quân 50-70%, trôi dưới 10 điểm",
+   "perSeed": [
+    {
+     "seed": 1,
+     "ok": true,
+     "value": "bình quân 55.3%, trôi 3.9 điểm"
+    },
+    {
+     "seed": 2,
+     "ok": true,
+     "value": "bình quân 57.0%, trôi 1.7 điểm"
+    },
+    {
+     "seed": 3,
+     "ok": true,
+     "value": "bình quân 57.9%, trôi 3.0 điểm"
+    },
+    {
+     "seed": 4,
+     "ok": true,
+     "value": "bình quân 56.7%, trôi 0.8 điểm"
+    },
+    {
+     "seed": 5,
+     "ok": true,
+     "value": "bình quân 55.1%, trôi -0.6 điểm"
+    },
+    {
+     "seed": 6,
+     "ok": true,
+     "value": "bình quân 58.6%, trôi 8.4 điểm"
+    },
+    {
+     "seed": 7,
+     "ok": true,
+     "value": "bình quân 59.8%, trôi 8.3 điểm"
+    },
+    {
+     "seed": 8,
+     "ok": true,
+     "value": "bình quân 54.9%, trôi -4.3 điểm"
+    },
+    {
+     "seed": 9,
+     "ok": true,
+     "value": "bình quân 55.2%, trôi 4.5 điểm"
+    },
+    {
+     "seed": 10,
+     "ok": true,
+     "value": "bình quân 58.6%, trôi 4.8 điểm"
+    },
+    {
+     "seed": 11,
+     "ok": true,
+     "value": "bình quân 56.4%, trôi 1.6 điểm"
+    },
+    {
+     "seed": 12,
+     "ok": true,
+     "value": "bình quân 56.9%, trôi 3.8 điểm"
+    },
+    {
+     "seed": 13,
+     "ok": true,
+     "value": "bình quân 59.1%, trôi 8.0 điểm"
+    },
+    {
+     "seed": 14,
+     "ok": true,
+     "value": "bình quân 55.7%, trôi -0.8 điểm"
+    },
+    {
+     "seed": 15,
+     "ok": true,
+     "value": "bình quân 55.4%, trôi 1.1 điểm"
+    },
+    {
+     "seed": 16,
+     "ok": true,
+     "value": "bình quân 56.8%, trôi 1.4 điểm"
+    },
+    {
+     "seed": 17,
+     "ok": true,
+     "value": "bình quân 56.1%, trôi -1.8 điểm"
+    },
+    {
+     "seed": 18,
+     "ok": true,
+     "value": "bình quân 55.1%, trôi 2.8 điểm"
+    },
+    {
+     "seed": 19,
+     "ok": true,
+     "value": "bình quân 55.8%, trôi -0.1 điểm"
+    },
+    {
+     "seed": 20,
+     "ok": true,
+     "value": "bình quân 60.8%, trôi 5.9 điểm"
+    }
+   ],
+   "share": 1,
+   "pass": true,
+   "byMean": false
+  }
+ ],
+ "table": [
+  [
+   "seed",
+   "thất nghiệp",
+   "lạm phát",
+   "phi chính thức",
+   "thu/GDP",
+   "tiền mặt",
+   "Gini của cải",
+   "doanh nghiệp",
+   "phá sản/năm",
+   "mới/năm"
+  ],
+  [
+   "1",
+   "6.0%",
+   "0.7%",
+   "55.3%",
+   "14.7%",
+   "13.6%",
+   "0.56",
+   "21",
+   "3.1",
+   "2.4"
+  ],
+  [
+   "2",
+   "5.8%",
+   "1.0%",
+   "57.0%",
+   "14.9%",
+   "13.7%",
+   "0.53",
+   "28",
+   "2.7",
+   "2.3"
+  ],
+  [
+   "3",
+   "6.0%",
+   "0.8%",
+   "57.9%",
+   "15.3%",
+   "13.9%",
+   "0.55",
+   "22",
+   "3.0",
+   "2.4"
+  ],
+  [
+   "4",
+   "5.8%",
+   "1.1%",
+   "56.7%",
+   "14.9%",
+   "13.7%",
+   "0.55",
+   "29",
+   "3.7",
+   "3.2"
+  ],
+  [
+   "5",
+   "6.1%",
+   "1.0%",
+   "55.1%",
+   "14.8%",
+   "13.5%",
+   "0.55",
+   "23",
+   "2.8",
+   "2.3"
+  ],
+  [
+   "6",
+   "7.2%",
+   "0.2%",
+   "58.6%",
+   "16.2%",
+   "13.9%",
+   "0.46",
+   "15",
+   "3.2",
+   "2.3"
+  ],
+  [
+   "7",
+   "7.1%",
+   "0.1%",
+   "59.8%",
+   "16.3%",
+   "14.2%",
+   "0.52",
+   "12",
+   "3.5",
+   "2.4"
+  ],
+  [
+   "8",
+   "5.7%",
+   "1.1%",
+   "54.9%",
+   "14.9%",
+   "13.6%",
+   "0.49",
+   "35",
+   "2.7",
+   "2.7"
+  ],
+  [
+   "9",
+   "6.2%",
+   "0.7%",
+   "55.2%",
+   "14.9%",
+   "13.6%",
+   "0.54",
+   "19",
+   "2.9",
+   "2.0"
+  ],
+  [
+   "10",
+   "6.5%",
+   "0.7%",
+   "58.6%",
+   "15.8%",
+   "13.9%",
+   "0.51",
+   "19",
+   "3.5",
+   "2.7"
+  ],
+  [
+   "11",
+   "6.3%",
+   "0.7%",
+   "56.4%",
+   "15.2%",
+   "13.8%",
+   "0.54",
+   "24",
+   "2.9",
+   "2.4"
+  ],
+  [
+   "12",
+   "6.6%",
+   "0.8%",
+   "56.9%",
+   "15.2%",
+   "13.7%",
+   "0.56",
+   "26",
+   "3.4",
+   "2.9"
+  ],
+  [
+   "13",
+   "6.8%",
+   "0.4%",
+   "59.1%",
+   "16.3%",
+   "14.1%",
+   "0.49",
+   "13",
+   "3.3",
+   "2.2"
+  ],
+  [
+   "14",
+   "5.5%",
+   "1.1%",
+   "55.7%",
+   "14.9%",
+   "13.6%",
+   "0.54",
+   "25",
+   "3.9",
+   "3.3"
+  ],
+  [
+   "15",
+   "6.3%",
+   "0.8%",
+   "55.4%",
+   "14.9%",
+   "13.6%",
+   "0.53",
+   "22",
+   "3.1",
+   "2.4"
+  ],
+  [
+   "16",
+   "5.6%",
+   "1.0%",
+   "56.8%",
+   "15.0%",
+   "13.9%",
+   "0.54",
+   "27",
+   "2.7",
+   "2.2"
+  ],
+  [
+   "17",
+   "5.3%",
+   "1.5%",
+   "56.1%",
+   "14.9%",
+   "13.7%",
+   "0.54",
+   "28",
+   "3.6",
+   "3.6"
+  ],
+  [
+   "18",
+   "5.7%",
+   "1.2%",
+   "55.1%",
+   "14.8%",
+   "13.6%",
+   "0.56",
+   "16",
+   "3.4",
+   "3.0"
+  ],
+  [
+   "19",
+   "5.9%",
+   "1.2%",
+   "55.8%",
+   "15.0%",
+   "13.7%",
+   "0.54",
+   "22",
+   "3.4",
+   "2.7"
+  ],
+  [
+   "20",
+   "7.0%",
+   "0.3%",
+   "60.8%",
+   "16.9%",
+   "14.2%",
+   "0.41",
+   "29",
+   "3.0",
+   "2.6"
+  ]
+ ]
+}
