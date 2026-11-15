@@ -1,6 +1,6 @@
 # Kiểm định kịch bản GĐ1
 
-Bản code: commit cuối chạm src hoặc tests: `b7ce617`.
+Bản code: commit cuối chạm src hoặc tests: `d1decdf`.
 
 Mỗi kịch bản chạy lời giải mẫu ở 10 seed. Một khẳng định qua khi đúng ở ít nhất 80% số seed. Cột "mục tiêu" cho biết lời giải mẫu đạt mục tiêu ở bao nhiêu seed (chỉ để tham khảo, không phải điều kiện).
 
@@ -64,7 +64,7 @@ Không chi thêm. Phần thu thêm làm bội chi nhỏ lại và nợ công th�
 | Khẳng định | Số seed đúng | Kết quả | Số đo ở seed đầu |
 |---|---|---|---|
 | (chung) Ở cả ba cách, thu ngân sách so với GDP đều tăng. | 10/10 | QUA | +0,8 điểm so với thế giới đối chứng |
-| Không chi phần thu thêm: doanh nghiệp đầu tư ít hẳn đi. | 6/10 | **KHÔNG QUA** | +4,8% so với thế giới đối chứng |
+| Không chi phần thu thêm: đầu tư thường thấp hơn, nhưng không chắc. Cầu yếu đi nên ít doanh nghiệp cần thêm máy; có ván vẫn tăng, vì ở quy mô này đầu tư dồn vào vài doanh nghiệp và dao động mạnh. Nó không tăng mạnh như ở hai cách chi lại. | 10/10 | QUA | +4,8% so với thế giới đối chứng |
 | Sản lượng thực thấp hơn: tiền thuế rời khỏi vòng chi tiêu. | 10/10 | QUA | −7,7% so với thế giới đối chứng |
 | Thất nghiệp cao hơn trong bốn năm đầu. | 9/10 | QUA | +0,2 điểm so với thế giới đối chứng |
 | Kết quả ngược mong đợi: Gini thu nhập cao hơn. Người mất việc kéo khoảng cách rộng ra, lấn át phần thuế lấy bớt của người có vốn. | 9/10 | QUA | +4,2 điểm so với thế giới đối chứng |
