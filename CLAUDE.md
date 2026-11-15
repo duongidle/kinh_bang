@@ -27,6 +27,23 @@ Dương quyết ngày 15/11/2026. **Phân việc chỉ đổi khi Dương yêu c
 - **Dừng lại báo Dương** khi gặp một trong bảy trường hợp ở chong-va-ngam.md mục "Khi nào phải dừng lại báo Dương". Sonnet gặp thì báo người điều phối, người điều phối báo Dương. Không ai tự quyết thay.
 - Kiểm định thống kê đầy đủ: Sonnet cho chạy (ghi log ra file, chạy từng phần), người điều phối đọc và đánh giá. Không sửa engine trong lúc nó chạy.
 
+## Tiêu chuẩn người điều phối
+
+Dương đặt ngày 15/11/2026, rút từ cách làm ở cuối GĐ1. Áp cho mọi model giữ vai điều phối, ở mọi giai đoạn. Mục "Ai làm gì" nói ai làm việc gì; mục này nói làm tới mức nào thì đạt.
+
+1. **Xem trước khi tin.** Đầu phiên: `git status`, `git log`, `npm test`, rồi mới đọc progress.md. progress.md có thể cũ: đối chiếu từng câu "đã chạy", "đang chờ" với commit và với dòng "Bản code" trong báo cáo kiểm định. Thấy dòng cũ thì ghi là cũ ngay, đừng để phiên sau tin nhầm.
+2. **Phần phán đoán làm xong trước khi giao.** Câu chữ của một lời giải thích, cửa sổ đo, khẳng định nào bỏ, giá trị nào chọn: người điều phối tự đo, tự quyết, rồi đưa Sonnet **nguyên văn** để áp. Sonnet không phải đoán ý.
+3. **Lời giao đọc một mình là đủ.** Ngoài bốn thứ bắt buộc (việc gì, trạng thái, file cần đọc, tiêu chí xong) phải có: từng bước theo thứ tự và mỗi bước một commit; những thứ KHÔNG được đụng; nội dung phải báo lại; và việc phải làm ở những chỗ biết trước sẽ vướng.
+4. **Lường trước chỗ sẽ đỏ.** Trước khi giao, tự hỏi: bước nào sẽ làm chốt chặn đỏ đúng thiết kế (đổi `gd1-lib.ts` thì cần dòng mục F), thay đổi nào buộc phải chạy lại kiểm định nào, file nào hai bên có thể cùng sửa. Ghi câu trả lời vào lời giao. Sonnet gặp chỗ đã được báo trước thì làm tiếp được; gặp chỗ chưa báo thì dừng.
+5. **Đo rồi mới viết.** Một kiểm định hỏng: lấy số đo từng seed theo từng năm, so với nhiễu giữa các seed, rồi mới kết luận. Hiệu nhỏ hơn nhiễu thì bỏ khẳng định, không đổi cửa sổ cho tới khi qua. Phân biệt rõ ba trường hợp khi báo: bài học giữ nguyên, bài học đổi thời điểm hay mức độ, bài học bị đảo. Bị đảo thì báo Dương bằng một dòng riêng.
+6. **Review bằng diff, không bằng báo cáo.** Đọc `git diff` của mọi thứ Sonnet nộp, nhất là `tests/`, `src/content/scenarios.ts`, `sai-khac.md`. So báo cáo kiểm định mới với bản trước: mục nào đổi trạng thái, mục nào tụt xuống sát ngưỡng. Mục qua đúng 8/10 ghi là yếu.
+7. **Việc chạy lâu: một lệnh, có dấu vết, không ngó.** Chạy nền, ghi log và giờ bắt đầu, kết thúc, mã thoát ra file; chờ thông báo, không kiểm tra định kỳ; không sửa `src` hay `tests` trong lúc chạy. Chỉ chạy đúng phần Dương cho chạy.
+8. **Báo cáo để người đọc quyết được.** Thứ tự: chưa làm và chưa kiểm, rồi cái bị đảo hoặc yếu, rồi mới tới cái đã đạt. Mỗi số kèm số seed và mã commit. Việc tự thêm ngoài lời yêu cầu thì nói rõ là tự thêm. Không viết "xong" cho việc mới giao đi, không đoán kết quả của việc đang chạy.
+9. **Giữ đúng phạm vi.** Thấy lỗi nằm ngoài việc được giao: cùng loại và chắc chắn thì sửa kèm và nói; không chắc thì ghi vào progress.md hoặc sai-khac.md, không tự mở việc mới. Không tự chạy thêm kiểm định, không tự push, không tự bắt đầu mốc kế tiếp khi Dương chưa bảo.
+10. **Dương đổi lệnh giữa chừng thì dừng thật.** Ngắt việc đang chạy nền, xem nó đã để lại gì (`git status`, file mới, tiến trình còn sống), báo đúng trạng thái đó. Không để việc cũ chạy nốt.
+11. **Lúc nào cũng bàn giao được.** Sau mỗi bước: commit, progress.md nói đúng "xong gì, dở gì, kế tiếp là gì, đang chờ ai". Quyết định của Dương ghi kèm ngày vào đúng file nó chi phối (spec, sai-khac.md, progress.md), không chỉ nằm trong cuộc trò chuyện.
+12. **Cửa ra production.** Trước khi báo xong một mốc có đụng tới app: `npm test`, `npx tsc --noEmit`, `npx eslint src tests`, `npm run build` đều qua; tự mở app bằng trình duyệt ở 50 và 5.000 hộ, sáng và tối, console không có lỗi; lưu, tải ván, mở ván lưu của bản trước, và chạy offline còn dùng được; sổ kế toán không báo lệch. Mục nào chưa kiểm thì ghi "chưa kiểm", không bỏ qua trong im lặng.
+
 ## Tài liệu
 
 | File | Nội dung |
