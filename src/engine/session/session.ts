@@ -59,6 +59,8 @@ interface Snap {
 }
 
 const SNAP_MAX = { S: 40, M: 10, L: 3 } as const;
+/** Tham số chọn ai điều hành (máy hay người chơi), không phải quy luật kinh tế: đổi không gắn nhãn đã sửa. */
+const ROLE_PARAMS = new Set(['cb.autopilot', 'gov.autopilot']);
 const fmtPct = (x: number, d = 1) => `${(x * 100).toFixed(d).replace('.', ',')}%`;
 
 export class Session {
@@ -203,6 +205,7 @@ export class Session {
     const before = w.params[id];
     if (before === value) return;
     w.params[id] = value;
+    if (by === 'Người chơi' && !ROLE_PARAMS.has(id)) w.meta.modified = true; // không tự tắt, như setVariant (K0.11)
     this.eng.event(w, { type: 'player', id, before, after: value, label: def.label, by });
   }
 
@@ -285,7 +288,7 @@ export class Session {
 
   private counterfactual(skip: number[] | 'lab' | 'player'): CounterfactualResult {
     const set = Array.isArray(skip) ? new Set(skip) : null;
-    const r = this.replay((e, i) => (set ? set.has(i) : skip === 'lab' ? e.cmd.type === 'lab' : e.origin === 'player'));
+    const r = this.replay((e, i) => (set ? set.has(i) : skip === 'lab' ? e.cmd.type === 'lab' || (e.cmd.type === 'param' && e.origin === 'player' && !ROLE_PARAMS.has(e.cmd.id)) : e.origin === 'player'));
     const ids = this.eng.indicators.map((x) => x.id);
     const n = this.w.meta.tick - r.from;
     const take = (w: World) => {

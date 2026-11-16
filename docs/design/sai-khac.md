@@ -545,9 +545,17 @@ Không mục nào đổi qua/không qua. Hai kết luận đã báo phải sửa
 
 Sonnet đo khi viết test U2 (ván 50 hộ, seed 1, đổi `vat.rate.standard` lên 12% ở tháng N, chạy 24 tháng): N = 1 hoặc 2 thì quy tắc không bao giờ kích hoạt; N = 3, 4, 6, 12 thì kích hoạt đúng tháng đó. Người điều phối đọc `src/engine/modules/gd1/gov.ts` hàm `revenueUse`: `s.taxOvSeen = ovCount` chạy mọi tháng, còn điều kiện kích hoạt đòi `s.taxHist.length >= 3`. Lần đổi ở tháng 1-2 được ghi là "đã thấy" khi chưa đủ số liệu, nên mất hẳn.
 
-Ảnh hưởng: chỉ ván không làm nóng (ván tự do hiện nay, và ô "Bắt đầu từ một nền kinh tế mới lập" sau U5). Kịch bản và kiểm định tách nhánh ở tháng 240 nên không bị. Hướng sửa gợi ý: chỉ cập nhật `taxOvSeen` khi đã đủ 3 tháng số liệu (hoặc hoãn kích hoạt tới khi đủ). Sửa là đổi engine; với ván không đổi thuế ở tháng 1-2 thì mã băm không đổi. Test `tests/unit/setup-init.test.ts` dùng tháng 3 cho phần đối chứng, kèm chú thích trỏ về đây.
+Ảnh hưởng: chỉ ván không làm nóng (ván tự do hiện nay, và ô "Bắt đầu từ một nền kinh tế mới lập" sau U5). Kịch bản và kiểm định tách nhánh ở tháng 240 nên không bị. Hướng sửa gợi ý: chỉ cập nhật `taxOvSeen` khi đã đủ 3 tháng số liệu (hoặc hoãn kích hoạt tới khi đủ). Sửa là đổi engine; với ván không đổi thuế ở tháng 1-2 thì mã băm không đổi.
 
 **Đã sửa (Dương duyệt 16/11/2026).** Ngưỡng số liệu hạ từ 3 tháng xuống 1 tháng; lần đổi chưa xử lý được thì giữ lại để tháng sau thử tiếp. Mốc chỉ gồm các tháng trước khi đổi luật. Bỏ phương án hoãn tới tháng 3 vì mốc sẽ lẫn các tháng sau khi đổi. Hệ quả: đổi thuế ở tháng 1-2 thì mốc chỉ có 1-2 tháng số liệu của một nền kinh tế mới dựng, nhiễu hơn; mốc cũng thiếu tháng quyết toán thuế TNDN, như mọi lần đổi trước tháng 12 (đơn giản hoá đã có). Ván không đổi thuế ở tháng 1-2 không đổi: mã băm 9 ván mẫu trùng trước và sau.
+
+### D18. Đổi tham số hành vi không bật dải "đã sửa quy luật" (ĐÃ SỬA 16/11/2026, Dương duyệt)
+
+Phát hiện 16/11/2026 khi soạn U2: Phòng thí nghiệm cho người chơi đổi tham số hành vi qua lệnh `param`, nhưng `Session.setParam` không bật `meta.modified`; chỉ đổi biến thể quy tắc mới bật. Dải cảnh báo vì vậy không hiện, trái nguyên tắc "thế giới đã sửa quy luật thì luôn có dải cảnh báo". Đối chứng "So với thế giới gốc" cũng không bỏ các lệnh này.
+
+**Đã sửa.** Người chơi đổi tham số hành vi thì bật cờ, không tự tắt. Trừ `cb.autopilot` và `gov.autopilot`: đó là chọn máy hay người chơi điều hành, không phải quy luật. Tham số đặt bởi điều kiện ban đầu hay kịch bản không bật cờ. Đối chứng "thế giới gốc" bỏ cả lệnh `lab` và lệnh `param` đó. Test: `tests/unit/modified-flag.test.ts`.
+
+Kịch bản `that-lung-buoc-bung` mời người chơi hạ `hh.alpha1` trong Phòng thí nghiệm (lời giải mẫu đi qua lệnh của người chơi), nên sau khi sửa, ván đó hiện dải "đã sửa quy luật". Người điều phối quyết giữ (16/11/2026): kịch bản này đúng là một thí nghiệm sửa quy luật hành vi, dải nói đúng sự thật, và "So với thế giới gốc" là phép so tự nhiên của nó. Báo cáo kịch bản dùng đối chứng riêng của kịch bản nên không đổi; mã băm lời giải mẫu không đổi.
 
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
