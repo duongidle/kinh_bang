@@ -141,34 +141,10 @@ small {
   max-width: 520px;
   padding: 20px;
 }
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--color-line);
-  background: var(--color-surface);
-  flex-wrap: wrap;
-}
-.brand {
-  font-weight: 700;
-  border: 0;
-  background: none;
-  padding: 0;
-}
-.date {
-  font-family: var(--font-num);
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  min-width: 78px;
-}
 .seg {
   display: inline-flex;
   gap: 0;
   margin: 8px 0;
-}
-.topbar .seg {
-  margin: 0;
 }
 .seg.wrap {
   flex-wrap: wrap;
@@ -190,26 +166,6 @@ small {
   color: var(--color-on-accent);
   border-color: var(--color-accent);
   position: relative;
-}
-.role {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-text-3);
-}
-.meta {
-  margin-left: auto;
-  color: var(--color-text-3);
-  font-size: var(--font-size-1);
-}
-.banner {
-  background: color-mix(in srgb, var(--color-accent) 18%, var(--color-bg));
-  border-bottom: 1px solid var(--color-accent);
-  padding: 6px 12px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  font-size: var(--font-size-2);
 }
 .stage {
   flex: 1;
@@ -861,8 +817,5 @@ figcaption {
     inset: 0;
     width: auto;
     z-index: 5;
-  }
-  .meta {
-    display: none;
   }
 }

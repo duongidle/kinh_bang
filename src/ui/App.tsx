@@ -1,16 +1,15 @@
 // Khung ứng dụng (gd0 mục 8.1): thanh trên, bản đồ ở giữa, bảng theo vai bên phải, dải chỉ số ở dưới, ngăn chi tiết.
 import { useEffect, useState } from 'react';
-import type { Role, ScaleId } from '../protocol';
 import { Spark } from './Chart';
 import { Drawer } from './Drawer';
 import { fmt, monthLabel } from './format';
 import { FLOW_LEGEND, IsoMap } from './iso/IsoMap';
 import { RolePanel } from './RolePanel';
+import { Banners } from './frame/Banners';
+import { TopBar } from './frame/TopBar';
 import { Home } from './screens/Home';
-import { useStore, type Guess, type Speed } from './store';
+import { useStore, type Guess } from './store';
 
-const ROLE_LABEL: Record<Role, string> = { observer: 'Quan sát', government: 'Chính phủ (cả hai)', fiscal: 'Bộ Tài chính', monetary: 'NHNN', household: 'Hộ gia đình', firm: 'Doanh nghiệp' };
-const SCALE_LABEL: Record<ScaleId, string> = { S: '50 hộ (sa bàn)', M: '500 hộ', L: '5.000 hộ' };
 const STRIP = ['gdp.real', 'inflation.yoy', 'unemployment', 'wage.real', 'money.m2', 'credit', 'gov.deficitGdp', 'gov.debtGdp', 'gini.wealth', 'informal.share'];
 const SHORT: Record<string, string> = {
   'gdp.real': 'GDP thực',
@@ -71,6 +70,7 @@ function Play() {
   return (
     <div className="app">
       <TopBar />
+      <Banners />
       <div className="stage">
         <div className="mapwrap">
           <IsoMap />
@@ -92,69 +92,6 @@ function Play() {
         </div>
       )}
     </div>
-  );
-}
-
-function TopBar() {
-  const tick = useStore((s) => s.tick)!;
-  const speed = useStore((s) => s.speed);
-  const setSpeed = useStore((s) => s.setSpeed);
-  const stepOnce = useStore((s) => s.stepOnce);
-  const role = useStore((s) => s.role);
-  const setRole = useStore((s) => s.setRole);
-  const scenario = useStore((s) => s.scenario);
-  const scale = useStore((s) => s.scale);
-  const seed = useStore((s) => s.seed);
-  const toMenu = useStore((s) => s.toMenu);
-  const whatIf = useStore((s) => s.whatIf);
-  const speeds: Array<[Speed, string]> = [
-    [0, 'Dừng'],
-    [1, '×1'],
-    [4, '×4'],
-    [16, '×16'],
-    [99, 'Tối đa'],
-  ];
-  const roles: Role[] = scenario ? [scenario.role, ...(scenario.role === 'observer' ? [] : (['observer'] as Role[]))] : ['observer', 'fiscal', 'monetary', 'government', 'household', 'firm'];
-  return (
-    <>
-      <header className="topbar">
-        <button className="brand" onClick={toMenu} title="Về màn hình đầu">
-          Kinh Bang
-        </button>
-        <div className="date" title={`Tháng thứ ${tick.tick}`}>
-          {tick.tick === 0 ? 'Chưa chạy' : `${String(tick.month).padStart(2, '0')}/${tick.year}`}
-        </div>
-        <div className="seg" role="group" aria-label="Tốc độ">
-          {speeds.map(([v, label]) => (
-            <button key={v} className={speed === v ? 'on' : ''} onClick={() => setSpeed(v)} aria-pressed={speed === v}>
-              {label}
-            </button>
-          ))}
-          <button onClick={() => stepOnce(1)} disabled={speed !== 0} title="Chạy một tháng">
-            +1 tháng
-          </button>
-        </div>
-        <label className="role">
-          Vai
-          <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {ROLE_LABEL[r]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div className="meta">
-          {scenario ? scenario.title : 'Tự do'} · {SCALE_LABEL[scale]} · hạt giống {seed} · {tick.ms.toFixed(0)} ms/tháng
-        </div>
-      </header>
-      {tick.modified && (
-        <div className="banner" role="status">
-          Thế giới này đã bị sửa quy luật kinh tế trong Phòng thí nghiệm. Kết quả không còn là của mô hình gốc.
-          <button onClick={() => void whatIf('lab')}>So với thế giới gốc</button>
-        </div>
-      )}
-    </>
   );
 }
 

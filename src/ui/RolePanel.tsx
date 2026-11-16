@@ -2,7 +2,9 @@
 import { useEffect, useState } from 'react';
 import type { LawInfo, ScenarioReport } from '../protocol';
 import { engine } from './client';
+import { SegmentedControl } from './design';
 import { fmt, monthLabel, num } from './format';
+import { ROLE_NAME } from './screens/Home';
 import { useStore } from './store';
 
 export function RolePanel() {
@@ -13,6 +15,7 @@ export function RolePanel() {
   return (
     <aside className="side">
       <ScenarioCard />
+      <RoleChoice />
       <nav className="tools" aria-label="Công cụ">
         <button onClick={() => openScreen({ kind: 'charts' })}>Biểu đồ</button>
         <button onClick={() => openLeft({ kind: 'money' })}>Nguồn tiền</button>
@@ -28,6 +31,44 @@ export function RolePanel() {
       <Timeline />
     </aside>
   );
+}
+
+/** Lựa chọn con của tab vai (ván tự do), hoặc dòng nói vai của kịch bản. */
+function RoleChoice() {
+  const role = useStore((s) => s.role);
+  const setRole = useStore((s) => s.setRole);
+  const scenario = useStore((s) => s.scenario);
+  if (scenario) return <p className="hint">Vai của kịch bản: {ROLE_NAME[scenario.role]}</p>;
+  if (role === 'fiscal' || role === 'monetary' || role === 'government')
+    return (
+      <div className="rolechoice">
+        <SegmentedControl
+          label="Bạn giữ"
+          options={[
+            { value: 'fiscal', label: 'Bộ Tài chính' },
+            { value: 'monetary', label: 'NHNN' },
+            { value: 'government', label: 'Cả hai' },
+          ]}
+          value={role}
+          onChange={setRole}
+        />
+      </div>
+    );
+  if (role === 'household' || role === 'firm')
+    return (
+      <div className="rolechoice">
+        <SegmentedControl
+          label="Bạn nhập vai"
+          options={[
+            { value: 'household', label: 'Hộ gia đình' },
+            { value: 'firm', label: 'Doanh nghiệp' },
+          ]}
+          value={role}
+          onChange={setRole}
+        />
+      </div>
+    );
+  return null;
 }
 
 function ScenarioCard() {

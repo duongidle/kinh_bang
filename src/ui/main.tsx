@@ -9,9 +9,8 @@ import { getThemePref, setThemePref } from './theme';
 // PWA: cài như app, mở không cần mạng (K0.14)
 registerSW({ immediate: true });
 
-// Đặt chế độ sáng/tối đã chọn trước khi vẽ. Nút đổi trên giao diện làm ở đợt B; trong bản dev thử bằng window.__theme('dark').
+// Đặt chế độ sáng/tối đã chọn trước khi vẽ. Nút đổi nằm trong menu của thanh trên.
 setThemePref(getThemePref());
-if (import.meta.env.DEV) (window as unknown as { __theme: typeof setThemePref }).__theme = setThemePref;
 
 const root = createRoot(document.getElementById('root')!);
 if (import.meta.env.DEV && new URLSearchParams(location.search).has('design')) {
