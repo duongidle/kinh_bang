@@ -22,6 +22,9 @@ export function fmt(x: number, unit: string): string {
   return num(x, Number.isInteger(x) ? 0 : 1);
 }
 
+/** Một dòng "sự thật" của tác nhân (AgentDetail.facts) theo đơn vị của nó. */
+export const factText = (unit: string, v: number): string => (unit === '%' ? `${num(v * 100, 1)}%` : unit === 'đồng' ? money(v) : num(v, Number.isInteger(v) ? 0 : 1));
+
 /** Mức thay đổi, có dấu. Tỷ lệ thì tính bằng điểm phần trăm. */
 export function fmtDelta(d: number, unit: string): string {
   if (!Number.isFinite(d)) return '–';

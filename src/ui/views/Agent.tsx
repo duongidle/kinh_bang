@@ -1,7 +1,7 @@
 // Sổ sách của một tác nhân: bảng cân đối chữ T, quyết định gần đây, giao dịch gần đây.
 import type { AgentDetail } from '../../protocol';
 import { engine } from '../client';
-import { fmtDelta, money, monthLabel, num } from '../format';
+import { factText, fmtDelta, money, monthLabel, num } from '../format';
 import { useStore } from '../store';
 import { useQuery } from './useQuery';
 
@@ -14,7 +14,6 @@ export function Agent({ sector, id }: { sector: 'hh' | 'firm' | 'bank' | 'gov' |
   if (error) return <p className="error">{error}</p>;
   if (!data) return <p className="hint">Đang mở sổ…</p>;
   const total = (x: AgentDetail['assets']) => x.reduce((a, b) => a + b.amount, 0);
-  const unitOf = (u: string, v: number) => (u === '%' ? `${num(v * 100, 1)}%` : u === 'đồng' ? money(v) : num(v, Number.isInteger(v) ? 0 : 1));
   return (
     <>
       <h3>{data.title}</h3>
@@ -69,7 +68,7 @@ export function Agent({ sector, id }: { sector: 'hh' | 'firm' | 'bank' | 'gov' |
             {data.facts.map((f) => (
               <tr key={f.label}>
                 <th>{f.label}</th>
-                <td>{unitOf(f.unit, f.value)}</td>
+                <td>{factText(f.unit, f.value)}</td>
               </tr>
             ))}
           </tbody>

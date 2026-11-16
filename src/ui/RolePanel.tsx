@@ -1,13 +1,14 @@
 // Bảng bên phải, đổi theo vai (gd1 mục 12). Vai nào không do người chơi giữ thì chạy bằng quy tắc tự động.
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import type { LawInfo, ScenarioReport } from '../protocol';
+import type { AgentDetail, LawInfo, ScenarioReport } from '../protocol';
 import { engine } from './client';
 import { Button, SegmentedControl } from './design';
-import { fmt, num } from './format';
+import { factText, fmt, money, monthLabel, num } from './format';
 import { LawInput, LawSource, isToggle, lawValueText } from './LawField';
 import { groupLaws, type LawOwner } from './lawGroups';
 import { ROLE_NAME } from './screens/Home';
 import { useStore } from './store';
+import { useQuery } from './views/useQuery';
 
 export function RolePanel() {
   const role = useStore((s) => s.role);
@@ -193,9 +194,6 @@ function AgentPanel() {
   const named = useStore((s) => s.named);
   const player = useStore((s) => s.tick!.player);
   const possess = useStore((s) => s.possess);
-  const orders = useStore((s) => s.orders);
-  const openLeft = useStore((s) => s.openLeft);
-  const scenario = useStore((s) => s.scenario);
   const sector = role === 'household' ? 'hh' : 'firm';
   const id = sector === 'hh' ? player.hh : player.firm;
   const list = named.filter((n) => n.sector === sector);
@@ -216,37 +214,103 @@ function AgentPanel() {
         <p className="hint">Hoặc bấm vào một ngôi nhà hay một xưởng trên bản đồ rồi chọn "Điều khiển".</p>
       </section>
     );
+  return <AgentMine sector={sector} id={id} />;
+}
+
+/** Bảng của người đã nhập vai: tình hình của tôi, quyết định tháng này, lý do của quy tắc tự động. */
+function AgentMine({ sector, id }: { sector: 'hh' | 'firm'; id: number }) {
+  const named = useStore((s) => s.named);
+  const player = useStore((s) => s.tick!.player);
+  const possess = useStore((s) => s.possess);
+  const orders = useStore((s) => s.orders);
+  const openLeft = useStore((s) => s.openLeft);
+  const scenario = useStore((s) => s.scenario);
+  const { data } = useQuery(() => engine.query<AgentDetail>({ kind: 'agent', sector, id }), [sector, id]);
   const me = named.find((n) => n.sector === sector && n.id === id);
   const o = player.orders;
   const a = player.auto;
+  // Các quyết định của quy tắc tự động ở tháng gần nhất có quyết định.
+  const last = data?.decisions.reduce((m, d) => Math.max(m, d.tick), -1) ?? -1;
+  const latest = data?.decisions.filter((d) => d.tick === last) ?? [];
   return (
-    <section className="card">
-      <h2>{me?.name ?? (sector === 'hh' ? `Hộ ${id + 1}` : `Doanh nghiệp ${id + 1}`)}</h2>
-      {me && <p className="hint">{me.story}</p>}
-      <div className="row">
-        <button onClick={() => openLeft({ kind: 'agent', sector, id })}>Xem sổ sách</button>
-        {!scenario?.id && <button onClick={() => possess(null)}>Thả ra</button>}
-      </div>
-      <p className="hint">Mỗi ô có phương án của quy tắc tự động ở tháng vừa rồi. Bỏ trống là để quy tắc tự lái.</p>
-      {sector === 'hh' ? (
-        <>
-          <Lever label="Chi tiêu tháng" unit="triệu đ" scale={1e-6} auto={a.budget} value={o.hhBudget} onChange={(v) => orders({ hhBudget: v })} />
-          <Lever label="Lương thấp nhất chịu nhận" unit="triệu đ" scale={1e-6} auto={NaN} value={o.hhResWage} onChange={(v) => orders({ hhResWage: v })} />
-          <div className="row">
-            <button onClick={() => orders({ hhQuit: true })}>Nghỉ việc</button>
-            <button onClick={() => orders({ hhOpenBiz: true })}>Ra tự làm</button>
-          </div>
-          <p className="hint">Nghỉ việc và ra tự làm có hiệu lực từ tháng tới.</p>
-        </>
-      ) : (
-        <>
-          <Lever label="Giá bán (gồm thuế)" unit="nghìn đ" scale={1e-3} auto={a.price} value={o.firmPrice} onChange={(v) => orders({ firmPrice: v })} />
-          <Lever label="Lương trả mỗi người" unit="triệu đ" scale={1e-6} auto={a.wage} value={o.firmWage} onChange={(v) => orders({ firmWage: v })} />
-          <Lever label="Số người muốn có" unit="người" scale={1} auto={a.workers} value={o.firmWorkers} onChange={(v) => orders({ firmWorkers: v })} />
-          <Lever label="Số máy mua thêm" unit="máy" scale={1} auto={a.invest} value={o.firmInvest} onChange={(v) => orders({ firmInvest: v })} />
-        </>
-      )}
-    </section>
+    <>
+      <section className="card">
+        <h2>{me?.name ?? data?.title ?? (sector === 'hh' ? `Hộ ${id + 1}` : `Doanh nghiệp ${id + 1}`)}</h2>
+        {me && <p className="hint">{me.story}</p>}
+        <h3>Tình hình của tôi</h3>
+        {data ? (
+          <table className="kv">
+            <tbody>
+              <tr>
+                <th>Vốn ròng</th>
+                <td>{money(data.netWorth)}</td>
+              </tr>
+              {data.facts.map((f) => (
+                <tr key={f.label}>
+                  <th>{f.label}</th>
+                  <td>{factText(f.unit, f.value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="hint">Đang mở sổ…</p>
+        )}
+        <div className="row">
+          <button onClick={() => openLeft({ kind: 'agent', sector, id })}>Xem sổ sách</button>
+          {!scenario?.id && <button onClick={() => possess(null)}>Thả ra</button>}
+        </div>
+      </section>
+      <section className="card">
+        <h2>Quyết định tháng này</h2>
+        <p className="hint">Mỗi ô có phương án của quy tắc tự động ở tháng vừa rồi. Bỏ trống là để quy tắc tự lái.</p>
+        {sector === 'hh' ? (
+          <>
+            <Lever label="Chi tiêu tháng" unit="triệu đ" scale={1e-6} auto={a.budget} value={o.hhBudget} onChange={(v) => orders({ hhBudget: v })} />
+            <Lever label="Lương thấp nhất chịu nhận" unit="triệu đ" scale={1e-6} auto={NaN} value={o.hhResWage} onChange={(v) => orders({ hhResWage: v })} />
+            <div className="row">
+              <button onClick={() => orders({ hhQuit: true })}>Nghỉ việc</button>
+              <button onClick={() => orders({ hhOpenBiz: true })}>Ra tự làm</button>
+            </div>
+            <p className="hint">Nghỉ việc và ra tự làm có hiệu lực từ tháng tới.</p>
+          </>
+        ) : (
+          <>
+            <Lever label="Giá bán (gồm thuế)" unit="nghìn đ" scale={1e-3} auto={a.price} value={o.firmPrice} onChange={(v) => orders({ firmPrice: v })} />
+            <Lever label="Lương trả mỗi người" unit="triệu đ" scale={1e-6} auto={a.wage} value={o.firmWage} onChange={(v) => orders({ firmWage: v })} />
+            <Lever label="Số người muốn có" unit="người" scale={1} auto={a.workers} value={o.firmWorkers} onChange={(v) => orders({ firmWorkers: v })} />
+            <Lever label="Số máy mua thêm" unit="máy" scale={1} auto={a.invest} value={o.firmInvest} onChange={(v) => orders({ firmInvest: v })} />
+          </>
+        )}
+      </section>
+      <section className="card">
+        <h2>Lý do của quy tắc tự động</h2>
+        {!data ? (
+          <p className="hint">Đang mở sổ…</p>
+        ) : latest.length === 0 ? (
+          <p className="hint">Tháng này quy tắc không đổi gì.</p>
+        ) : (
+          <>
+            <p className="hint">Tháng {monthLabel(last)}</p>
+            <ul className="decisions">
+              {latest.map((d, k) => (
+                <li key={k}>
+                  <strong>
+                    {d.rule}: {num(d.before)} → {num(d.after)}
+                  </strong>
+                  {d.parts.map((p, j) => (
+                    <span key={j}>
+                      {p.amount >= 0 ? '+' : '−'}
+                      {num(Math.abs(p.amount))} vì {p.label}
+                    </span>
+                  ))}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
+    </>
   );
 }
 
@@ -323,7 +387,31 @@ function ObserverPanel() {
           </li>
         ))}
       </ul>
+      <h3>Bản tin</h3>
+      <NewsList />
     </section>
+  );
+}
+
+/** Toàn bộ bản tin, mới nhất trên. Cùng cách hiện với ô bản tin trên bản đồ. */
+function NewsList() {
+  const news = useStore((s) => s.news);
+  const openLeft = useStore((s) => s.openLeft);
+  if (!news.length) return <p className="hint">Chưa có tin.</p>;
+  return (
+    <ol className="kb-newslist" aria-label="Bản tin">
+      {news.map((n, i) => (
+        <li key={`${n.tick}-${i}`} className={n.tone > 0 ? 'good' : n.tone < 0 ? 'bad' : ''}>
+          <time>{monthLabel(n.tick)}</time>
+          {n.tone !== 0 && (
+            <span className="kb-newslist__mark" aria-hidden="true">
+              {n.tone > 0 ? '▲' : '▼'}
+            </span>
+          )}
+          {n.indicator ? <button onClick={() => openLeft({ kind: 'causal', indicator: n.indicator! })}>{n.text}</button> : <span>{n.text}</span>}
+        </li>
+      ))}
+    </ol>
   );
 }
 

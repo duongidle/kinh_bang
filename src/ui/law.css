@@ -36,3 +36,43 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-2);
 }
+
+/* Bản tin đầy đủ ở bảng Quan sát. */
+.kb-newslist {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+}
+.kb-newslist li {
+  display: flex;
+  gap: var(--space-2);
+}
+.kb-newslist time {
+  flex: none;
+  color: var(--color-text-3);
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+}
+.kb-newslist__mark {
+  flex: none;
+}
+.kb-newslist button {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  text-decoration: underline dotted;
+  text-underline-offset: var(--space-1);
+}
+.kb-newslist .bad span,
+.kb-newslist .bad button {
+  color: var(--color-bad);
+}
+.kb-newslist .good span,
+.kb-newslist .good button {
+  color: var(--color-good);
+}
