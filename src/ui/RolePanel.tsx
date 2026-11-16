@@ -3,32 +3,20 @@ import { useEffect, useState } from 'react';
 import type { LawInfo, ScenarioReport } from '../protocol';
 import { engine } from './client';
 import { SegmentedControl } from './design';
-import { fmt, monthLabel, num } from './format';
+import { fmt, num } from './format';
 import { ROLE_NAME } from './screens/Home';
 import { useStore } from './store';
 
 export function RolePanel() {
   const role = useStore((s) => s.role);
-  const openLeft = useStore((s) => s.openLeft);
-  const openScreen = useStore((s) => s.openScreen);
-  const openDialog = useStore((s) => s.openDialog);
   return (
     <aside className="side">
       <ScenarioCard />
       <RoleChoice />
-      <nav className="tools" aria-label="Công cụ">
-        <button onClick={() => openScreen({ kind: 'charts' })}>Biểu đồ</button>
-        <button onClick={() => openLeft({ kind: 'money' })}>Nguồn tiền</button>
-        <button onClick={() => openLeft({ kind: 'agents' })}>Soi tác nhân</button>
-        <button onClick={() => openScreen({ kind: 'lab' })}>Phòng thí nghiệm</button>
-        <button onClick={() => openDialog({ kind: 'notes' })}>Mô hình bỏ qua gì</button>
-        <button onClick={() => openDialog({ kind: 'file' })}>Lưu, tải, xuất</button>
-      </nav>
       {(role === 'government' || role === 'fiscal' || role === 'monetary') && <PolicyPanel key={role} />}
       {(role === 'household' || role === 'firm') && <AgentPanel />}
       {role === 'observer' && <ObserverPanel />}
       <Predictions />
-      <Timeline />
     </aside>
   );
 }
@@ -42,6 +30,7 @@ function RoleChoice() {
   if (role === 'fiscal' || role === 'monetary' || role === 'government')
     return (
       <div className="rolechoice">
+        <span className="hint">Bạn giữ</span>
         <SegmentedControl
           label="Bạn giữ"
           options={[
@@ -57,6 +46,7 @@ function RoleChoice() {
   if (role === 'household' || role === 'firm')
     return (
       <div className="rolechoice">
+        <span className="hint">Bạn nhập vai</span>
         <SegmentedControl
           label="Bạn nhập vai"
           options={[
@@ -341,7 +331,7 @@ function ObserverPanel() {
   );
 }
 
-// ---------- lời đoán và dòng thời gian ----------
+// ---------- lời đoán ----------
 const DIR = { up: 'cao hơn', down: 'thấp hơn', flat: 'gần như không đổi' } as const;
 
 function Predictions() {
@@ -377,49 +367,3 @@ function Predictions() {
     </section>
   );
 }
-
-function Timeline() {
-  const events = useStore((s) => s.events);
-  const whatIf = useStore((s) => s.whatIf);
-  const catalog = useStore((s) => s.catalog)!;
-  const [busy, setBusy] = useState(-1);
-  const recent = events.slice(-12).reverse();
-  if (!recent.length) return null;
-  return (
-    <section className="card">
-      <h2>Dòng sự kiện</h2>
-      <ol className="events">
-        {recent.map((e, k) => {
-          const law = catalog.laws.find((l) => l.id === e.id);
-          const unit = law?.unit ?? '';
-          return (
-            <li key={`${e.tick}-${e.id}-${k}`}>
-              <time>{monthLabel(e.tick)}</time>
-              <div>
-                <span>
-                  {e.label}
-                  {e.before !== undefined && e.after !== undefined && law ? `: ${fmt(e.before, unit)} → ${fmt(e.after, unit)}` : ''}
-                </span>
-                <small>{e.by}</small>
-                {e.index >= 0 && e.by === 'Người chơi' && (
-                  <button
-                    className="link"
-                    disabled={busy >= 0}
-                    onClick={async () => {
-                      setBusy(k);
-                      await whatIf([e.index]);
-                      setBusy(-1);
-                    }}
-                  >
-                    {busy === k ? 'Đang chạy thế giới song song…' : 'Nếu không làm vậy thì sao?'}
-                  </button>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ol>
-    </section>
-  );
-}
-

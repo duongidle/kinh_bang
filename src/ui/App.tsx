@@ -1,28 +1,19 @@
-// Khung ứng dụng (gd0 mục 8.1): thanh trên, bản đồ ở giữa, bảng theo vai bên phải, dải chỉ số ở dưới, ngăn chi tiết.
+// Khung ứng dụng (gd1-5 mục 4.2): thanh trên, dải cảnh báo, sân khấu (ngăn trái, bản đồ, bảng vai), dải chỉ số, dòng thời gian.
+// Màn hình riêng phủ sân khấu và dải chỉ số. Hộp thoại dùng <dialog>.
 import { useEffect, useState } from 'react';
-import { Spark } from './Chart';
-import { Drawer } from './Drawer';
-import { fmt, monthLabel } from './format';
+import { monthLabel } from './format';
+import { Dialogs } from './frame/Dialogs';
+import { GuessDialog } from './frame/GuessDialog';
+import { Banners } from './frame/Banners';
+import { LeftPanel } from './frame/LeftPanel';
+import { ScreenView } from './frame/ScreenView';
+import { Strip } from './frame/Strip';
+import { TimelineBar } from './frame/TimelineBar';
+import { TopBar } from './frame/TopBar';
 import { FLOW_LEGEND, IsoMap } from './iso/IsoMap';
 import { RolePanel } from './RolePanel';
-import { Banners } from './frame/Banners';
-import { TopBar } from './frame/TopBar';
 import { Home } from './screens/Home';
-import { useStore, type Guess } from './store';
-
-const STRIP = ['gdp.real', 'inflation.yoy', 'unemployment', 'wage.real', 'money.m2', 'credit', 'gov.deficitGdp', 'gov.debtGdp', 'gini.wealth', 'informal.share'];
-const SHORT: Record<string, string> = {
-  'gdp.real': 'GDP thực',
-  'inflation.yoy': 'Lạm phát',
-  unemployment: 'Thất nghiệp',
-  'wage.real': 'Lương thực',
-  'money.m2': 'Tổng tiền',
-  credit: 'Dư nợ',
-  'gov.deficitGdp': 'Bội chi/GDP',
-  'gov.debtGdp': 'Nợ công/GDP',
-  'gini.wealth': 'Gini của cải',
-  'informal.share': 'Phi chính thức',
-};
+import { useStore } from './store';
 
 export function App() {
   const phase = useStore((s) => s.phase);
@@ -32,6 +23,8 @@ export function App() {
 function Play() {
   const phase = useStore((s) => s.phase);
   const tick = useStore((s) => s.tick);
+  const hasLeft = useStore((s) => s.left.length > 0);
+  const hasScreen = useStore((s) => s.screen !== null);
   const error = useStore((s) => s.error);
   const violation = useStore((s) => s.violation);
   const dismiss = useStore((s) => s.dismissError);
@@ -45,8 +38,9 @@ function Play() {
         e.preventDefault();
         s.setSpeed(s.speed === 0 ? 1 : 0);
       } else if (e.key === 'Escape') {
-        if (s.dialog) s.openDialog(null);
-        else if (s.screen) s.openScreen(null);
+        // Hộp thoại đang mở thì để chính nó xử lý Esc.
+        if (document.querySelector('dialog[open]')) return;
+        if (s.screen) s.openScreen(null);
         else s.closeLeft();
       }
     };
@@ -68,20 +62,27 @@ function Play() {
       </div>
     );
   return (
-    <div className="app">
+    <div className="app kb-app">
       <TopBar />
       <Banners />
-      <div className="stage">
-        <div className="mapwrap">
+      <div className={hasLeft ? 'kb-stage kb-stage--left' : 'kb-stage'} inert={hasScreen}>
+        {hasLeft && (
+          <div className="kb-stage__left">
+            <LeftPanel />
+          </div>
+        )}
+        <div className="kb-stage__map">
           <IsoMap />
           <Legend />
           <News />
         </div>
         <RolePanel />
-        <Drawer />
       </div>
-      <Strip />
-      <GuessModal />
+      <Strip inert={hasScreen} />
+      <TimelineBar />
+      <ScreenView />
+      <Dialogs />
+      <GuessDialog />
       {(error || violation) && (
         <div className="toast" role="alert">
           <div>
@@ -112,106 +113,28 @@ function Legend() {
 function News() {
   const news = useStore((s) => s.news);
   const openLeft = useStore((s) => s.openLeft);
+  const [open, setOpen] = useState(true);
   if (!news.length) return null;
   return (
-    <ol className="news" aria-label="Bản tin">
-      {news.slice(0, 5).map((n, i) => (
-        <li key={`${n.tick}-${i}`} className={n.tone > 0 ? 'good' : n.tone < 0 ? 'bad' : ''}>
-          <time>{monthLabel(n.tick)}</time>
-          {n.indicator ? <button onClick={() => openLeft({ kind: 'causal', indicator: n.indicator! })}>{n.text}</button> : <span>{n.text}</span>}
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function Strip() {
-  const catalog = useStore((s) => s.catalog)!;
-  const tick = useStore((s) => s.tick)!;
-  const index = useStore((s) => s.index);
-  const series = useStore((s) => s.series);
-  const openLeft = useStore((s) => s.openLeft);
-  useStore((s) => s.hist.n);
-  return (
-    <footer className="strip">
-      {STRIP.map((id) => {
-        const i = index.get(id);
-        if (i === undefined) return null;
-        const def = catalog.indicators[i];
-        return (
-          <button key={id} onClick={() => openLeft({ kind: 'causal', indicator: id })} title={`${def.label}. Bấm để hỏi vì sao.`}>
-            <span className="k">{SHORT[id] ?? def.label}</span>
-            <span className="v">{fmt(tick.values[i], def.unit)}</span>
-            <Spark data={series(id)} good={def.good} />
-          </button>
-        );
-      })}
-    </footer>
-  );
-}
-
-const GUESS_LABEL: Record<Guess, string> = { up: 'Cao hơn', flat: 'Gần như không đổi', down: 'Thấp hơn' };
-
-function GuessModal() {
-  const pg = useStore((s) => s.pendingGuess);
-  const catalog = useStore((s) => s.catalog);
-  const scenario = useStore((s) => s.scenario);
-  const guess = useStore((s) => s.guess);
-  const [g, setG] = useState<Record<string, Guess>>({});
-  useEffect(() => setG({}), [pg]);
-  if (!pg || !catalog) return null;
-  const intro = !pg.skipFromEvents && scenario;
-  return (
-    <div className="modal" role="dialog" aria-modal="true" aria-label="Đoán trước khi chạy">
-      <div className="card">
-        {intro ? (
-          <>
-            <h2>{scenario.title}</h2>
-            <p className="q">{scenario.question}</p>
-            <p>{scenario.intro}</p>
-            {scenario.options && (
-              <>
-                <p>Kịch bản này có nhiều lựa chọn. Cuối ván có bảng so sánh song song.</p>
-                <ul className="plain">
-                  {scenario.options.map((o) => (
-                    <li key={o.id}>
-                      <b>{o.label}</b>: {o.note}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {scenario.untested && <p className="warn">Kịch bản này nằm ngoài vùng đã kiểm định. Coi kết quả là gợi ý, không phải dự báo.</p>}
-            <h3>Đoán trước khi chạy</h3>
-          </>
-        ) : (
-          <>
-            <h2>Đoán trước khi chạy</h2>
-            <p>Sau 2 năm, so với thế giới không có quyết định "{pg.label}", cậu nghĩ:</p>
-          </>
-        )}
-        {pg.indicators.map((id, k) => {
-          const def = catalog.indicators.find((x) => x.id === id);
-          const q = intro ? scenario.predict[k]?.question : `${def?.label ?? id} sẽ`;
-          return (
-            <fieldset key={id}>
-              <legend>{q}</legend>
-              {(['up', 'flat', 'down'] as Guess[]).map((v) => (
-                <label key={v} className={g[id] === v ? 'on' : ''}>
-                  <input type="radio" name={id} checked={g[id] === v} onChange={() => setG({ ...g, [id]: v })} />
-                  {GUESS_LABEL[v]}
-                </label>
-              ))}
-            </fieldset>
-          );
-        })}
-        <div className="actions">
-          <button onClick={() => guess(null)}>Bỏ qua</button>
-          <button className="primary" onClick={() => guess(g)} disabled={Object.keys(g).length === 0}>
-            Ghi lại và chạy
-          </button>
-        </div>
-      </div>
+    <div className="news">
+      <button type="button" className="news__toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
+        Bản tin ({news.length})
+      </button>
+      {open && (
+        <ol aria-label="Bản tin">
+          {news.slice(0, 5).map((n, i) => (
+            <li key={`${n.tick}-${i}`} className={n.tone > 0 ? 'good' : n.tone < 0 ? 'bad' : ''}>
+              <time>{monthLabel(n.tick)}</time>
+              {n.tone !== 0 && (
+                <span className="news__mark" aria-hidden="true">
+                  {n.tone > 0 ? '▲' : '▼'}
+                </span>
+              )}
+              {n.indicator ? <button onClick={() => openLeft({ kind: 'causal', indicator: n.indicator! })}>{n.text}</button> : <span>{n.text}</span>}
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

@@ -107,3 +107,229 @@
   font-size: var(--font-size-2);
   white-space: nowrap;
 }
+
+/* ---------- bố cục khung chơi ---------- */
+/* Hàng: thanh trên, dải cảnh báo, sân khấu, dải chỉ số, dòng thời gian. Dải cảnh báo vắng thì hàng của nó cao 0. */
+.app.kb-app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+}
+.kb-app > .kb-top {
+  grid-row: 1;
+}
+.kb-app > .kb-banners {
+  grid-row: 2;
+}
+.kb-app > .kb-stage {
+  grid-row: 3;
+}
+.kb-app > .kb-strip {
+  grid-row: 4;
+}
+.kb-app > .kb-tl {
+  grid-row: 5;
+}
+.kb-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+}
+/* Ngăn trái đẩy bản đồ, không đè bảng vai. */
+.kb-stage--left {
+  grid-template-columns: 380px minmax(0, 1fr) 340px;
+}
+.kb-stage__left {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+.kb-stage__map {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ---------- màn hình riêng ---------- */
+.kb-screen {
+  grid-column: 1;
+  grid-row: 3 / 5;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--color-bg);
+}
+.kb-screen__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+.kb-screen__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-4);
+}
+.kb-screen__inner {
+  max-width: calc(var(--space-7) * 18);
+  margin: 0 auto;
+}
+
+/* ---------- dải chỉ số ---------- */
+.kb-strip {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  overflow-x: auto;
+  border-top: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+.kb-strip > * {
+  flex: none;
+}
+
+/* ---------- dòng thời gian ---------- */
+.kb-tl {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-4);
+  border-top: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+.kb-tl__end {
+  flex: none;
+  font-size: var(--font-size-1);
+  color: var(--color-text-3);
+}
+.kb-tl__track {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: var(--space-6);
+  margin: 0 var(--space-3);
+}
+.kb-tl__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid var(--color-line);
+}
+.kb-tl__empty {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 var(--space-2);
+  background: var(--color-surface);
+  font-size: var(--font-size-2);
+  color: var(--color-text-3);
+}
+.kb-tl__mark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: var(--space-4);
+  height: var(--space-5);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  cursor: pointer;
+}
+.kb-tl__mark--player {
+  color: var(--color-accent);
+}
+.kb-tl__mark--scenario,
+.kb-tl__mark--setup {
+  color: var(--color-text-2);
+}
+.kb-tl__mark--other {
+  color: var(--color-text-3);
+}
+.kb-tl__mark--on {
+  background: var(--color-raised);
+  border-radius: var(--radius-s);
+}
+.kb-tl__pop {
+  position: absolute;
+  bottom: calc(100% + var(--space-2));
+  left: clamp(0px, calc(var(--x) - var(--space-7) * 4), calc(100% - var(--space-7) * 8));
+  z-index: 15;
+  width: calc(var(--space-7) * 8);
+  max-height: calc(var(--space-7) * 6);
+  overflow: auto;
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+}
+.kb-tl__pophead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.kb-events {
+  margin: 0;
+}
+
+/* ---------- hộp đoán ---------- */
+.kb-guess fieldset {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) 0 0;
+}
+.kb-guess legend {
+  padding: 0;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+.kb-guess .q {
+  color: var(--color-text);
+}
+
+/* ---------- lựa chọn con của tab vai ---------- */
+.rolechoice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 900px) {
+  .app.kb-app {
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  }
+  .kb-stage,
+  .kb-stage--left {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .kb-stage__map {
+    flex: none;
+    height: min(52vh, 420px);
+  }
+  .kb-stage__left {
+    flex: none;
+    height: 60vh;
+  }
+  .kb-stage .side {
+    width: auto;
+    flex: none;
+    overflow-y: visible;
+    border-left: 0;
+    border-top: 1px solid var(--color-line);
+  }
+}

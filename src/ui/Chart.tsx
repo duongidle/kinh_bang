@@ -97,25 +97,3 @@ export function Chart({ lines, from = 0, unit, height = 180, marks = [] }: { lin
 
   return <div ref={el} className="chart" />;
 }
-
-/** Đường nhỏ không trục, cho dải chỉ số. */
-export function Spark({ data, good }: { data: ArrayLike<number>; good: number }) {
-  const n = data.length;
-  if (n < 2) return <svg className="spark" viewBox="0 0 60 18" />;
-  const k = Math.max(0, n - 60);
-  let lo = Infinity;
-  let hi = -Infinity;
-  for (let i = k; i < n; i++) {
-    lo = Math.min(lo, data[i]);
-    hi = Math.max(hi, data[i]);
-  }
-  const span = hi - lo || 1;
-  let d = '';
-  for (let i = k; i < n; i++) d += `${i === k ? 'M' : 'L'}${(((i - k) / Math.max(1, n - k - 1)) * 60).toFixed(1)},${(16 - ((data[i] - lo) / span) * 14).toFixed(1)}`;
-  const dir = Math.sign(data[n - 1] - data[Math.max(k, n - 13)]) * good;
-  return (
-    <svg className={`spark ${dir > 0 ? 'up' : dir < 0 ? 'down' : ''}`} viewBox="0 0 60 18" aria-hidden="true">
-      <path d={d} fill="none" strokeWidth="1.4" />
-    </svg>
-  );
-}
