@@ -17,6 +17,7 @@ export const GLOSSARY: readonly GlossaryEntry[] = [
   { id: 'tac-nhan', term: 'Tác nhân', def: 'Một hộ, doanh nghiệp, ngân hàng hay cơ quan nhà nước tự ra quyết định trong mô hình.', avoid: ['agent'] },
   { id: 'lam-nong', term: 'Làm nóng', def: 'Chạy trước 20 năm cho nền kinh tế qua giai đoạn khởi động rồi mới giao ván cho bạn.' },
   { id: 'phong-thi-nghiem', term: 'Phòng thí nghiệm', def: 'Nơi sửa quy luật hành vi của tác nhân, thế giới đã sửa luôn có dải cảnh báo.' },
+  { id: 'van-tu-do', term: 'Ván tự do', def: 'Ván không có câu hỏi hay mục tiêu sẵn, bạn tự đặt luật và chọn việc để thử.' },
   { id: 'du-no', term: 'Dư nợ', def: 'Tổng số tiền còn phải trả của các khoản vay tại một thời điểm.', avoid: ['tổng nợ vay'] },
   { id: 'tin-dung', term: 'Tín dụng', def: 'Tiền ngân hàng cho vay.' },
   { id: 'tien-gui', term: 'Tiền gửi', def: 'Tiền hộ và doanh nghiệp để trong ngân hàng, mỗi khoản ngân hàng cho vay tạo thêm một khoản tiền gửi mới.' },

@@ -1,11 +1,13 @@
 // Màn hình đầu (gd1-5 mục 4.1): học theo lộ trình, tự do (sandbox), ván đã lưu.
 import { useEffect, useMemo, useState } from 'react';
 import { SCENARIOS } from '../../content/scenarios';
-import type { Role, ScaleId } from '../../protocol';
+import type { Role, ScaleId, SetupInfo } from '../../protocol';
 import { Button, Card, NumberInput, SegmentedControl, StatusBadge } from '../design';
 import { learningPath } from '../learningPath';
 import { deleteSave, lastSave, listSaves, loadSave, saveTitle } from '../saves';
+import { buildSetup } from '../setup';
 import { useStore } from '../store';
+import { SetupBlock } from './SetupBlock';
 import './screens.css';
 
 export const ROLE_NAME: Record<Role, string> = {
@@ -39,6 +41,9 @@ export function Home() {
   const loadBytes = useStore((s) => s.loadBytes);
   const [scale, setScale] = useState<ScaleId>('M');
   const [seed, setSeed] = useState(1);
+  const [setupInfo, setSetupInfo] = useState<SetupInfo | undefined>();
+  const [setupLaws, setSetupLaws] = useState<Record<string, number>>({});
+  const [setupVariants, setSetupVariants] = useState<Record<string, string>>({});
   const [saves, setSaves] = useState<string[]>([]);
   const [last, setLast] = useState<string | undefined>();
   const [ready, setReady] = useState(false);
@@ -120,9 +125,9 @@ export function Home() {
             </div>
             <NumberInput label="Hạt giống" unit="" value={seed} min={1} max={9999} step={1} onChange={setSeed} />
           </div>
-          {/* Cài đặt ban đầu: đợt C */}
+          <SetupBlock info={setupInfo} onInfo={setSetupInfo} laws={setupLaws} setLaws={setSetupLaws} variants={setupVariants} setVariants={setSetupVariants} />
           <div className="kb-home__actions">
-            <Button variant="primary" onClick={() => start({ scale, seed })}>
+            <Button variant="primary" onClick={() => start({ scale, seed, setup: setupInfo ? buildSetup(setupInfo, setupLaws, setupVariants) : undefined })}>
               Bắt đầu
             </Button>
             {last && (
@@ -130,6 +135,7 @@ export function Home() {
             )}
           </div>
         </Card>
+        <p className="kb-home__sub kb-home__setupnote">Nền kinh tế được dựng theo luật hiện hành, rồi chuyển sang luật bạn đặt ngay từ tháng đầu. Vài tháng đầu là lúc nền kinh tế thích nghi.</p>
       </section>
 
       <section className="kb-home__block" aria-labelledby="home-saves">
