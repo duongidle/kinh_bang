@@ -1,8 +1,10 @@
 // Biểu đồ chuỗi thời gian bằng uPlot.
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import { fmtAxis, monthLabel } from './format';
+import { themes } from './design/tokens';
+import { onThemeChange, resolvedTheme } from './theme';
 
 /** Vạch chia trục tung: khoảng 4 vạch nằm trong miền nhìn, bước tròn (1, 2, 5). */
 function niceSplits(lo: number, hi: number): number[] {
@@ -28,13 +30,17 @@ export function Chart({ lines, from = 0, unit, height = 180, marks = [] }: { lin
   const el = useRef<HTMLDivElement>(null);
   const plot = useRef<uPlot | null>(null);
   const n = lines[0]?.data.length ?? 0;
+  const [themeTick, setThemeTick] = useState(0);
+  useEffect(() => onThemeChange(() => setThemeTick((k) => k + 1)), []);
 
   useEffect(() => {
     if (!el.current) return;
     const css = getComputedStyle(document.documentElement);
-    const axis = css.getPropertyValue('--muted').trim() || '#888';
-    const grid = css.getPropertyValue('--line').trim() || '#333';
-    const palette = [css.getPropertyValue('--accent').trim() || '#e8b04a', css.getPropertyValue('--muted').trim() || '#888', '#6fb1e0', '#7fd1a3'];
+    const fb = themes[resolvedTheme()];
+    const token = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+    const axis = token('--color-text-3', fb.text3);
+    const grid = token('--color-line', fb.line);
+    const palette = [token('--color-accent', fb.accent), token('--color-text-2', fb.text2), token('--color-flow-wage', fb.flowWage), token('--color-flow-credit', fb.flowCredit)];
     const u = new uPlot(
       {
         width: el.current.clientWidth || 320,
@@ -79,7 +85,7 @@ export function Chart({ lines, from = 0, unit, height = 180, marks = [] }: { lin
       u.destroy();
       plot.current = null;
     };
-  }, [lines.length, unit, height, marks.join(',')]);
+  }, [lines.length, unit, height, marks.join(','), themeTick]);
 
   useEffect(() => {
     const u = plot.current;

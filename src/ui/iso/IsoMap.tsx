@@ -1,8 +1,10 @@
 // Bản đồ isometric sống. Lớp tĩnh (nhà, xưởng, ngân hàng) vẽ lại mỗi tháng vào một canvas đệm.
 // Lớp động (hạt dòng tiền) vẽ mỗi khung hình, phát lại đúng mẫu giao dịch của tháng vừa xong (CLAUDE.md quy tắc 8).
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { MapFrame, TxSample } from '../../protocol';
 import { useStore } from '../store';
+import { themes } from '../design/tokens';
+import { onThemeChange, resolvedTheme } from '../theme';
 import { computeLayout, fitView, GRID, project, spotOf, ZONE_LABEL, ZONES, type Layout, type Spot, type View, type Zone } from './layout';
 
 interface Tone {
@@ -25,6 +27,11 @@ interface Palette {
   alert: string;
   flow: Record<string, string>;
 }
+/** Màu dòng tiền lấy từ token (spec 3.2: một màu một giá trị ở mọi nơi); loại "khác" dùng màu chữ mờ. */
+function flowColors(mode: 'light' | 'dark'): Record<string, string> {
+  const t = themes[mode];
+  return { wage: t.flowWage, buy: t.flowBuy, tax: t.flowTax, credit: t.flowCredit, gov: t.flowGov, other: t.text3 };
+}
 const tone = (top: string, left: string, right: string): Tone => ({ top, left, right });
 const DARK: Palette = {
   ground: '#14181b',
@@ -39,7 +46,7 @@ const DARK: Palette = {
   gov: tone('#d9a49a', '#a87b73', '#825e58'),
   cb: tone('#e8c56a', '#b3974f', '#8a743c'),
   alert: '#e5604d',
-  flow: { wage: '#6fb1e0', buy: '#e8b04a', tax: '#e07a6a', credit: '#7fd1a3', gov: '#c79be8', other: '#9aa5ad' },
+  flow: flowColors('dark'),
 };
 const LIGHT: Palette = {
   ...DARK,
@@ -48,7 +55,7 @@ const LIGHT: Palette = {
   zoneLine: '#cfd4cc',
   label: '#6b756f',
   empty: '#d9ddd6',
-  flow: { wage: '#2f7fb8', buy: '#b97d12', tax: '#c24a38', credit: '#2c9a63', gov: '#8a55c2', other: '#77828a' },
+  flow: flowColors('light'),
 };
 
 // loại giao dịch -> nhóm màu. Màu ở đây là nội dung: nó cho biết đó là dòng tiền gì.
@@ -295,6 +302,8 @@ export function IsoMap() {
   const firm = useStore((s) => s.tick?.player.firm ?? -1);
   const open = useStore((s) => s.open);
   const sizeTick = useRef(0);
+  const [themeTick, setThemeTick] = useState(0);
+  useEffect(() => onThemeChange(() => setThemeTick((n) => n + 1)), []);
 
   // vẽ lớp tĩnh khi có khung mới hoặc đổi kích thước
   useEffect(() => {
@@ -321,7 +330,7 @@ export function IsoMap() {
       if (!frame || w === 0) return;
       const ctx = cv.getContext('2d')!;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const P = window.matchMedia('(prefers-color-scheme: light)').matches ? LIGHT : DARK;
+      const P = resolvedTheme() === 'light' ? LIGHT : DARK;
       S.layout = computeLayout(frame);
       S.hits = drawStatic(ctx, S.view, frame, S.layout, P, w, h, { hh, firm }, named);
     };
@@ -332,7 +341,7 @@ export function IsoMap() {
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [frame, named, hh, firm]);
+  }, [frame, named, hh, firm, themeTick]);
 
   // hạt dòng tiền của tháng vừa xong
   useEffect(() => {
@@ -343,7 +352,7 @@ export function IsoMap() {
       S.parts = [];
       return;
     }
-    const P = window.matchMedia('(prefers-color-scheme: light)').matches ? LIGHT : DARK;
+    const P = resolvedTheme() === 'light' ? LIGHT : DARK;
     S.parts = makeParticles(tx, S.layout, S.view, P, kinds.map((k) => k.id));
     S.start = performance.now();
     S.dur = speed === 16 ? 180 : speed === 4 ? 700 : 2600;
