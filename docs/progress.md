@@ -54,6 +54,7 @@ Spec: gd1-5.md mục 4 (gồm 4.4 cài đặt ban đầu dùng `setup.laws`, nh�
 **Giới hạn đã biết, ngoài U2:** sau khi tải ván, `eventLog` của Session rỗng nên sự kiện cũ có `index = -1`, không có nút "Nếu không làm vậy thì sao?" cho các lệnh trước lúc lưu. Có từ GĐ1, chưa sửa.
 
 - U2 bước A1 xong: `scripts/hash-check.ts` (sáu ván, 24 tháng qua Session, in mã băm) và `scripts/hash-baseline-u2.txt` (mã băm gốc trước U2, code bdf52ee; phải không đổi tới cuối U2). `npm test` xanh 100/100. Commit: `U2 bước A1` trong git log.
+- U2 bước A2 xong: giao thức lên 3 (`src/protocol/index.ts`: truy vấn `events`, `setupInfo`, kiểu `SetupInfo`); `src/engine/session/session.ts` thêm hai nhánh truy vấn và tách `lawInfos`/`ruleInfos` dùng chung với `catalog()`; `setupInfo` dựng thế giới tạm, chạy được khi chưa `init`. `npm test` xanh 100/100, mã băm sáu ván không đổi. Commit: `U2 bước A2` trong git log.
 
 ### U6b Sandbox đầy đủ (Dương duyệt 15/11/2026, đã ghi spec, CHƯA LÀM; xếp sau U6, trước U7)
 

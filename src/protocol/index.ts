@@ -1,7 +1,7 @@
 // Giao thức engine <-> UI (gd0 mục 7.2). Mọi tin nhắn đi qua Worker đều có kiểu ở đây.
 // Đổi cấu trúc tin thì tăng PROTOCOL_VERSION.
 
-export const PROTOCOL_VERSION = 2;
+export const PROTOCOL_VERSION = 3; // 3: thêm truy vấn events, setupInfo (U2)
 
 export type ScaleId = 'S' | 'M' | 'L';
 export type Role = 'observer' | 'government' | 'fiscal' | 'monetary' | 'household' | 'firm';
@@ -33,7 +33,9 @@ export type Query =
   | { kind: 'flows'; t0: number; t1: number }
   | { kind: 'hash' }
   | { kind: 'scenarioReport' }
-  | { kind: 'scenarioOptions' };
+  | { kind: 'scenarioOptions' }
+  | { kind: 'events' }
+  | { kind: 'setupInfo' };
 
 export type Command =
   | { type: 'init'; scale: ScaleId; seed: number; scenario?: string; setup?: Intervention }
@@ -77,6 +79,11 @@ export interface RuleInfo {
   source: string;
   teaches?: string;
   variants: Array<{ id: string; label: string }>;
+}
+/** Dữ liệu cho màn hình Cài đặt ban đầu: mọi luật kèm giá trị mặc định, và các quy tắc có biến thể. */
+export interface SetupInfo {
+  laws: Array<LawInfo & { value: number }>;
+  rules: RuleInfo[];
 }
 export interface ParamInfo {
   id: string;
@@ -302,7 +309,7 @@ export interface OptionsReport {
   player?: { values: number[] };
 }
 
-export type QueryData = SeriesResult | CausalTree | AgentDetail | AgentRow[] | MoneyResult | FlowsResult | CounterfactualResult | ScenarioReport | OptionsReport | { hash: string } | { bytes: Uint8Array };
+export type QueryData = SeriesResult | CausalTree | AgentDetail | AgentRow[] | MoneyResult | FlowsResult | CounterfactualResult | ScenarioReport | OptionsReport | EventInfo[] | SetupInfo | { hash: string } | { bytes: Uint8Array };
 
 export type EngineMsg =
   | { type: 'ready'; catalog: Catalog; named: NamedAgent[]; scenario?: ScenarioInfo; seed: number; scale: ScaleId }

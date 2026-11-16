@@ -13,6 +13,7 @@ import type {
   EngineMsg,
   EventInfo,
   FlowsResult,
+  LawInfo,
   MapFrame,
   MoneyResult,
   NamedAgent,
@@ -21,10 +22,12 @@ import type {
   PlayerOrders,
   Query,
   QueryData,
+  RuleInfo,
   ScenarioInfo,
   ScenarioReport,
   ScenarioState,
   SeriesResult,
+  SetupInfo,
   TickMsg,
   TxSample,
 } from '../../protocol';
@@ -333,16 +336,25 @@ export class Session {
   // =====================================================================
   // Tin nhắn
   // =====================================================================
+  /** Thông tin mọi luật theo thế giới `w` (ngày hiệu lực lấy từ `w`). Dùng chung cho `catalog` và `setupInfo`. */
+  private lawInfos(w: World): LawInfo[] {
+    const iso = dateOf(w).iso;
+    return [...this.eng.laws.values()].map((l) => {
+      const v = resolveVersion(l, iso);
+      return { id: l.id, label: l.label, unit: l.unit, group: l.group, owner: l.owner, min: l.min, max: l.max, step: l.step, note: l.note, source: [v.source.doc, v.source.article].filter(Boolean).join(', '), verification: v.verification };
+    });
+  }
+
+  private ruleInfos(): RuleInfo[] {
+    return [...this.eng.rules.values()].map((r) => ({ id: r.id, label: r.label, source: r.source, teaches: r.teaches, variants: r.variants }));
+  }
+
   catalog(): Catalog {
-    const iso = dateOf(this.w).iso;
     return {
       protocol: PROTOCOL_VERSION,
       indicators: this.eng.indicators.map((i) => ({ id: i.id, label: i.label, unit: i.unit, group: i.group, good: i.good ?? 0, explainable: !!i.contrib })),
-      laws: [...this.eng.laws.values()].map((l) => {
-        const v = resolveVersion(l, iso);
-        return { id: l.id, label: l.label, unit: l.unit, group: l.group, owner: l.owner, min: l.min, max: l.max, step: l.step, note: l.note, source: [v.source.doc, v.source.article].filter(Boolean).join(', '), verification: v.verification };
-      }),
-      rules: [...this.eng.rules.values()].map((r) => ({ id: r.id, label: r.label, source: r.source, teaches: r.teaches, variants: r.variants })),
+      laws: this.lawInfos(this.w),
+      rules: this.ruleInfos(),
       params: [...this.eng.paramDefs.values()].map((p) => ({ id: p.id, label: p.label, source: p.source, note: p.note })),
       txKinds: TX_KINDS.map((k) => ({ id: k.id, label: k.label, flow: k.flow })),
       sectors: [...SECTOR_LABEL],
@@ -694,7 +706,18 @@ export class Session {
         return this.scenarioReport();
       case 'scenarioOptions':
         return this.scenarioOptions();
+      case 'events':
+        return w.events.map((e, i) => this.eventInfo(e, i));
+      case 'setupInfo':
+        return this.setupInfo();
     }
+  }
+
+  /** Mọi luật kèm giá trị mặc định, và các quy tắc có biến thể. Dựng thế giới tạm, không đụng thế giới đang chạy; dùng được khi chưa `init`. */
+  private setupInfo(): SetupInfo {
+    const tmp = this.eng.newWorld({ seed: 1, scale: 'S' });
+    const laws = this.lawInfos(tmp).map((l) => ({ ...l, value: this.eng.law(tmp, l.id) }));
+    return { laws, rules: this.ruleInfos().filter((r) => r.variants.length > 1) };
   }
 
   private tree(n: CausalNode): CausalTree {
