@@ -541,6 +541,12 @@ Không mục nào đổi qua/không qua. Hai kết luận đã báo phải sửa
 
 **Đề xuất "làm nóng sẵn" (ĐÃ DUYỆT hướng 15/11/2026; điểm 4 đang làm; đưa vào spec GĐ1.5):** (1) ván mới bắt đầu từ trạng thái tháng 240, người chơi vẫn thấy năm bắt đầu 2026; (2) tính lúc tạo ván (khoảng 1 giây ở 500 hộ, 20 giây ở 5000 hộ), lưu IndexedDB theo quy mô, seed, phiên bản engine; không đóng gói file trạng thái; (3) làm nóng bằng luật đứng yên ở phiên bản 2026 rồi đặt lại đồng hồ, luật có ngày hiệu lực không kích hoạt trong lúc làm nóng, chuỗi nhân quả và biểu đồ bắt đầu sạch; (4) kiểm định và kịch bản dời điểm tách nhánh sang tháng 240: đổi cách đo của mọi thí nghiệm chạy đôi, cần Dương duyệt riêng và chạy lại toàn bộ.
 
+### D17. gov.revenueUse bỏ sót lần đổi thuế ở tháng 1 và 2 (phát hiện 16/11/2026, CHƯA SỬA, chờ Dương)
+
+Sonnet đo khi viết test U2 (ván 50 hộ, seed 1, đổi `vat.rate.standard` lên 12% ở tháng N, chạy 24 tháng): N = 1 hoặc 2 thì quy tắc không bao giờ kích hoạt; N = 3, 4, 6, 12 thì kích hoạt đúng tháng đó. Người điều phối đọc `src/engine/modules/gd1/gov.ts` hàm `revenueUse`: `s.taxOvSeen = ovCount` chạy mọi tháng, còn điều kiện kích hoạt đòi `s.taxHist.length >= 3`. Lần đổi ở tháng 1-2 được ghi là "đã thấy" khi chưa đủ số liệu, nên mất hẳn.
+
+Ảnh hưởng: chỉ ván không làm nóng (ván tự do hiện nay, và ô "Bắt đầu từ một nền kinh tế mới lập" sau U5). Kịch bản và kiểm định tách nhánh ở tháng 240 nên không bị. Hướng sửa gợi ý: chỉ cập nhật `taxOvSeen` khi đã đủ 3 tháng số liệu (hoặc hoãn kích hoạt tới khi đủ). Sửa là đổi engine; với ván không đổi thuế ở tháng 1-2 thì mã băm không đổi. Test `tests/unit/setup-init.test.ts` dùng tháng 3 cho phần đối chứng, kèm chú thích trỏ về đây.
+
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 
 Đo trong Chrome thật: 50 hộ, seed 7, 24 tháng. Bảng tác nhân, sổ cái, chuỗi chỉ số, phần phân rã trùng từng bit với Node. Mã băm toàn cục lệch từ tháng 11 vì một bản ghi quyết định lương sai ở chữ số cuối (`Math.log`, `Math.cos` trong `core/rng.ts` khác nhau giữa hai bản V8). Engine còn dùng `Math.pow`, `Math.exp` ở 8 chỗ. gd0 mục 12 đã lường. **Dương quyết 14/11/2026: chấp nhận như gd0 mục 12, không tự cài hàm toán.** K0.2 ghi là đạt theo nghĩa: trạng thái kinh tế trùng từng bit; mã băm toàn cục có thể lệch giữa hai bản V8 khác nhau ở chữ số cuối của hàm toán.
