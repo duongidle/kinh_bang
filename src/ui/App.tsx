@@ -1,12 +1,12 @@
 // Khung ứng dụng (gd0 mục 8.1): thanh trên, bản đồ ở giữa, bảng theo vai bên phải, dải chỉ số ở dưới, ngăn chi tiết.
 import { useEffect, useState } from 'react';
-import { SCENARIOS } from '../content/scenarios';
 import type { Role, ScaleId } from '../protocol';
 import { Spark } from './Chart';
 import { Drawer } from './Drawer';
 import { fmt, monthLabel } from './format';
 import { FLOW_LEGEND, IsoMap } from './iso/IsoMap';
 import { RolePanel } from './RolePanel';
+import { Home } from './screens/Home';
 import { useStore, type Guess, type Speed } from './store';
 
 const ROLE_LABEL: Record<Role, string> = { observer: 'Quan sát', government: 'Chính phủ (cả hai)', fiscal: 'Bộ Tài chính', monetary: 'NHNN', household: 'Hộ gia đình', firm: 'Doanh nghiệp' };
@@ -27,84 +27,12 @@ const SHORT: Record<string, string> = {
 
 export function App() {
   const phase = useStore((s) => s.phase);
-  return phase === 'menu' ? <Menu /> : <Play />;
-}
-
-function Menu() {
-  const start = useStore((s) => s.start);
-  const openDialog = useStore((s) => s.openDialog);
-  const [scale, setScale] = useState<ScaleId>('M');
-  const [seed, setSeed] = useState(1);
-  const done = new Set<string>(JSON.parse(localStorage.getItem('kb.done') ?? '[]'));
-  return (
-    <main className="menu">
-      <header>
-        <h1>Kinh Bang</h1>
-        <p>Một nền kinh tế nhỏ phỏng theo Việt Nam. Mọi con số sinh ra từ hành vi của từng hộ, từng doanh nghiệp, từng ngân hàng. Bấm vào số nào cũng hỏi được "vì sao".</p>
-      </header>
-      <section>
-        <h2>Tự do</h2>
-        <div className="row">
-          <label>
-            Quy mô
-            <select value={scale} onChange={(e) => setScale(e.target.value as ScaleId)}>
-              {(['S', 'M', 'L'] as ScaleId[]).map((s) => (
-                <option key={s} value={s}>
-                  {SCALE_LABEL[s]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Hạt giống
-            <input type="number" min={1} max={9999} value={seed} onChange={(e) => setSeed(Math.max(1, Number(e.target.value) || 1))} />
-          </label>
-          <button className="primary" onClick={() => start({ scale, seed })}>
-            Bắt đầu
-          </button>
-          <button
-            onClick={() => {
-              useStore.setState({ phase: 'play' });
-              openDialog({ kind: 'file' });
-            }}
-          >
-            Mở ván đã lưu
-          </button>
-        </div>
-        <p className="hint">Tự đặt chính sách, đổi vai bất cứ lúc nào. Phòng thí nghiệm nằm trong chế độ này.</p>
-      </section>
-      <section>
-        <h2>Kịch bản</h2>
-        <ul className="scenarios">
-          {SCENARIOS.map((s, i) => (
-            <li key={s.id}>
-              <button onClick={() => start({ scale: s.scale, seed, scenario: s.id })}>
-                <span className="no">{String(i + 1).padStart(2, '0')}</span>
-                <span className="body">
-                  <strong>
-                    {s.title}
-                    {done.has(s.id) && <em className="tag ok">đã xong</em>}
-                    {s.untested && <em className="tag warn">ngoài vùng đã kiểm định</em>}
-                  </strong>
-                  <span>{s.question}</span>
-                  <small>
-                    {ROLE_LABEL[s.role]} · {Math.round(s.months / 12)} năm
-                    {s.prereq.length > 0 && ` · nên hiểu trước: ${s.prereq.map((p) => SCENARIOS.find((x) => x.id === p)?.title ?? p).join(', ')}`}
-                  </small>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </main>
-  );
+  return phase === 'menu' ? <Home /> : <Play />;
 }
 
 function Play() {
   const phase = useStore((s) => s.phase);
   const tick = useStore((s) => s.tick);
-  const dialog = useStore((s) => s.dialog);
   const error = useStore((s) => s.error);
   const violation = useStore((s) => s.violation);
   const dismiss = useStore((s) => s.dismissError);
@@ -131,7 +59,7 @@ function Play() {
     return (
       <div className="app">
         <div className="loading">
-          {dialog?.kind === 'file' ? <Drawer /> : <p>Đang dựng nền kinh tế…</p>}
+          <p>Đang dựng nền kinh tế…</p>
           {error && (
             <p className="error">
               {error} <button onClick={toMenu}>Về màn hình đầu</button>
