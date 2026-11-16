@@ -118,15 +118,21 @@ function revenueUse(w: World, eng: Engine, s: Gd1State): void {
   const comp = eng.variant(w, 'tax.compliance');
   let triggered = false;
   if (w.meta.tick > 0 && (ovCount > s.taxOvSeen || comp !== s.compSeen)) triggered = true;
-  s.taxOvSeen = ovCount;
-  s.compSeen = comp;
-  if (triggered && s.revBase < 0 && s.taxHist.length >= 3) {
+  // sai-khac.md D17: lần đổi chưa xử lý được (chưa có tháng số liệu nào, hoặc GDP không dương) thì không đánh dấu "đã thấy", để tháng sau thử lại.
+  let handled = true;
+  if (triggered && s.revBase < 0) {
+    handled = false;
     const g = sumLast(s.gdpHist, 12);
-    if (g > 0) {
+    if (s.taxHist.length >= 1 && g > 0) {
+      handled = true;
       s.revBase = sumLast(s.taxHist, 12) / g;
       if (variant === 'base') eng.event(w, { type: 'policy', id: 'gov.revenueUse', label: 'Chính phủ bắt đầu chi lại phần thu thêm từ thuế (hụt thu thì vay bù)', by: 'Mô hình' });
       else if (variant === 'balanced') eng.event(w, { type: 'policy', id: 'gov.revenueUse', label: 'Chính phủ bắt đầu chi lại phần thu thêm từ thuế (hụt thu thì cắt chi)', by: 'Mô hình' });
     }
+  }
+  if (handled) {
+    s.taxOvSeen = ovCount;
+    s.compSeen = comp;
   }
   s.respend = 1;
   s.respendAmt = 0;

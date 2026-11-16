@@ -2,6 +2,8 @@
 import { describe, expect, it } from 'vitest';
 import { gd1Engine } from '@/engine/modules/gd1/index';
 import type { World } from '@/engine/core/world';
+import { Session } from '@/engine/session/session';
+import type { Command, EngineMsg, EventInfo } from '@/protocol';
 
 const sum = (a: ArrayLike<number>) => Array.from(a).reduce((x, y) => x + y, 0);
 
@@ -57,4 +59,28 @@ describe('gov.revenueUse', () => {
     eng.run(w, 36);
     expect(sum(eng.seriesOf(w, 'gov.respend', 0, 36).map(Math.abs))).toBe(0);
   });
+});
+
+// sai-khac.md D17: đổi thuế ở tháng 1 hoặc 2 từng bị bỏ sót vì lần đổi bị đánh dấu "đã thấy" khi chưa đủ số liệu.
+describe('gov.revenueUse khi đổi thuế sớm (D17)', () => {
+  function revenueEventsAfterVatAt(month: number): EventInfo[] {
+    const s = new Session();
+    const send = (cmd: Command): EngineMsg[] => structuredClone(s.handle(structuredClone(cmd)));
+    send({ type: 'init', scale: 'S', seed: 1 });
+    send({ type: 'step', months: month, frame: false });
+    send({ type: 'policy', id: 'vat.rate.standard', value: 0.12 });
+    send({ type: 'step', months: 24, frame: false });
+    const r = send({ type: 'query', rid: 1, q: { kind: 'events' } })[0];
+    if (r.type !== 'result') throw new Error(r.type === 'error' ? r.message : r.type);
+    return (r.data as EventInfo[]).filter((e) => e.id === 'gov.revenueUse');
+  }
+
+  for (const month of [1, 2]) {
+    it(`đổi GTGT ở tháng ${month}: có đúng một sự kiện gov.revenueUse, ở tháng đổi hoặc ngay sau`, () => {
+      const ev = revenueEventsAfterVatAt(month);
+      expect(ev.length).toBe(1);
+      expect(ev[0].tick).toBeGreaterThanOrEqual(month);
+      expect(ev[0].tick).toBeLessThanOrEqual(month + 1);
+    });
+  }
 });

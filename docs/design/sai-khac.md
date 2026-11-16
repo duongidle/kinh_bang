@@ -423,7 +423,7 @@ Các lựa chọn đã trình (để đối chiếu):
 **Thiết kế cơ chế là của người điều phối (Fable, 15/11/2026), Dương chưa soát chi tiết.** Quy tắc `gov.revenueUse` trong sổ quy tắc:
 
 - **Kích hoạt.** Khi người chơi hoặc một thí nghiệm đổi một luật thuế (`vat.*`, `pit.*`, `cit.*`, `hkd.threshold`, `tax.indirect.other`) hoặc đổi biến thể `tax.compliance`, sau tháng đầu của ván. Không kích hoạt bởi: điều kiện ban đầu, việc tự chỉnh ngưỡng theo lạm phát, và thay đổi đã nằm sẵn trong luật hiện hành (GTGT tự về 10% từ 01/01/2027). Lý do: dự toán ngân sách đã tính theo luật hiện hành; "thu thêm" là so với luật hiện hành.
-- **Mốc.** Lúc kích hoạt lần đầu, ghi tỷ lệ thu thuế / GDP danh nghĩa của 12 tháng trước đó (ít hơn nếu ván chưa đủ 12 tháng; dưới 3 tháng thì không kích hoạt). Thu thuế gồm GTGT, TNCN, TNDN, thuế hộ kinh doanh, thuế gián thu khác; không gồm phí và đất. Mốc giữ nguyên tới hết ván.
+- **Mốc.** Lúc kích hoạt lần đầu, ghi tỷ lệ thu thuế / GDP danh nghĩa của 12 tháng trước đó (ít hơn nếu ván chưa đủ 12 tháng; cần ít nhất 1 tháng, sửa ngày 16/11/2026 ở D17). Thu thuế gồm GTGT, TNCN, TNDN, thuế hộ kinh doanh, thuế gián thu khác; không gồm phí và đất. Mốc giữ nguyên tới hết ván.
 - **Mỗi tháng sau đó.** Thu thêm = (tỷ lệ thu thuế / GDP của 12 tháng gần nhất − mốc) × GDP tháng (làm trơn). Dùng cửa sổ 12 tháng vì thuế TNDN quyết toán theo năm, và vì ngân sách ngoài đời lập theo năm. Hệ quả: phần chi lại vào dần trong 12 tháng đầu, đủ từ năm thứ hai.
 - **Chi lại.** Một hệ số chung nhân vào lương công chức, ngân sách mua hàng và trợ cấp, sao cho tổng chi tăng đúng bằng phần thu thêm. Cùng một hệ số nên cơ cấu chi giữ nguyên. Không đổi giá trị luật nào; lãi trái phiếu không đổi.
 - **Biến thể.** `base`: thu thêm thì chi lại, hụt thu thì vay bù (hệ số không xuống dưới 1). `keep`: không bao giờ chỉnh chi (bản "về thiết kế": tăng thuế thì tiền nằm lại Kho bạc, giảm thuế thì vay bù). `balanced`: thu thêm thì chi lại, hụt thu thì cắt chi.
@@ -541,11 +541,13 @@ Không mục nào đổi qua/không qua. Hai kết luận đã báo phải sửa
 
 **Đề xuất "làm nóng sẵn" (ĐÃ DUYỆT hướng 15/11/2026; điểm 4 đang làm; đưa vào spec GĐ1.5):** (1) ván mới bắt đầu từ trạng thái tháng 240, người chơi vẫn thấy năm bắt đầu 2026; (2) tính lúc tạo ván (khoảng 1 giây ở 500 hộ, 20 giây ở 5000 hộ), lưu IndexedDB theo quy mô, seed, phiên bản engine; không đóng gói file trạng thái; (3) làm nóng bằng luật đứng yên ở phiên bản 2026 rồi đặt lại đồng hồ, luật có ngày hiệu lực không kích hoạt trong lúc làm nóng, chuỗi nhân quả và biểu đồ bắt đầu sạch; (4) kiểm định và kịch bản dời điểm tách nhánh sang tháng 240: đổi cách đo của mọi thí nghiệm chạy đôi, cần Dương duyệt riêng và chạy lại toàn bộ.
 
-### D17. gov.revenueUse bỏ sót lần đổi thuế ở tháng 1 và 2 (phát hiện 16/11/2026, CHƯA SỬA, chờ Dương)
+### D17. gov.revenueUse bỏ sót lần đổi thuế ở tháng 1 và 2 (ĐÃ SỬA 16/11/2026, Dương duyệt)
 
 Sonnet đo khi viết test U2 (ván 50 hộ, seed 1, đổi `vat.rate.standard` lên 12% ở tháng N, chạy 24 tháng): N = 1 hoặc 2 thì quy tắc không bao giờ kích hoạt; N = 3, 4, 6, 12 thì kích hoạt đúng tháng đó. Người điều phối đọc `src/engine/modules/gd1/gov.ts` hàm `revenueUse`: `s.taxOvSeen = ovCount` chạy mọi tháng, còn điều kiện kích hoạt đòi `s.taxHist.length >= 3`. Lần đổi ở tháng 1-2 được ghi là "đã thấy" khi chưa đủ số liệu, nên mất hẳn.
 
 Ảnh hưởng: chỉ ván không làm nóng (ván tự do hiện nay, và ô "Bắt đầu từ một nền kinh tế mới lập" sau U5). Kịch bản và kiểm định tách nhánh ở tháng 240 nên không bị. Hướng sửa gợi ý: chỉ cập nhật `taxOvSeen` khi đã đủ 3 tháng số liệu (hoặc hoãn kích hoạt tới khi đủ). Sửa là đổi engine; với ván không đổi thuế ở tháng 1-2 thì mã băm không đổi. Test `tests/unit/setup-init.test.ts` dùng tháng 3 cho phần đối chứng, kèm chú thích trỏ về đây.
+
+**Đã sửa (Dương duyệt 16/11/2026).** Ngưỡng số liệu hạ từ 3 tháng xuống 1 tháng; lần đổi chưa xử lý được thì giữ lại để tháng sau thử tiếp. Mốc chỉ gồm các tháng trước khi đổi luật. Bỏ phương án hoãn tới tháng 3 vì mốc sẽ lẫn các tháng sau khi đổi. Hệ quả: đổi thuế ở tháng 1-2 thì mốc chỉ có 1-2 tháng số liệu của một nền kinh tế mới dựng, nhiễu hơn; mốc cũng thiếu tháng quyết toán thuế TNDN, như mọi lần đổi trước tháng 12 (đơn giản hoá đã có). Ván không đổi thuế ở tháng 1-2 không đổi: mã băm 9 ván mẫu trùng trước và sau.
 
 ### D7. Tất định giữa trình duyệt và Node (K0.2)
 

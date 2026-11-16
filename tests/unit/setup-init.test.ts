@@ -72,11 +72,10 @@ describe('luật đặt ở tháng 0 qua setup.laws', () => {
     expect(revenueUse(s)).toEqual([]);
   });
 
-  // Tháng 1-2 không kích hoạt do lỗi đã biết, sai-khac.md D17; test này chỉ đối chứng với test 4.
-  it('đối chiếu: đổi cùng luật bằng lệnh policy ở tháng 3 thì có gov.revenueUse', () => {
+  it('đối chiếu: đổi cùng luật bằng lệnh policy ở tháng 1 thì có gov.revenueUse', () => {
     const s = new Session();
     send(s, { type: 'init', scale: 'S', seed: 1 });
-    send(s, { type: 'step', months: 3, frame: false });
+    send(s, { type: 'step', months: 1, frame: false });
     send(s, { type: 'policy', id: VAT, value: 0.12 });
     send(s, { type: 'step', months: 24, frame: false });
     expect(revenueUse(s).length).toBeGreaterThan(0);
