@@ -1,0 +1,4 @@
+Mã băm gốc trước khi sửa D17 và cờ đã sửa, code 92fe9be
+tu-do-S-seed1-vat-thang6 dec035017cfd33f7
+tu-do-M-seed2-vat-thang6 9c8cbc6e572d554c
+kb-that-lung-buoc-bung-seed1 965549a4d01de09e
