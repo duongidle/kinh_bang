@@ -6,7 +6,11 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
-### U2 (Dương bảo làm ngày 16/11/2026; XONG CODE và ĐÃ SOÁT tối 16/11, đã báo Dương; CHƯA sang U3 khi Dương chưa bảo)
+### U3 (CHƯA LÀM; chờ Dương bảo)
+
+Dương nhận U2 ngày 16/11/2026 và thêm ba việc vào U3 (gd1-5.md mục 6b): sửa đối chứng sau khi tải ván (test tái hiện trước), `format.ts` cùng số chữ số hai đầu một lần đổi tỷ lệ, lượt soát mở ít nhất một kịch bản vai Chính phủ trên trình duyệt. Làm U3 khi Dương bảo.
+
+### U2 (Dương bảo làm ngày 16/11/2026; XONG, Dương nhận ngày 16/11/2026, đã push)
 
 Spec: gd1-5.md mục 4 (gồm 4.4 cài đặt ban đầu dùng `setup.laws`, như spec hiện tại), mục 3.5, mục 12 dòng 7 (nhãn "Tự do (sandbox)", mục thuật ngữ `van-tu-do`). U2 KHÔNG làm phần của U6b (mục 4.5).
 
