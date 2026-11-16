@@ -7,17 +7,19 @@ import { useStore } from './store';
 
 export function RolePanel() {
   const role = useStore((s) => s.role);
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
+  const openScreen = useStore((s) => s.openScreen);
+  const openDialog = useStore((s) => s.openDialog);
   return (
     <aside className="side">
       <ScenarioCard />
       <nav className="tools" aria-label="Công cụ">
-        <button onClick={() => open({ kind: 'charts' })}>Biểu đồ</button>
-        <button onClick={() => open({ kind: 'money' })}>Nguồn tiền</button>
-        <button onClick={() => open({ kind: 'agents' })}>Soi tác nhân</button>
-        <button onClick={() => open({ kind: 'lab' })}>Phòng thí nghiệm</button>
-        <button onClick={() => open({ kind: 'notes' })}>Mô hình bỏ qua gì</button>
-        <button onClick={() => open({ kind: 'file' })}>Lưu, tải, xuất</button>
+        <button onClick={() => openScreen({ kind: 'charts' })}>Biểu đồ</button>
+        <button onClick={() => openLeft({ kind: 'money' })}>Nguồn tiền</button>
+        <button onClick={() => openLeft({ kind: 'agents' })}>Soi tác nhân</button>
+        <button onClick={() => openScreen({ kind: 'lab' })}>Phòng thí nghiệm</button>
+        <button onClick={() => openDialog({ kind: 'notes' })}>Mô hình bỏ qua gì</button>
+        <button onClick={() => openDialog({ kind: 'file' })}>Lưu, tải, xuất</button>
       </nav>
       {(role === 'government' || role === 'fiscal' || role === 'monetary') && <PolicyPanel key={role} />}
       {(role === 'household' || role === 'firm') && <AgentPanel />}
@@ -31,7 +33,7 @@ export function RolePanel() {
 function ScenarioCard() {
   const scenario = useStore((s) => s.scenario);
   const st = useStore((s) => s.tick?.scenario);
-  const open = useStore((s) => s.open);
+  const openScreen = useStore((s) => s.openScreen);
   const [busy, setBusy] = useState(false);
   if (!scenario || !st) return null;
   const report = async () => {
@@ -43,7 +45,7 @@ function ScenarioCard() {
         done.add(scenario.id);
         localStorage.setItem('kb.done', JSON.stringify([...done]));
       }
-      open({ kind: 'report', data });
+      openScreen({ kind: 'report', data });
     } finally {
       setBusy(false);
     }
@@ -77,7 +79,7 @@ function PolicyPanel() {
   const catalog = useStore((s) => s.catalog)!;
   const tick = useStore((s) => s.tick)!;
   const param = useStore((s) => s.param);
-  const open = useStore((s) => s.open);
+  const openDialog = useStore((s) => s.openDialog);
   const laws = catalog.laws.filter((l) => role === 'government' || l.owner === role);
   const groups = [...new Set(laws.map((l) => l.group))];
   const [openGroup, setOpenGroup] = useState<string>(groups[0]);
@@ -93,7 +95,7 @@ function PolicyPanel() {
       {role !== 'monetary' && role !== 'government' && auto('cb.autopilot', 'Để máy điều hành NHNN: tự chỉnh lãi suất theo lạm phát')}
       {role !== 'fiscal' && role !== 'government' && auto('gov.autopilot', 'Để máy điều hành Bộ Tài chính: tự chỉnh mua hàng theo mục tiêu bội chi')}
       {role !== 'fiscal' && (
-        <button className="link" onClick={() => open({ kind: 'notes', id: 'lai-suat-yeu' })}>
+        <button className="link" onClick={() => openDialog({ kind: 'notes', id: 'lai-suat-yeu' })}>
           Vì sao lãi suất yếu, room tín dụng mạnh?
         </button>
       )}
@@ -165,7 +167,7 @@ function AgentPanel() {
   const player = useStore((s) => s.tick!.player);
   const possess = useStore((s) => s.possess);
   const orders = useStore((s) => s.orders);
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
   const scenario = useStore((s) => s.scenario);
   const sector = role === 'household' ? 'hh' : 'firm';
   const id = sector === 'hh' ? player.hh : player.firm;
@@ -195,7 +197,7 @@ function AgentPanel() {
       <h2>{me?.name ?? (sector === 'hh' ? `Hộ ${id + 1}` : `Doanh nghiệp ${id + 1}`)}</h2>
       {me && <p className="hint">{me.story}</p>}
       <div className="row">
-        <button onClick={() => open({ kind: 'agent', sector, id })}>Xem sổ sách</button>
+        <button onClick={() => openLeft({ kind: 'agent', sector, id })}>Xem sổ sách</button>
         {!scenario?.id && <button onClick={() => possess(null)}>Thả ra</button>}
       </div>
       <p className="hint">Mỗi ô có phương án của quy tắc tự động ở tháng vừa rồi. Bỏ trống là để quy tắc tự lái.</p>
@@ -258,7 +260,7 @@ function Lever({ label, unit, scale, auto, value, onChange }: { label: string; u
 function ObserverPanel() {
   const catalog = useStore((s) => s.catalog)!;
   const tick = useStore((s) => s.tick)!;
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
   const named = useStore((s) => s.named);
   const show = ['gdp.nominal', 'consumption', 'investment', 'gov.spending', 'gov.revenue', 'rate.lending', 'firms.formal', 'firms.hkd', 'firms.solo', 'firms.bankrupt', 'npl', 'bank.car', 'money.cashShare', 'inflation.expected', 'trust', 'gini.income'];
   return (
@@ -273,7 +275,7 @@ function ObserverPanel() {
             return (
               <tr key={id}>
                 <th>
-                  <button className="link" onClick={() => open({ kind: 'causal', indicator: id })}>
+                  <button className="link" onClick={() => openLeft({ kind: 'causal', indicator: id })}>
                     {d.label}
                   </button>
                 </th>
@@ -287,7 +289,7 @@ function ObserverPanel() {
       <ul className="pick small">
         {named.map((n) => (
           <li key={`${n.sector}${n.id}`}>
-            <button onClick={() => open({ kind: 'agent', sector: n.sector, id: n.id })}>
+            <button onClick={() => openLeft({ kind: 'agent', sector: n.sector, id: n.id })}>
               <strong>{n.name}</strong>
               <span>{n.story}</span>
             </button>

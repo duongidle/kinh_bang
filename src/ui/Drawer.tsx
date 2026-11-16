@@ -1,13 +1,15 @@
 // Ngăn chi tiết: chuỗi nhân quả, soi tác nhân, nguồn tiền, Phòng thí nghiệm, ghi chú mô hình, so với thế giới đối chứng,
 // báo cáo kịch bản, biểu đồ và xuất CSV, lưu tải.
-import { del, get as idbGet, keys as idbKeys, set as idbSet } from 'idb-keyval';
 import { useEffect, useMemo, useState } from 'react';
 import { NOTES, OMISSIONS } from '../content/notes';
 import type { AgentDetail, AgentRow, CausalTree, CounterfactualResult, MoneyResult, OptionsReport, ScenarioReport, SeriesResult } from '../protocol';
 import { Chart } from './Chart';
 import { engine } from './client';
 import { fmt, fmtDelta, money, monthLabel, num } from './format';
-import { useStore, type Panel } from './store';
+import { deleteSave, listSaves, loadSave, saveCurrent } from './saves';
+import { useStore, type DialogState, type LeftItem, type ScreenState } from './store';
+
+type Panel = LeftItem | ScreenState | DialogState;
 
 const TITLE: Record<Panel['kind'], string> = {
   causal: 'Vì sao?',
@@ -20,17 +22,29 @@ const TITLE: Record<Panel['kind'], string> = {
   charts: 'Biểu đồ',
   agents: 'Soi tác nhân',
   file: 'Lưu, tải, xuất',
+  events: 'Mọi sự kiện',
 };
 
 export function Drawer() {
-  const panel = useStore((s) => s.panel);
-  const open = useStore((s) => s.open);
+  const left = useStore((s) => s.left);
+  const screen = useStore((s) => s.screen);
+  const dialog = useStore((s) => s.dialog);
+  const closeLeft = useStore((s) => s.closeLeft);
+  const openScreen = useStore((s) => s.openScreen);
+  const openDialog = useStore((s) => s.openDialog);
+  // Tạm thời (bước B1): vẫn hiện một ngăn như cũ. B5 tách thành ngăn trái, màn hình riêng và hộp thoại.
+  const panel: Panel | null = dialog ?? screen ?? left[left.length - 1] ?? null;
+  const close = () => {
+    openDialog(null);
+    openScreen(null);
+    closeLeft();
+  };
   if (!panel) return null;
   return (
     <section className="drawer" aria-label={TITLE[panel.kind]}>
       <header>
         <h2>{TITLE[panel.kind]}</h2>
-        <button onClick={() => open(null)} aria-label="Đóng">
+        <button onClick={close} aria-label="Đóng">
           Đóng
         </button>
       </header>
@@ -78,7 +92,7 @@ function Causal({ indicator }: { indicator: string }) {
   const tick = useStore((s) => s.tick!.tick);
   const series = useStore((s) => s.series);
   const events = useStore((s) => s.events);
-  const open = useStore((s) => s.open);
+  const openDialog = useStore((s) => s.openDialog);
   const [span, setSpan] = useState(12);
   const def = catalog.indicators.find((x) => x.id === indicator)!;
   const t1 = tick - 1;
@@ -113,7 +127,7 @@ function Causal({ indicator }: { indicator: string }) {
             <>
               <p className="tagline">
                 Phân rã: hạch toán các lý do trực tiếp, cộng lại đúng bằng mức thay đổi.{' '}
-                <button className="link" onClick={() => open({ kind: 'notes', id: 'phan-ra-va-doi-chung' })}>
+                <button className="link" onClick={() => openDialog({ kind: 'notes', id: 'phan-ra-va-doi-chung' })}>
                   Khác gì với đối chứng?
                 </button>
               </p>
@@ -309,7 +323,7 @@ function Agent({ sector, id }: { sector: 'hh' | 'firm' | 'bank' | 'gov' | 'cb'; 
 
 function Agents() {
   const [sector, setSector] = useState<'hh' | 'firm' | 'bank'>('firm');
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
   const { data } = useQuery(() => engine.query<AgentRow[]>({ kind: 'agents', sector }), [sector]);
   return (
     <>
@@ -325,13 +339,13 @@ function Agents() {
             {label}
           </button>
         ))}
-        <button onClick={() => open({ kind: 'agent', sector: 'gov', id: 0 })}>Kho bạc</button>
-        <button onClick={() => open({ kind: 'agent', sector: 'cb', id: 0 })}>NHNN</button>
+        <button onClick={() => openLeft({ kind: 'agent', sector: 'gov', id: 0 })}>Kho bạc</button>
+        <button onClick={() => openLeft({ kind: 'agent', sector: 'cb', id: 0 })}>NHNN</button>
       </div>
       <ul className="pick small">
         {data?.map((r) => (
           <li key={r.id}>
-            <button onClick={() => open({ kind: 'agent', sector, id: r.id })}>
+            <button onClick={() => openLeft({ kind: 'agent', sector, id: r.id })}>
               <strong>
                 {r.title}
                 {r.named && <em className="tag">theo dõi</em>}
@@ -703,7 +717,8 @@ function Options() {
 function Charts() {
   const catalog = useStore((s) => s.catalog)!;
   const series = useStore((s) => s.series);
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
+  const openScreen = useStore((s) => s.openScreen);
   useStore((s) => s.hist.n);
   const groups = [...new Set(catalog.indicators.map((i) => i.group))];
   const [group, setGroup] = useState(groups[0]);
@@ -721,7 +736,14 @@ function Charts() {
         .map((i) => (
           <figure key={i.id}>
             <figcaption>
-              <button className="link" onClick={() => open({ kind: 'causal', indicator: i.id })}>
+              <button
+                className="link"
+                onClick={() => {
+                  // Màn hình riêng phủ kín sân khấu: đóng nó để ngăn trái lộ ra.
+                  openScreen(null);
+                  openLeft({ kind: 'causal', indicator: i.id });
+                }}
+              >
                 {i.label}
               </button>
             </figcaption>
@@ -749,12 +771,12 @@ function Files() {
   const toMenu = useStore((s) => s.toMenu);
   const [saves, setSaves] = useState<string[]>([]);
   const [msg, setMsg] = useState('');
-  const refresh = () => void idbKeys().then((k) => setSaves(k.map(String).filter((x) => x.startsWith('kb:')).sort().reverse()));
+  const refresh = () => void listSaves().then(setSaves);
   useEffect(refresh, []);
   const name = () => `kb:${scenario?.title ?? 'Tự do'} · hạt giống ${seed} · tháng ${tick?.tick ?? 0}`;
   const save = async () => {
     const { bytes } = await engine.save();
-    await idbSet(name(), bytes);
+    await saveCurrent(name(), bytes);
     setMsg('Đã lưu vào trình duyệt này.');
     refresh();
   };
@@ -787,15 +809,15 @@ function Files() {
           <li key={k} className="save">
             <button
               onClick={async () => {
-                const b = await idbGet<Uint8Array>(k);
-                if (b) loadBytes(new Uint8Array(b));
+                const b = await loadSave(k);
+                if (b) loadBytes(b);
               }}
             >
               <strong>{k.slice(3)}</strong>
             </button>
             <button
               onClick={async () => {
-                await del(k);
+                await deleteSave(k);
                 refresh();
               }}
               aria-label={`Xoá ${k.slice(3)}`}

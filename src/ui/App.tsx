@@ -32,7 +32,7 @@ export function App() {
 
 function Menu() {
   const start = useStore((s) => s.start);
-  const open = useStore((s) => s.open);
+  const openDialog = useStore((s) => s.openDialog);
   const [scale, setScale] = useState<ScaleId>('M');
   const [seed, setSeed] = useState(1);
   const done = new Set<string>(JSON.parse(localStorage.getItem('kb.done') ?? '[]'));
@@ -65,7 +65,7 @@ function Menu() {
           <button
             onClick={() => {
               useStore.setState({ phase: 'play' });
-              open({ kind: 'file' });
+              openDialog({ kind: 'file' });
             }}
           >
             Mở ván đã lưu
@@ -104,7 +104,7 @@ function Menu() {
 function Play() {
   const phase = useStore((s) => s.phase);
   const tick = useStore((s) => s.tick);
-  const panel = useStore((s) => s.panel);
+  const dialog = useStore((s) => s.dialog);
   const error = useStore((s) => s.error);
   const violation = useStore((s) => s.violation);
   const dismiss = useStore((s) => s.dismissError);
@@ -117,7 +117,11 @@ function Play() {
       if (e.key === ' ') {
         e.preventDefault();
         s.setSpeed(s.speed === 0 ? 1 : 0);
-      } else if (e.key === 'Escape') s.open(null);
+      } else if (e.key === 'Escape') {
+        if (s.dialog) s.openDialog(null);
+        else if (s.screen) s.openScreen(null);
+        else s.closeLeft();
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -127,7 +131,7 @@ function Play() {
     return (
       <div className="app">
         <div className="loading">
-          {panel?.kind === 'file' ? <Drawer /> : <p>Đang dựng nền kinh tế…</p>}
+          {dialog?.kind === 'file' ? <Drawer /> : <p>Đang dựng nền kinh tế…</p>}
           {error && (
             <p className="error">
               {error} <button onClick={toMenu}>Về màn hình đầu</button>
@@ -146,7 +150,7 @@ function Play() {
           <News />
         </div>
         <RolePanel />
-        {panel && <Drawer />}
+        <Drawer />
       </div>
       <Strip />
       <GuessModal />
@@ -242,14 +246,14 @@ function Legend() {
 
 function News() {
   const news = useStore((s) => s.news);
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
   if (!news.length) return null;
   return (
     <ol className="news" aria-label="Bản tin">
       {news.slice(0, 5).map((n, i) => (
         <li key={`${n.tick}-${i}`} className={n.tone > 0 ? 'good' : n.tone < 0 ? 'bad' : ''}>
           <time>{monthLabel(n.tick)}</time>
-          {n.indicator ? <button onClick={() => open({ kind: 'causal', indicator: n.indicator! })}>{n.text}</button> : <span>{n.text}</span>}
+          {n.indicator ? <button onClick={() => openLeft({ kind: 'causal', indicator: n.indicator! })}>{n.text}</button> : <span>{n.text}</span>}
         </li>
       ))}
     </ol>
@@ -261,7 +265,7 @@ function Strip() {
   const tick = useStore((s) => s.tick)!;
   const index = useStore((s) => s.index);
   const series = useStore((s) => s.series);
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
   useStore((s) => s.hist.n);
   return (
     <footer className="strip">
@@ -270,7 +274,7 @@ function Strip() {
         if (i === undefined) return null;
         const def = catalog.indicators[i];
         return (
-          <button key={id} onClick={() => open({ kind: 'causal', indicator: id })} title={`${def.label}. Bấm để hỏi vì sao.`}>
+          <button key={id} onClick={() => openLeft({ kind: 'causal', indicator: id })} title={`${def.label}. Bấm để hỏi vì sao.`}>
             <span className="k">{SHORT[id] ?? def.label}</span>
             <span className="v">{fmt(tick.values[i], def.unit)}</span>
             <Spark data={series(id)} good={def.good} />

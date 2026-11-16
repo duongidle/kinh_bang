@@ -1,21 +1,20 @@
 // State của UI (Zustand) và vòng chạy: UI ra lệnh `step`, engine trả tin `tick`, rồi UI hẹn lệnh kế tiếp theo tốc độ.
 import { create } from 'zustand';
-import type { Catalog, CounterfactualResult, EngineMsg, EventInfo, MapFrame, NamedAgent, NewsItem, PlayerOrders, Role, ScaleId, ScenarioInfo, ScenarioReport, SeriesResult, TickMsg, TxSample } from '../protocol';
+import type { Catalog, CounterfactualResult, EngineMsg, EventInfo, Intervention, MapFrame, NamedAgent, NewsItem, PlayerOrders, Role, ScaleId, ScenarioInfo, ScenarioReport, SeriesResult, TickMsg, TxSample } from '../protocol';
 import { engine } from './client';
 import { setStartYear } from './format';
 
 export type Speed = 0 | 1 | 4 | 16 | 99;
-export type Panel =
+/** Ngăn trái: tra cứu, mở chồng lên nhau được (gd1-5 mục 4.2). */
+export type LeftItem =
   | { kind: 'causal'; indicator: string }
   | { kind: 'agent'; sector: 'hh' | 'firm' | 'bank' | 'gov' | 'cb'; id: number }
   | { kind: 'money' }
-  | { kind: 'lab' }
-  | { kind: 'notes'; id?: string }
-  | { kind: 'compare'; data: CounterfactualResult; focus?: string }
-  | { kind: 'report'; data: ScenarioReport }
-  | { kind: 'charts' }
-  | { kind: 'agents' }
-  | { kind: 'file' };
+  | { kind: 'agents' };
+/** Màn hình riêng: cần chỗ rộng. */
+export type ScreenState = { kind: 'charts' } | { kind: 'lab' } | { kind: 'compare'; data: CounterfactualResult; focus?: string } | { kind: 'report'; data: ScenarioReport };
+/** Hộp thoại. */
+export type DialogState = { kind: 'notes'; id?: string } | { kind: 'file' } | { kind: 'events' };
 
 export type Guess = 'up' | 'down' | 'flat';
 export interface Prediction {
@@ -48,7 +47,9 @@ interface State {
   role: Role;
   speed: Speed;
   busy: boolean;
-  panel: Panel | null;
+  left: LeftItem[];
+  screen: ScreenState | null;
+  dialog: DialogState | null;
   predictions: Prediction[];
   pendingGuess: { label: string; indicators: string[]; skipFromEvents: boolean } | null;
   askGuess(label: string): void;
@@ -56,7 +57,7 @@ interface State {
   violation: string[] | null;
   startYear: number;
 
-  start(o: { scale: ScaleId; seed: number; scenario?: string }): void;
+  start(o: { scale: ScaleId; seed: number; scenario?: string; setup?: Intervention }): void;
   toMenu(): void;
   setSpeed(s: Speed): void;
   stepOnce(months?: number): void;
@@ -66,7 +67,11 @@ interface State {
   lab(rule: string, variant: string): void;
   possess(sector: 'hh' | 'firm' | null, id?: number): void;
   orders(o: Partial<PlayerOrders>): void;
-  open(p: Panel | null): void;
+  openLeft(item: LeftItem): void;
+  backLeft(): void;
+  closeLeft(): void;
+  openScreen(s: ScreenState | null): void;
+  openDialog(d: DialogState | null): void;
   value(id: string): number;
   series(id: string): Float64Array;
   law(id: string): number;
@@ -124,10 +129,15 @@ export const useStore = create<State>((set, get) => {
       const index = new Map(m.catalog.indicators.map((x, i) => [x.id, i]));
       const lawIndex = new Map(m.catalog.laws.map((x, i) => [x.id, i]));
       const role: Role = m.scenario?.role ?? 'observer';
-      set({ catalog: m.catalog, index, lawIndex, named: m.named, scenario: m.scenario, seed: m.seed, scale: m.scale, phase: 'play', role, events: [], news: [], predictions: [], hist: { n: 0, cols: [] }, panel: null, busy: false });
+      set({ catalog: m.catalog, index, lawIndex, named: m.named, scenario: m.scenario, seed: m.seed, scale: m.scale, phase: 'play', role, events: [], news: [], predictions: [], hist: { n: 0, cols: [] }, left: [], screen: null, dialog: null, busy: false });
       const pr = m.scenario?.predict ?? [];
       if (pr.length) set({ pendingGuess: { label: m.scenario!.title, indicators: pr.map((x) => x.indicator), skipFromEvents: false } });
       void refill();
+      // Sự kiện của World (gồm điều kiện ban đầu ở tháng 0 và sự kiện trước lúc lưu): thay hẳn, không nối.
+      engine
+        .query<EventInfo[]>({ kind: 'events' })
+        .then((events) => set({ events }))
+        .catch(() => set({ events: [] }));
       return;
     }
     if (m.type === 'tick') {
@@ -185,7 +195,9 @@ export const useStore = create<State>((set, get) => {
     role: 'observer',
     speed: 0,
     busy: false,
-    panel: null,
+    left: [],
+    screen: null,
+    dialog: null,
     predictions: [],
     pendingGuess: null,
     error: null,
@@ -195,11 +207,11 @@ export const useStore = create<State>((set, get) => {
     start(o) {
       clearTimeout(timer);
       set({ phase: 'loading', speed: 0, tick: undefined, frame: undefined, tx: undefined, error: null, violation: null });
-      engine.send({ type: 'init', scale: o.scale, seed: o.seed, scenario: o.scenario });
+      engine.send({ type: 'init', scale: o.scale, seed: o.seed, scenario: o.scenario, ...(o.setup ? { setup: o.setup } : {}) });
     },
     toMenu() {
       clearTimeout(timer);
-      set({ phase: 'menu', speed: 0, panel: null });
+      set({ phase: 'menu', speed: 0, left: [], screen: null, dialog: null });
     },
     setSpeed(speed) {
       set({ speed });
@@ -229,8 +241,23 @@ export const useStore = create<State>((set, get) => {
     orders(o) {
       engine.send({ type: 'orders', orders: o });
     },
-    open(panel) {
-      set({ panel });
+    openLeft(item) {
+      const l = get().left;
+      const top = l[l.length - 1];
+      if (top && JSON.stringify(top) === JSON.stringify(item)) return;
+      set({ left: [...l, item] });
+    },
+    backLeft() {
+      set({ left: get().left.slice(0, -1) });
+    },
+    closeLeft() {
+      set({ left: [] });
+    },
+    openScreen(screen) {
+      set({ screen });
+    },
+    openDialog(dialog) {
+      set({ dialog });
     },
     value(id) {
       const s = get();
@@ -251,7 +278,7 @@ export const useStore = create<State>((set, get) => {
     async whatIf(skip, focus) {
       try {
         const data = await engine.counterfactual<CounterfactualResult>(skip);
-        set({ panel: { kind: 'compare', data, focus } });
+        set({ screen: { kind: 'compare', data, focus } });
       } catch (e) {
         set({ error: (e as Error).message });
       }

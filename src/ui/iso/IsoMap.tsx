@@ -300,7 +300,7 @@ export function IsoMap() {
   const named = useStore((s) => s.named);
   const hh = useStore((s) => s.tick?.player.hh ?? -1);
   const firm = useStore((s) => s.tick?.player.firm ?? -1);
-  const open = useStore((s) => s.open);
+  const openLeft = useStore((s) => s.openLeft);
   const sizeTick = useRef(0);
   const [themeTick, setThemeTick] = useState(0);
   useEffect(() => onThemeChange(() => setThemeTick((n) => n + 1)), []);
@@ -406,7 +406,7 @@ export function IsoMap() {
         best = h;
       }
     }
-    if (best) open({ kind: 'agent', sector: best.sector, id: best.id });
+    if (best) openLeft({ kind: 'agent', sector: best.sector, id: best.id });
   };
 
   return (
