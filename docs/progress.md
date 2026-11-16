@@ -10,6 +10,49 @@ Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
 Spec: gd1-5.md mục 4 (gồm 4.4 cài đặt ban đầu dùng `setup.laws`, như spec hiện tại), mục 3.5, mục 12 dòng 7 (nhãn "Tự do (sandbox)", mục thuật ngữ `van-tu-do`). U2 KHÔNG làm phần của U6b (mục 4.5).
 
+**Danh sách chức năng GĐ1 đang tới được** (người điều phối lập 16/11 từ `App.tsx`, `RolePanel.tsx`, `Drawer.tsx`, `store.ts`, `IsoMap.tsx` ở `e3aa4e8`; spec mục 13 dòng 9). Cuối U2 đối chiếu từng dòng.
+- F1 Màn hình đầu: ván tự do chọn quy mô (3 mức) và hạt giống; 15 kịch bản, mỗi thẻ có câu hỏi, vai, số năm, "nên hiểu trước", nhãn "đã xong" (localStorage `kb.done`), nhãn "ngoài vùng đã kiểm định"; kịch bản chạy với hạt giống đang chọn; mở ván đã lưu (trình duyệt và file).
+- F2 Lúc dựng: chữ "Đang dựng nền kinh tế", lỗi kèm nút về màn hình đầu.
+- F3 Thanh trên: về màn hình đầu; ngày tháng ("Chưa chạy" ở tháng 0); tốc độ Dừng/×1/×4/×16/Tối đa; +1 tháng (chỉ khi dừng); chọn vai (tự do: 6 vai; kịch bản: vai kịch bản và Quan sát); tên ván, quy mô, hạt giống, ms mỗi tháng.
+- F4 Dải "đã sửa quy luật" và nút so với thế giới gốc.
+- F5 Bản đồ: bấm công trình mở sổ tác nhân; chú giải dòng tiền; dòng "vị trí chỉ để nhìn".
+- F6 Bản tin 5 mục, tô tốt/xấu, mục có chỉ số bấm mở chuỗi nhân quả.
+- F7 Dải 10 chỉ số, đường nhỏ, bấm mở chuỗi nhân quả.
+- F8 Hộp đoán: mở đầu kịch bản (câu hỏi, giới thiệu, các lựa chọn, cảnh báo ngoài vùng) và đoán; sau mỗi lần ban hành luật hỏi đoán 3 chỉ số; Bỏ qua / Ghi lại và chạy; mô phỏng chờ khi hộp đang mở.
+- F9 Thông báo lỗi; sổ kế toán không cân thì dừng và báo.
+- F10 Phím cách dừng/chạy, Esc đóng ngăn.
+- F11 Thẻ kịch bản: mục tiêu đạt/chưa, số tháng còn, "Xem lời giải thích" (thắng thì ghi `kb.done`).
+- F12 Lối tới: Biểu đồ, Nguồn tiền, Soi tác nhân, Phòng thí nghiệm, Mô hình bỏ qua gì, Lưu/tải/xuất.
+- F13 Bảng chính sách: theo vai lọc luật theo `owner`; ô "để máy điều hành" bên kia (`cb.autopilot`, `gov.autopilot`); liên kết "Vì sao lãi suất yếu, room tín dụng mạnh?" (ghi chú `lai-suat-yeu`); mỗi luật: ô nhập, đơn vị, Ban hành, kẹp min/max, ghi chú, nguồn; luật bật/tắt là ô đánh dấu; ban hành xong hỏi đoán.
+- F14 Vai hộ/doanh nghiệp: chọn tác nhân có tên; xem sổ sách; thả ra (chỉ ván tự do); hộ: chi tiêu, lương thấp nhất chịu nhận, nghỉ việc, ra tự làm; doanh nghiệp: giá, lương, số người, số máy; mỗi ô có phương án quy tắc tự động, "Tự lái" để trả lại.
+- F15 Quan sát: 16 chỉ số mở rộng bấm được; danh sách người đang theo dõi bấm mở sổ.
+- F16 Lời đoán: 3 lời gần nhất, chờ chấm hoặc kết quả từng chỉ số.
+- F17 Dòng sự kiện 12 mục gần nhất, trước → sau, người ban hành, "Nếu không làm vậy thì sao?" cho lệnh của người chơi.
+- F18 Chuỗi nhân quả: biểu đồ có mốc sự kiện, khoảng 3 tháng/1/3/10 năm, chỉ số suy ra mượn phân rã của chỉ số gốc kèm câu nói rõ, câu "Phân rã..." và liên kết "Khác gì với đối chứng?", cây có thanh ngang, "Lý do này đến từ đâu", nút luật/sự kiện có "Nếu không làm vậy thì sao?", vòng phản hồi, điểm gốc.
+- F19 Sổ tác nhân: bảng chữ T, vốn ròng, sự kiện, quyết định gần đây và lý do, giao dịch gần đây, "Điều khiển ... này" (ván tự do).
+- F20 Soi tác nhân: doanh nghiệp/hộ/ngân hàng (200 dòng), Kho bạc, NHNN.
+- F21 Nguồn tiền: tháng này/1 năm/5 năm, thanh ngang, thay đổi ròng, tiền mặt và tiền gửi.
+- F22 Phòng thí nghiệm: biến thể quy tắc kèm "học được gì", nguồn, nhãn "gốc"; so với thế giới gốc; tìm và đổi tham số hành vi (trừ `init.*`).
+- F23 Mô hình bỏ qua gì: các ghi chú (mở đúng mục khi đến từ liên kết), danh sách thứ chưa có.
+- F24 So sánh đối chứng: chọn chỉ số, hai đường, bảng 13 chỉ số tháng cuối.
+- F25 Báo cáo kịch bản: đạt/chưa, mục tiêu, giải thích, khẳng định kiểm trên ván này, so sánh các lựa chọn (chạy nhánh), lời đoán, ngoài đời, đơn giản hoá, xem hai thế giới cạnh nhau, về danh sách.
+- F26 Biểu đồ: theo nhóm chỉ số, tên bấm mở nhân quả.
+- F27 Lưu vào trình duyệt, xuất file ván, xuất CSV, danh sách ván lưu (mở, xoá), mở từ file.
+- F28 PWA chạy offline; `?design` chỉ bản dev.
+
+**Quyết định của người điều phối cho U2** (16/11, tự quyết theo spec mục 13, đã xét phương án khác):
+- **Hai truy vấn đọc `events` và `setupInfo`, giao thức lên 3** (ghi ở spec mục 10). Bỏ: giao diện đọc thẳng `src/config` (hai nguồn số cho một luật); dựng ván thử rồi dựng lại (rối `store.ts`).
+- **Nhóm luật theo việc** là bảng hằng trong `src/ui`, không đổi `group` trong config: Thuế (chia nhỏ theo nhóm config: GTGT, TNCN, TNDN, Hộ kinh doanh, và `tax.indirect.other`, `gov.fees.rate`), Chi tiêu (`gov.purchase.share`, `gov.public.share`, `gov.wage.premium`, `gov.transfer.unemployed`, `gov.transfer.universal`), Vay và in tiền (`gov.deficit.target`, `gov.debt.ceiling`, `gov.bond.spread`, `cb.monetize`, `cb.omo.auto`), Lãi suất (`cb.rate.refinancing`, `cb.deposit.cap`, `cb.inflation.target`), Dự trữ (`cb.reserve.ratio`, `cb.reserve.interest`, `bank.car.min`), Room tín dụng (`cb.room.enabled`, `cb.credit.room`), Lương tối thiểu (`minwage.zone.1-4`). Vai chỉ giữ một bên thì nhóm chỉ hiện luật có `owner` của bên đó. Test: mọi luật trong danh mục có đúng một nhóm. Bỏ: đổi `group` trong `laws.ts` (đụng config).
+- **Vai trong store giữ nguyên kiểu `Role`** (6 giá trị, giao thức không đổi). Tab Chính phủ có nhóm nút "Bạn giữ: Bộ Tài chính / NHNN / Cả hai" (mặc định Cả hai); tab Người tham gia có "Hộ gia đình / Doanh nghiệp". Bỏ: đổi `Role` thành 3 giá trị (đổi giao thức, kịch bản khai vai cũ).
+- **Màu dòng tiền trên bản đồ và chú giải lấy từ `tokens.ts`** ngay ở U2 (spec 3.2: một màu một giá trị ở mọi nơi); loại "khác" dùng màu chữ mờ. Màu công trình giữ tới U4.
+- **"Mô hình bỏ qua gì" và "Lưu, tải, xuất" là hộp thoại** mở từ menu; bốn màn hình riêng đúng như spec 4.2. Bỏ: thêm hai màn hình riêng (spec chỉ kể bốn).
+- **"Tiếp tục ván gần nhất"**: lúc lưu ghi tên khoá vào localStorage `kb.last`; nút chỉ hiện khi khoá đó còn trong IndexedDB. Bỏ: suy từ thứ tự tên khoá (đang xếp theo chữ, không theo thời gian).
+- **Hạt giống của kịch bản**: lộ trình có ô "Tuỳ chọn" thu gọn chứa hạt giống, dùng chung với ván tự do (giữ F1).
+
+**Phát hiện, sửa ghi chép cũ (16/11):** dòng "giao diện hiện không có chỗ nào gọi `store.param`" ở `e1b4aa9` là SAI. Phòng thí nghiệm (`Drawer.tsx` `ParamRow`) và ô "để máy điều hành" (`RolePanel.tsx`) đều gọi. Vì `Session.setParam` không bật `meta.modified`, người chơi đổi tham số hành vi trong Phòng thí nghiệm thì **không có dải "đã sửa quy luật"**: lỗi đang xảy ra, trái nguyên tắc spec mục 1. Sửa phải đụng engine (và phải tách hai tham số `*.autopilot` vốn là lựa chọn vai, không phải sửa quy luật), nên CHỜ DƯƠNG. U2 giữ nguyên hành vi này, không tự sửa.
+
+**Giới hạn đã biết, ngoài U2:** sau khi tải ván, `eventLog` của Session rỗng nên sự kiện cũ có `index = -1`, không có nút "Nếu không làm vậy thì sao?" cho các lệnh trước lúc lưu. Có từ GĐ1, chưa sửa.
+
 ### U6b Sandbox đầy đủ (Dương duyệt 15/11/2026, đã ghi spec, CHƯA LÀM; xếp sau U6, trước U7)
 
 - Quyết định của Dương (15/11/2026) với danh sách "Điều kiện ban đầu" bên dưới: duyệt việc 1, 2, 4 thành mốc U6b; bỏ việc 3 và 6; hoãn việc 5 (chưa xếp giai đoạn). Ô tắt làm nóng phải dùng được cùng tham số ban đầu, kèm câu giải thích phân phối sẽ tự trôi. U2 làm như spec hiện tại.
