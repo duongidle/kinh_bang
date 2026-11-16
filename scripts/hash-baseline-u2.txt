@@ -1,0 +1,7 @@
+Mã băm gốc trước U2, code bdf52ee
+tu-do-S-seed1 f72625ffa77e188d
+tu-do-S-seed2 a0cd799030343ea6
+tu-do-S-seed3 8e935a5e3e1a7d22
+tu-do-M-seed1 588a5da4e43eceae
+tu-do-S-seed1-vat12 38c43a6be55e727b
+mot-khoan-vay-seed1 3e36593826871f56

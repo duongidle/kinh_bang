@@ -53,6 +53,8 @@ Spec: gd1-5.md mục 4 (gồm 4.4 cài đặt ban đầu dùng `setup.laws`, nh�
 
 **Giới hạn đã biết, ngoài U2:** sau khi tải ván, `eventLog` của Session rỗng nên sự kiện cũ có `index = -1`, không có nút "Nếu không làm vậy thì sao?" cho các lệnh trước lúc lưu. Có từ GĐ1, chưa sửa.
 
+- U2 bước A1 xong: `scripts/hash-check.ts` (sáu ván, 24 tháng qua Session, in mã băm) và `scripts/hash-baseline-u2.txt` (mã băm gốc trước U2, code bdf52ee; phải không đổi tới cuối U2). `npm test` xanh 100/100. Commit: `U2 bước A1` trong git log.
+
 ### U6b Sandbox đầy đủ (Dương duyệt 15/11/2026, đã ghi spec, CHƯA LÀM; xếp sau U6, trước U7)
 
 - Quyết định của Dương (15/11/2026) với danh sách "Điều kiện ban đầu" bên dưới: duyệt việc 1, 2, 4 thành mốc U6b; bỏ việc 3 và 6; hoãn việc 5 (chưa xếp giai đoạn). Ô tắt làm nóng phải dùng được cùng tham số ban đầu, kèm câu giải thích phân phối sẽ tự trôi. U2 làm như spec hiện tại.
