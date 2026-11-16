@@ -18,6 +18,7 @@ Nội dung từng giai đoạn ở KICKOFF.md, với các thay đổi đã duy�
 - Thêm vào GĐ3 (Dương quyết 14/11/2026): vay tiêu dùng của hộ (kênh lãi suất tới cầu, để K1.19 đạt) và cơ chế giảm phát nợ. Lý do và số đo: [sai-khac.md mục D](design/sai-khac.md).
 - Thêm vào GĐ5: vàng và đô la làm nơi trú ẩn; kịch bản 1997, Zimbabwe và siêu lạm phát đầy đủ.
 - Thêm vào GĐ8: mức đồng thuận của các nhóm dân cư với Chính phủ.
+- Thêm vào GĐ9 (Dương quyết 16/11/2026): chọn năm bắt đầu cho ván tự do, dời từ U6b của GĐ1.5 (việc 4). Cần nạp đủ phiên bản luật cũ vào `src/config/vn/laws.ts` trước (biểu thuế TNCN 7 bậc, GTGT, lương tối thiểu trước 7/2024, thuế khoán hộ kinh doanh...), cùng đợt với kịch bản lịch sử. Hiện luật chỉ khác nhau thật trong 2025-2027; chọn năm cũ hơn sẽ trộn luật nhiều thời kỳ. Lý do: gd1-5.md mục 12 dòng 8.
 - Mỗi giai đoạn có mục tiêu hiệu chỉnh thô; GĐ9 chỉ còn hiệu chỉnh tinh.
 - Mỗi kịch bản phải qua kiểm định riêng: lời giải thích đúng ở ít nhất 80% số seed.
 - Tính năng học đã nhận: nút đối chứng, đoán trước khi chạy, bảng nguồn tiền, bảng cân đối sống, bản tin, hộ có tên, tách Bộ Tài chính và NHNN, mục "mô hình bỏ qua gì", xuất CSV, một figure anatomy cuối GĐ1. Để sau GĐ1: theo dấu đồng tiền, tua lại, vai chủ ngân hàng, sổ tay khái niệm. Chi tiết: [de-xuat.md](design/de-xuat.md).
