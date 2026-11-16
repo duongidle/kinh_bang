@@ -72,7 +72,7 @@ export function TimelineBar() {
           </div>
         )}
       </div>
-      <span className="kb-tl__end kb-num">{monthLabel(tick)}</span>
+      <span className="kb-tl__end">Bây giờ</span>
       <Button variant="text" onClick={() => openDialog({ kind: 'events' })}>
         Mọi sự kiện ({events.length})
       </Button>

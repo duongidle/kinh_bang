@@ -8,9 +8,16 @@
 }
 .kb-law__row {
   display: flex;
-  flex-wrap: wrap;
   align-items: flex-end;
   gap: var(--space-3);
+}
+/* Nhãn dài thì xuống dòng trong ô, không đẩy nút Ban hành xuống dưới. */
+.kb-law__row > .kb-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.kb-law__row > .kb-btn {
+  flex: none;
 }
 .kb-law__meta {
   margin: 0;

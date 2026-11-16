@@ -5,20 +5,56 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2) var(--space-4);
-  padding: var(--space-2) var(--space-4);
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--color-line);
   background: var(--color-surface);
+}
+/* Từ 1280px: một dòng. Mọi mục giữ nguyên cỡ, riêng tên ván co lại và cắt bằng dấu ba chấm. Dưới 1280px được xuống dòng. */
+@media (min-width: 1280px) {
+  .kb-top {
+    flex-wrap: nowrap;
+  }
+  .kb-top > * {
+    flex: none;
+  }
+  .kb-top > .kb-top__name {
+    flex: 0 1 auto;
+  }
+}
+.kb-top .kb-btn {
+  white-space: nowrap;
+}
+/* Gọn hơn mặc định để đủ chỗ cho một dòng ở 1280px: cỡ chữ và đệm của nút, nhóm tốc độ và tab nhỏ một bậc. Không bỏ chữ nào. */
+.kb-top .kb-btn,
+.kb-top .kb-seg__item,
+.kb-top .kb-tab {
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+}
+.kb-top .kb-seg__item,
+.kb-top .kb-tab {
+  padding: 0 var(--space-2);
+}
+.kb-top .kb-btn--text {
+  padding: 0 var(--space-1);
+}
+.kb-top .kb-btn--secondary {
+  padding: 0 var(--space-2);
 }
 .kb-top__brand {
   font-weight: var(--font-weight-semibold);
   padding: 0;
 }
 .kb-top__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-weight: var(--font-weight-medium);
 }
 .kb-top__date {
-  min-width: calc(var(--space-7) * 2);
+  min-width: calc(var(--space-7) + var(--space-5));
   font-weight: var(--font-weight-semibold);
 }
 .kb-top__speed {
@@ -38,11 +74,17 @@
 .kb-top__roles .kb-tabs__list {
   border-bottom: 0;
 }
-.kb-top__tools {
+/* Bốn nút công cụ và Menu là một nhóm canh phải. */
+.kb-top__right {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-1);
   margin-left: auto;
+}
+.kb-top__tools {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-1);
 }
 
 /* ---------- dải cảnh báo ---------- */
@@ -184,14 +226,43 @@
 /* ---------- dải chỉ số ---------- */
 .kb-strip {
   display: flex;
-  gap: var(--space-2);
+  flex-direction: column;
+  gap: var(--space-1);
   padding: var(--space-2) var(--space-4);
-  overflow-x: auto;
   border-top: 1px solid var(--color-line);
   background: var(--color-surface);
 }
-.kb-strip > * {
+.kb-strip__note {
+  margin: 0;
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--color-text-3);
+}
+.kb-strip__row {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+.kb-strip__row > * {
   flex: none;
+}
+/* Ô số trong dải: gọn hơn ô số mặc định để thấy trọn ít nhất tám ô ở 1446px. Chữ " so với 12 tháng trước" đã có ở dòng chú thích và nhãn đọc màn hình. */
+.kb-strip .kb-stat {
+  min-width: calc(var(--space-7) * 2);
+  padding: var(--space-2) var(--space-3);
+  gap: 0;
+}
+.kb-strip .kb-stat__value {
+  font-size: var(--font-size-5);
+  line-height: var(--line-height-5);
+  white-space: nowrap;
+}
+.kb-strip .kb-stat__vs {
+  display: none;
+}
+.kb-strip .kb-stat__spark {
+  height: var(--space-4);
+  margin-top: 0;
 }
 
 /* ---------- dòng thời gian ---------- */

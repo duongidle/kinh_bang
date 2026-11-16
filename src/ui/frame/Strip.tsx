@@ -26,26 +26,29 @@ export function Strip({ inert }: { inert?: boolean }) {
   useStore((s) => s.hist.n);
   return (
     <footer className="kb-strip" inert={inert}>
-      {STRIP.map((id) => {
-        const i = index.get(id);
-        if (i === undefined) return null;
-        const def = catalog.indicators[i];
-        const kind = deltaKindOf(def.unit);
-        const all = series(id);
-        return (
-          <StatTile
-            key={id}
-            label={SHORT[id] ?? def.label}
-            value={tick.values[i]}
-            unit={def.unit}
-            deltaKind={kind}
-            delta12={delta12(all, kind)}
-            goodWhen={def.good > 0 ? 'up' : def.good < 0 ? 'down' : undefined}
-            series={Array.from(all.subarray(Math.max(0, all.length - 60)))}
-            onExplain={() => openLeft({ kind: 'causal', indicator: id })}
-          />
-        );
-      })}
+      <p className="kb-strip__note">Mũi tên: mức đổi so với 12 tháng trước.</p>
+      <div className="kb-strip__row">
+        {STRIP.map((id) => {
+          const i = index.get(id);
+          if (i === undefined) return null;
+          const def = catalog.indicators[i];
+          const kind = deltaKindOf(def.unit);
+          const all = series(id);
+          return (
+            <StatTile
+              key={id}
+              label={SHORT[id] ?? def.label}
+              value={tick.values[i]}
+              unit={def.unit}
+              deltaKind={kind}
+              delta12={delta12(all, kind)}
+              goodWhen={def.good > 0 ? 'up' : def.good < 0 ? 'down' : undefined}
+              series={Array.from(all.subarray(Math.max(0, all.length - 60)))}
+              onExplain={() => openLeft({ kind: 'causal', indicator: id })}
+            />
+          );
+        })}
+      </div>
     </footer>
   );
 }

@@ -63,21 +63,23 @@ export function TopBar() {
       <nav className="kb-top__roles" aria-label="Vai">
         <Tabs tabs={tabIds.map((id) => ({ id, label: TAB_LABEL[id] }))} active={tabOf(role)} onChange={pick} />
       </nav>
-      <nav className="kb-top__tools" aria-label="Công cụ">
-        <Button variant="text" onClick={() => openScreen({ kind: 'charts' })}>
-          Biểu đồ
-        </Button>
-        <Button variant="text" onClick={() => openLeft({ kind: 'money' })}>
-          Nguồn tiền
-        </Button>
-        <Button variant="text" onClick={() => openLeft({ kind: 'agents' })}>
-          Soi tác nhân
-        </Button>
-        <Button variant="text" onClick={() => openScreen({ kind: 'lab' })}>
-          Phòng thí nghiệm
-        </Button>
-      </nav>
-      <AppMenu />
+      <div className="kb-top__right">
+        <nav className="kb-top__tools" aria-label="Công cụ">
+          <Button variant="text" onClick={() => openScreen({ kind: 'charts' })}>
+            Biểu đồ
+          </Button>
+          <Button variant="text" onClick={() => openLeft({ kind: 'money' })}>
+            Nguồn tiền
+          </Button>
+          <Button variant="text" onClick={() => openLeft({ kind: 'agents' })}>
+            Soi tác nhân
+          </Button>
+          <Button variant="text" onClick={() => openScreen({ kind: 'lab' })}>
+            Phòng thí nghiệm
+          </Button>
+        </nav>
+        <AppMenu />
+      </div>
     </header>
   );
 }
