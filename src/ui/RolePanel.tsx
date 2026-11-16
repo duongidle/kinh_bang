@@ -2,7 +2,7 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import type { AgentDetail, LawInfo, ScenarioReport } from '../protocol';
 import { engine } from './client';
-import { Button, SegmentedControl } from './design';
+import { Button, GlossaryTerm, SegmentedControl } from './design';
 import { factText, fmt, money, monthLabel, num } from './format';
 import { LawInput, LawSource, isToggle, lawValueText } from './LawField';
 import { groupLaws, type LawOwner } from './lawGroups';
@@ -114,6 +114,16 @@ const OWNERS: Record<string, Set<LawOwner>> = {
   government: new Set<LawOwner>(['fiscal', 'monetary']),
 };
 
+// Thuật ngữ gắn với nhóm luật và nhóm con. Chú thích đặt trong thân nhóm, không lồng vào tiêu đề bấm được.
+const GROUP_TERM: Record<string, string> = {
+  'Vay và in tiền': 'in-tien',
+  'Lãi suất': 'lai-suat-tai-cap-von',
+  'Dự trữ': 'du-tru-bat-buoc',
+  'Room tín dụng': 'room-tin-dung',
+  'Lương tối thiểu': 'luong-toi-thieu-vung',
+};
+const SUB_TERM: Record<string, string> = { 'Thuế GTGT': 'gtgt', 'Thuế TNCN': 'tncn', 'Thuế TNDN': 'tndn' };
+
 function PolicyPanel() {
   const role = useStore((s) => s.role);
   const catalog = useStore((s) => s.catalog)!;
@@ -141,9 +151,16 @@ function PolicyPanel() {
       {groups.map((g) => (
         <details key={g.title} open={openGroup === g.title} onToggle={(e) => (e.currentTarget.open ? setOpenGroup(g.title) : undefined)}>
           <summary>{g.title}</summary>
+          {GROUP_TERM[g.title] && (
+            <p className="kb-lawgroup__term">
+              <GlossaryTerm id={GROUP_TERM[g.title]} />
+            </p>
+          )}
           {g.sections.map((sec) => (
             <Fragment key={sec.title ?? g.title}>
-              {sec.title && <h4 className="kb-lawsub">{sec.title}</h4>}
+              {sec.title && (
+                <h4 className="kb-lawsub">{SUB_TERM[sec.title] ? <GlossaryTerm id={SUB_TERM[sec.title]}>{sec.title}</GlossaryTerm> : sec.title}</h4>
+              )}
               {sec.laws.map((l) => (
                 <LawRow key={l.id} law={l} />
               ))}
@@ -376,7 +393,7 @@ function ObserverPanel() {
           })}
         </tbody>
       </table>
-      <h3>Những người cậu theo dõi</h3>
+      <h3>Những người bạn đang theo dõi</h3>
       <ul className="pick small">
         {named.map((n) => (
           <li key={`${n.sector}${n.id}`}>
@@ -425,7 +442,7 @@ function Predictions() {
   if (!preds.length) return null;
   return (
     <section className="card">
-      <h2>Lời đoán của cậu</h2>
+      <h2>Lời đoán của bạn</h2>
       {preds
         .slice(-3)
         .reverse()
@@ -440,7 +457,7 @@ function Predictions() {
                   const d = catalog.indicators.find((x) => x.id === r.indicator)!;
                   return (
                     <li key={r.indicator} className={r.guess === r.actual ? 'ok' : 'no'}>
-                      {d.label}: cậu đoán {DIR[r.guess]}, thực tế {DIR[r.actual]}.
+                      {d.label}: bạn đoán {DIR[r.guess]}, thực tế {DIR[r.actual]}.
                     </li>
                   );
                 })}

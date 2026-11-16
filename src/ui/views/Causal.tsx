@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import type { CausalTree } from '../../protocol';
 import { Chart } from '../Chart';
 import { engine } from '../client';
+import { GlossaryTerm } from '../design';
 import { fmt, fmtDelta, monthLabel } from '../format';
 import { useStore } from '../store';
 import { useQuery } from './useQuery';
@@ -53,7 +54,7 @@ export function Causal({ indicator }: { indicator: string }) {
           ) : (
             <>
               <p className="tagline">
-                Phân rã: hạch toán các lý do trực tiếp, cộng lại đúng bằng mức thay đổi.{' '}
+                <GlossaryTerm id="phan-ra" />: hạch toán các lý do trực tiếp, cộng lại đúng bằng mức thay đổi.{' '}
                 <button className="link" onClick={() => openDialog({ kind: 'notes', id: 'phan-ra-va-doi-chung' })}>
                   Khác gì với đối chứng?
                 </button>

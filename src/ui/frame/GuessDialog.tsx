@@ -50,7 +50,7 @@ export function GuessDialog() {
             <h3>Đoán trước khi chạy</h3>
           </>
         ) : (
-          <p>Sau 2 năm, so với thế giới không có quyết định "{pg.label}", cậu nghĩ:</p>
+          <p>Sau 2 năm, so với thế giới không có quyết định "{pg.label}", bạn nghĩ:</p>
         )}
         {pg.indicators.map((id, k) => {
           const def = catalog.indicators.find((x) => x.id === id);

@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { SCENARIOS } from '../../content/scenarios';
 import type { Role, ScaleId, SetupInfo } from '../../protocol';
-import { Button, Card, NumberInput, SegmentedControl, StatusBadge } from '../design';
+import { Button, Card, GlossaryTerm, NumberInput, SegmentedControl, StatusBadge } from '../design';
 import { learningPath } from '../learningPath';
 import { deleteSave, lastSave, listSaves, loadSave, saveTitle } from '../saves';
 import { buildSetup } from '../setup';
@@ -34,6 +34,18 @@ function readDone(): Set<string> {
   } catch {
     return new Set();
   }
+}
+
+/** Ô hạt giống. Nhãn thấy được là thuật ngữ có chú thích; ô nhập giữ nhãn ẩn để đọc màn hình vẫn có tên. */
+function SeedField({ seed, onChange }: { seed: number; onChange: (v: number) => void }) {
+  return (
+    <div className="kb-seed">
+      <span className="kb-field__label">
+        <GlossaryTerm id="hat-giong" />
+      </span>
+      <NumberInput label="Hạt giống" unit="" value={seed} min={1} max={9999} step={1} onChange={onChange} />
+    </div>
+  );
 }
 
 export function Home() {
@@ -108,7 +120,7 @@ export function Home() {
         </ol>
         <details className="kb-home__options">
           <summary>Tuỳ chọn</summary>
-          <NumberInput label="Hạt giống" unit="" value={seed} min={1} max={9999} step={1} onChange={setSeed} />
+          <SeedField seed={seed} onChange={setSeed} />
         </details>
       </section>
 
@@ -123,7 +135,7 @@ export function Home() {
               </span>
               <SegmentedControl label="Quy mô" options={SCALE_OPTIONS} value={scale} onChange={setScale} />
             </div>
-            <NumberInput label="Hạt giống" unit="" value={seed} min={1} max={9999} step={1} onChange={setSeed} />
+            <SeedField seed={seed} onChange={setSeed} />
           </div>
           <SetupBlock info={setupInfo} onInfo={setSetupInfo} laws={setupLaws} setLaws={setSetupLaws} variants={setupVariants} setVariants={setSetupVariants} />
           <div className="kb-home__actions">

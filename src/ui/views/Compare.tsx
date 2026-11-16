@@ -16,7 +16,7 @@ export function Compare({ data, focus }: { data: CounterfactualResult; focus?: s
     return src.subarray(k * data.n, (k + 1) * data.n);
   };
   const def = catalog.indicators.find((x) => x.id === id)!;
-  if (data.n < 2) return <p className="hint">Chưa có gì để so. Hoặc ván này không có quyết định nào của cậu để bỏ đi, hoặc chưa chạy đủ tháng. Nếu là vế sau, chạy thêm vài tháng rồi thử lại.</p>;
+  if (data.n < 2) return <p className="hint">Chưa có gì để so. Hoặc ván này không có quyết định nào của bạn để bỏ đi, hoặc chưa chạy đủ tháng. Nếu là vế sau, chạy thêm vài tháng rồi thử lại.</p>;
   return (
     <>
       <p className="lead">
@@ -31,7 +31,7 @@ export function Compare({ data, focus }: { data: CounterfactualResult; focus?: s
       </select>
       <Chart
         lines={[
-          { label: 'Ván của cậu', data: col(data.actual, id) },
+          { label: 'Ván của bạn', data: col(data.actual, id) },
           { label: 'Thế giới đối chứng', data: col(data.control, id), dash: [5, 4] },
         ]}
         from={data.from}
@@ -42,7 +42,7 @@ export function Compare({ data, focus }: { data: CounterfactualResult; focus?: s
         <thead>
           <tr>
             <th>Tháng cuối</th>
-            <td>Ván của cậu</td>
+            <td>Ván của bạn</td>
             <td>Đối chứng</td>
             <td>Chênh</td>
           </tr>

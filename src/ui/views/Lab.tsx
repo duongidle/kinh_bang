@@ -1,5 +1,6 @@
 // Phòng thí nghiệm: sửa quy luật kinh tế (biến thể quy tắc) và tham số hành vi.
 import { useState } from 'react';
+import { GlossaryTerm } from '../design';
 import { useStore } from '../store';
 
 // ---------- Phòng thí nghiệm ----------
@@ -14,7 +15,9 @@ export function Lab() {
   const params = catalog.params.filter((p) => !p.id.startsWith('init.') && (q === '' || (p.label + p.id).toLowerCase().includes(q.toLowerCase())));
   return (
     <>
-      <p className="lead">Ở đây cậu sửa chính các quy luật kinh tế, không phải chính sách. Thế giới sẽ bị đánh dấu "đã sửa luật" suốt ván.</p>
+      <p className="lead">
+        Trong <GlossaryTerm id="phong-thi-nghiem" />, bạn sửa chính các quy luật kinh tế, không phải chính sách. Thế giới sẽ bị đánh dấu "đã sửa luật" suốt ván.
+      </p>
       {tick.modified && <button onClick={() => void whatIf('lab')}>So với thế giới giữ quy luật gốc</button>}
       {rules.map((r) => {
         const cur = tick.variants[r.id] ?? r.variants[0].id;

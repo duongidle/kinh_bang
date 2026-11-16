@@ -25,8 +25,8 @@ export function Report({ data }: { data: ScenarioReport }) {
       </ul>
       <h3>Chuyện gì đã xảy ra</h3>
       <p>{data.explanation}</p>
-      <h3>Kiểm lại trên chính ván của cậu</h3>
-      <p className="hint">Mỗi câu dưới đây được đo bằng cách so ván của cậu với một thế giới song song không có hành động đó. Câu nào không đúng ở ván này thì ghi rõ là không đúng.</p>
+      <h3>Kiểm lại trên chính ván của bạn</h3>
+      <p className="hint">Mỗi câu dưới đây được đo bằng cách so ván của bạn với một thế giới song song không có hành động đó. Câu nào không đúng ở ván này thì ghi rõ là không đúng.</p>
       <ul className="claims">
         {data.claims.map((c, k) => (
           <li key={k} className={c.ok ? 'ok' : 'no'}>
@@ -40,7 +40,7 @@ export function Report({ data }: { data: ScenarioReport }) {
       {scenario?.options && <Options />}
       {preds.some((p) => p.result?.length) && (
         <>
-          <h3>Lời đoán của cậu</h3>
+          <h3>Lời đoán của bạn</h3>
           <ul className="claims">
             {preds
               .flatMap((p) => p.result ?? [])
@@ -48,7 +48,7 @@ export function Report({ data }: { data: ScenarioReport }) {
                 <li key={k} className={r.guess === r.actual ? 'ok' : 'no'}>
                   <span>{catalog.indicators.find((x) => x.id === r.indicator)?.label}</span>
                   <small>
-                    Cậu đoán {DIR[r.guess]}, thực tế {DIR[r.actual]}.
+                    Bạn đoán {DIR[r.guess]}, thực tế {DIR[r.actual]}.
                   </small>
                 </li>
               ))}
@@ -127,7 +127,7 @@ function Options() {
               ))}
               {d.player && (
                 <tr>
-                  <th>Ván của cậu</th>
+                  <th>Ván của bạn</th>
                   {d.player.values.map((v, k) => (
                     <td key={k}>{cell(d.columns[k].kind, v)}</td>
                   ))}
