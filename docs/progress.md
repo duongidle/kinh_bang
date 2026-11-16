@@ -6,7 +6,19 @@ Mới nhất ở trên. Model tiếp quản: đọc mục "Đang ở đâu" trư
 
 Cập nhật mục này sau MỖI bước nhỏ (CLAUDE.md quy tắc 11).
 
-### U1 (XONG CODE tối 15/11/2026, đã báo Dương, ĐANG DỪNG; chưa sang U2 khi Dương chưa bảo)
+### U2 (Dương bảo làm ngày 16/11/2026; ĐANG LÀM)
+
+Spec: gd1-5.md mục 4 (gồm 4.4 cài đặt ban đầu dùng `setup.laws`, như spec hiện tại), mục 3.5, mục 12 dòng 7 (nhãn "Tự do (sandbox)", mục thuật ngữ `van-tu-do`). U2 KHÔNG làm phần của U6b (mục 4.5).
+
+### U6b Sandbox đầy đủ (Dương duyệt 15/11/2026, đã ghi spec, CHƯA LÀM; xếp sau U6, trước U7)
+
+- Quyết định của Dương (15/11/2026) với danh sách "Điều kiện ban đầu" bên dưới: duyệt việc 1, 2, 4 thành mốc U6b; bỏ việc 3 và 6; hoãn việc 5 (chưa xếp giai đoạn). Ô tắt làm nóng phải dùng được cùng tham số ban đầu, kèm câu giải thích phân phối sẽ tự trôi. U2 làm như spec hiện tại.
+- Đã ghi: gd1-5.md mục 4.5 (thiết kế, câu chữ nguyên văn, bảng tham số và khoảng), mục 10 (ngoại lệ U6b: đúng bốn chỗ được đổi), mục 11 (dòng U6b, tiêu chí 7), mục 12 dòng 8.
+- **Việc 4 (năm bắt đầu) CHỜ DƯƠNG XÁC NHẬN LẠI.** Người điều phối đã báo sai "luật có phiên bản từ 2000 tới 2027". Số thật (đọc `src/config/vn/laws.ts` 16/11): phần lớn luật chỉ có phiên bản từ 2016 trở về sau (TNCN 2026, lương tối thiểu 7/2024, tái cấp vốn 6/2023, giảm trừ gia cảnh 7/2020, TNDN 2016); mốc 2000 chỉ là nhãn hằng số. Chọn năm 2010 ra luật gần 2024-2026, mức giá vẫn 2026. Dương có thể bỏ việc 4 hoặc giữ với câu cảnh báo ở mục 4.5.
+- Người điều phối sửa một chỗ trong thiết kế (16/11): `init.soeShare` chỉ cho 0/10/20/25/50%, vì `init.ts` dùng `round(1/x)`.
+- Khoảng của bảng tham số chưa kiểm; script kiểm khoảng là bước đầu của U6b.
+
+### U1 (XONG CODE tối 15/11/2026, đã báo Dương)
 
 Phạm vi: chỉ U1 (spec gd1-5.md mục 3, mục 11). Xong U1 thì soát, báo Dương, rồi DỪNG; không tự sang U2. Lời giao đầy đủ có sáu bước: (1) token + test tương phản, (2) phông, (3) bảng thuật ngữ `src/content/glossary.ts`, (4) `format.ts` theo mục 3.5, (5) thành phần `src/ui/design/components/`, (6) trang xem thử `?design` chỉ bản dev.
 
@@ -43,7 +55,7 @@ Tiến độ từng bước (Sonnet cập nhật, mỗi bước một dòng):
 - Ghi nhận nhỏ, để U2: mũi tên ▲▼ của StatTile nằm ngoài vùng ký tự của hai phông nên dùng phông hệ thống; chữ giao diện cũ còn "cậu" (đã biết, đổi ở U2).
 - Ảnh chụp: thư mục scratchpad của phiên, `shots/opus-*.jpg` (không lưu trong kho).
 
-**Điều kiện ban đầu: engine có gì, thiếu gì** (Dương hỏi 15/11/2026; người điều phối đọc code, chưa đổi gì; CHỜ DƯƠNG quyết phần thiếu). Phần đã có ghi vào U2 (gd1-5.md mục 4.4).
+**Điều kiện ban đầu: engine có gì, thiếu gì** (Dương hỏi 15/11/2026; người điều phối đọc code, chưa đổi gì; Dương ĐÃ QUYẾT 15/11, xem khối U6b ở trên). Phần đã có ghi vào U2 (gd1-5.md mục 4.4).
 
 Đã có, dùng được ngay qua giao thức:
 - Quy mô 50/500/5.000 hộ, hạt giống.
@@ -54,7 +66,7 @@ Engine có nhưng giao thức hoặc Session chưa nối (đổi `session.ts`, g
 1. **Luật áp TRƯỚC khi dựng nền kinh tế.** `Engine.newWorld` nhận `laws` (ghi `lawOverrides` từ tháng 0, "Điều kiện ban đầu"), nhưng `Session.init` không truyền. Hệ quả hiện nay: giá, lãi vay, số công chức lúc dựng tính theo luật mặc định, rồi tháng đầu mới chỉnh. Công: nhỏ, khoảng nửa ngày Sonnet kèm test mã băm.
 2. **Tham số khởi tạo `init.*`** (của cải ban đầu theo tháng thu nhập, xuất phát bình đẳng hay theo thu nhập, thất nghiệp lúc đầu, phần lao động chính thức, cỡ doanh nghiệp, phần doanh nghiệp nhà nước, phần người tự làm). `newWorld` nhận `params` trước khi dựng, Session không truyền; `setup.params` áp sau khi dựng nên vô tác dụng với nhóm này. Công: chung với việc 1. Cần thêm: đổi tham số thì gắn nhãn "ngoài vùng đã kiểm định" (hiện `setParam` không gắn nhãn gì, xem phát hiện bên dưới).
 3. **Số hộ bất kỳ.** `newWorld` nhận `nHouseholds`, số doanh nghiệp và ngân hàng suy theo công thức. Giao thức chỉ có ba mức. Ngoài 500 và 5.000 hộ chưa kiểm định. Công: nhỏ, nửa ngày, kèm nhãn "ngoài vùng".
-4. **Năm bắt đầu** (chọn bộ luật của năm đó). `newWorld` nhận `startYear`; luật có phiên bản từ 2000 tới 2027. Giao thức chỉ cho kịch bản đặt năm. Công: nhỏ, nửa ngày. Năm cũ chỉ đổi luật, không đổi cấu trúc kinh tế.
+4. **Năm bắt đầu** (chọn bộ luật của năm đó). `newWorld` nhận `startYear`; [SAI, sửa 16/11: phần lớn luật chỉ có phiên bản từ 2016 về sau, xem khối U6b] luật có phiên bản từ 2000 tới 2027. Giao thức chỉ cho kịch bản đặt năm. Công: nhỏ, nửa ngày. Năm cũ chỉ đổi luật, không đổi cấu trúc kinh tế.
 
 Thiếu hẳn, cần cơ chế mới:
 5. **Hình dạng phân phối tài sản** (ví dụ chọn mức chênh lệch, một nhóm giàu). Hiện chỉ có hai kiểu: chia đều, hoặc theo thu nhập. Thêm kiểu khác phải viết ở `init.ts`, cần nguồn. Công: vừa, 1-2 ngày. **Vướng làm nóng:** ván tự do sẽ chạy trước 240 tháng (U5), mô hình tự sinh lại phân phối, nên phân phối đặt lúc dựng có thể mất gần hết khi người chơi vào ván. Phải đo trước. Nếu muốn phân phối có hiệu lực lúc nhận ván thì là "chia lại của cải lúc nhận ván": giao dịch qua sổ cái, có mã lý do, cơ chế mới. Công: 2-3 ngày, và phải thiết kế rồi Dương duyệt.
