@@ -1,7 +1,7 @@
 // Giao thức engine <-> UI (gd0 mục 7.2). Mọi tin nhắn đi qua Worker đều có kiểu ở đây.
 // Đổi cấu trúc tin thì tăng PROTOCOL_VERSION.
 
-export const PROTOCOL_VERSION = 3; // 3: thêm truy vấn events, setupInfo (U2)
+export const PROTOCOL_VERSION = 3; // 3: thêm truy vấn events, setupInfo; LawInfo có doc, article, effective (U2)
 
 export type ScaleId = 'S' | 'M' | 'L';
 export type Role = 'observer' | 'government' | 'fiscal' | 'monetary' | 'household' | 'firm';
@@ -71,6 +71,10 @@ export interface LawInfo {
   step?: number;
   note?: string;
   source: string;
+  /** Văn bản, điều khoản và ngày hiệu lực (ISO yyyy-mm-dd) của phiên bản đang áp. */
+  doc: string;
+  article: string;
+  effective: string;
   verification: string;
 }
 export interface RuleInfo {

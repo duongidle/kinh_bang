@@ -1,9 +1,11 @@
 // Bảng bên phải, đổi theo vai (gd1 mục 12). Vai nào không do người chơi giữ thì chạy bằng quy tắc tự động.
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import type { LawInfo, ScenarioReport } from '../protocol';
 import { engine } from './client';
-import { SegmentedControl } from './design';
+import { Button, SegmentedControl } from './design';
 import { fmt, num } from './format';
+import { LawInput, LawSource, isToggle, lawValueText } from './LawField';
+import { groupLaws, type LawOwner } from './lawGroups';
 import { ROLE_NAME } from './screens/Home';
 import { useStore } from './store';
 
@@ -105,15 +107,20 @@ function ScenarioCard() {
 }
 
 // ---------- vai Chính phủ: Bộ Tài chính và NHNN ----------
+const OWNERS: Record<string, Set<LawOwner>> = {
+  fiscal: new Set<LawOwner>(['fiscal']),
+  monetary: new Set<LawOwner>(['monetary']),
+  government: new Set<LawOwner>(['fiscal', 'monetary']),
+};
+
 function PolicyPanel() {
   const role = useStore((s) => s.role);
   const catalog = useStore((s) => s.catalog)!;
   const tick = useStore((s) => s.tick)!;
   const param = useStore((s) => s.param);
   const openDialog = useStore((s) => s.openDialog);
-  const laws = catalog.laws.filter((l) => role === 'government' || l.owner === role);
-  const groups = [...new Set(laws.map((l) => l.group))];
-  const [openGroup, setOpenGroup] = useState<string>(groups[0]);
+  const groups = useMemo(() => groupLaws(catalog.laws, OWNERS[role] ?? OWNERS.government), [catalog, role]);
+  const [openGroup, setOpenGroup] = useState<string | undefined>(groups[0]?.title);
   const auto = (id: string, label: string) => (
     <label className="auto">
       <input type="checkbox" checked={tick.params[id] >= 0.5} onChange={(e) => param(id, e.target.checked ? 1 : 0)} />
@@ -131,13 +138,16 @@ function PolicyPanel() {
         </button>
       )}
       {groups.map((g) => (
-        <details key={g} open={openGroup === g} onToggle={(e) => (e.currentTarget.open ? setOpenGroup(g) : undefined)}>
-          <summary>{g}</summary>
-          {laws
-            .filter((l) => l.group === g)
-            .map((l) => (
-              <LawRow key={l.id} law={l} />
-            ))}
+        <details key={g.title} open={openGroup === g.title} onToggle={(e) => (e.currentTarget.open ? setOpenGroup(g.title) : undefined)}>
+          <summary>{g.title}</summary>
+          {g.sections.map((sec) => (
+            <Fragment key={sec.title ?? g.title}>
+              {sec.title && <h4 className="kb-lawsub">{sec.title}</h4>}
+              {sec.laws.map((l) => (
+                <LawRow key={l.id} law={l} />
+              ))}
+            </Fragment>
+          ))}
         </details>
       ))}
     </section>
@@ -148,45 +158,31 @@ function LawRow({ law }: { law: LawInfo }) {
   const value = useStore((s) => s.law(law.id));
   const policy = useStore((s) => s.policy);
   const askGuess = useStore((s) => s.askGuess);
-  const [draft, setDraft] = useState<string | null>(null);
-  const isRate = law.unit === 'tỷ lệ' || law.unit === '%/năm';
-  const isMoney = law.unit.startsWith('đồng');
-  const scale = isRate ? 100 : isMoney ? 1e-6 : 1;
-  const shown = draft ?? String(Number((value * scale).toFixed(isRate ? 2 : 3))).replace('.', ',');
-  const apply = (v: number) => {
-    const lo = law.min ?? -Infinity;
-    const hi = law.max ?? Infinity;
-    const next = Math.max(lo, Math.min(hi, v));
+  const [draft, setDraft] = useState<number | null>(null);
+  const issue = (v: number) => {
+    const next = Math.max(law.min ?? -Infinity, Math.min(law.max ?? Infinity, v));
     setDraft(null);
     if (next === value) return;
     policy(law.id, next);
     askGuess(law.label);
   };
-  if (law.unit === 'bật/tắt')
-    return (
-      <div className="law">
-        <label className="auto">
-          <input type="checkbox" checked={value >= 0.5} onChange={(e) => apply(e.target.checked ? 1 : 0)} />
-          {law.label}
-        </label>
-        {law.note && <p className="hint">{law.note}</p>}
-      </div>
-    );
-  const dirty = draft !== null && Number(draft.replace(',', '.')) / scale !== value;
+  const toggle = isToggle(law);
+  const dirty = draft !== null && draft !== value;
   return (
-    <div className="law">
-      <label htmlFor={law.id}>{law.label}</label>
-      <div className="row">
-        <input id={law.id} inputMode="decimal" value={shown} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && dirty && apply(Number(draft!.replace(',', '.')) / scale)} />
-        <span className="unit">{isRate ? '%' : isMoney ? `triệu ${law.unit.replace('đồng', 'đ')}` : law.unit}</span>
-        <button className="primary" disabled={!dirty || !Number.isFinite(Number(draft?.replace(',', '.')))} onClick={() => apply(Number(draft!.replace(',', '.')) / scale)}>
-          Ban hành
-        </button>
+    <div className="kb-law">
+      <div className="kb-law__row">
+        <LawInput law={law} value={draft ?? value} onChange={toggle ? issue : setDraft} />
+        {!toggle && (
+          <Button variant="primary" disabled={!dirty} onClick={() => issue(draft!)}>
+            Ban hành
+          </Button>
+        )}
       </div>
-      <p className="hint">
-        {law.note ? `${law.note} ` : ''}
-        <span className="src">Nguồn: {law.source}</span>
+      <p className="kb-law__meta">
+        Hiện hành: {lawValueText(law, value)}
+        <LawSource law={law} />
       </p>
+      {law.note && <p className="kb-law__note">{law.note}</p>}
     </div>
   );
 }

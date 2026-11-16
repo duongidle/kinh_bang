@@ -344,7 +344,7 @@ export class Session {
     const iso = dateOf(w).iso;
     return [...this.eng.laws.values()].map((l) => {
       const v = resolveVersion(l, iso);
-      return { id: l.id, label: l.label, unit: l.unit, group: l.group, owner: l.owner, min: l.min, max: l.max, step: l.step, note: l.note, source: [v.source.doc, v.source.article].filter(Boolean).join(', '), verification: v.verification };
+      return { id: l.id, label: l.label, unit: l.unit, group: l.group, owner: l.owner, min: l.min, max: l.max, step: l.step, note: l.note, source: [v.source.doc, v.source.article].filter(Boolean).join(', '), doc: v.source.doc, article: v.source.article ?? '', effective: v.from, verification: v.verification };
     });
   }
 
